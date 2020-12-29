@@ -1,51 +1,71 @@
 #include <iostream>
+#include <thread>
 #include <memory>
+#include <limits>
+#include <chrono>
 
 #include <LogInstance.h>
 
 #include <DBusIMUClient.hpp>
 
-static IMUClient::eIMUError PrintAccel(std::shared_ptr<IMUClient::IIMUClient> &client)
+#include "argparser.hpp"
+
+static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro)
 {
-  IMUClient::eIMUError ret;
+  auto ret = IMUClient::eIMUError::eRET_OK;
   double val[3] = {0};
   for (size_t i = 0; i < (sizeof(val)/sizeof(val[0])); i++)
   {
-    ret = client->GetRawAccel((IMUClient::eAxis)i, val[i]);
-    if (ret == IMUClient::eIMUError::eRET_OK)
+    if (bAccel)
     {
-      LOGDEBUG("Accel[%d] -> [%0.2f]", i, val[i]);
-    }
-    else
-    {
-      LOGERROR("IMU Client GetRawAccel Error [%d]", (int)ret);
-      break;
+      ret = client->GetRawAccel((IMUClient::eAxis)i, val[i]);
+      if (ret == IMUClient::eIMUError::eRET_OK)
+      {
+        LOGDEBUG("Accel[%d] -> [%0.2f]", i, val[i]);
+      }
     }
 
-    ret = client->GetRawGyro((IMUClient::eAxis)i, val[i]);
-    if (ret == IMUClient::eIMUError::eRET_OK)
+    if (bGyro)
     {
-      LOGDEBUG("Gyro[%d] -> [%0.2f]", i, val[i]);
+      ret = client->GetRawGyro((IMUClient::eAxis)i, val[i]);
+      if (ret == IMUClient::eIMUError::eRET_OK)
+      {
+        LOGDEBUG("Gyro[%d] -> [%0.2f]", i, val[i]);
+      }
     }
-    else
+
+    if (ret != IMUClient::eIMUError::eRET_OK)
     {
-      LOGERROR("IMU Client GetRawGyro Error [%d]", (int)ret);
       break;
     }
   }
+
   return ret;
 }
 
 int main(int argc, char const *argv[])
 {
+  ArgParser::arguments args;
+  auto retParse = ArgParser::iProcessArgs(argc, argv, args);
+
+  LOGDEBUG("ReturnParser: %d", retParse);
+  LOGDEBUG("Arg accel\t[%s]", args.accel ? "Enable" : "Disable");
+  LOGDEBUG("Arg gyro\t[%s]", args.gyro ? "Enable" : "Disable");
+  LOGDEBUG("Arg timeout\t[%d] seconds", args.timeout);
+
+  if (retParse != 0) {
+    LOGERROR("Error ProcessArgs [%d]", retParse);
+    return retParse;
+  }
+
   std::shared_ptr<IMUClient::IIMUClient> client;
 
   client = std::make_shared<IMUClient::DBusIMUClient>();
   auto ret = client->Init();
 
-  auto func = [&client]()
+  auto func = [&client, &args]()
   {
-    auto ret = PrintAccel(client);
+    auto ret = PrintRawValues(client, args.accel, args.gyro);
     if (ret != IMUClient::eIMUError::eRET_OK)
     {
       LOGERROR("IMU Error [%d]", ((int)ret));
@@ -55,7 +75,14 @@ int main(int argc, char const *argv[])
 
   if (ret == IMUClient::eIMUError::eRET_OK)
   {
-    std::cin.get();
+    if (args.timeout != std::numeric_limits<int>::max())
+    {
+      std::this_thread::sleep_for(std::chrono::seconds(args.timeout));
+    }
+    else
+    {
+      std::cin.get();
+    }
   }
   else
   {
