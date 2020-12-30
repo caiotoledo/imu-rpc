@@ -33,3 +33,4 @@ jobs:
         # build project
         - cmake .
         - make
+        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client --help
