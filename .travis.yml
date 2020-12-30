@@ -41,7 +41,9 @@ jobs:
         - make
         - sudo make install
         # Simple binaries test
+        - imu-daemon --version
         - imu-daemon --help
+        - imu-client --version
         - imu-client --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
