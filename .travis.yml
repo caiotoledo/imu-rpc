@@ -12,7 +12,7 @@ addons:
       - cmake
 
 before_install:
-  - sudo apt-get -qq update
+  - sudo apt -qq update
   - sudo apt install libdbus-1-dev libsigc++-2.0-dev m4
 
 before_script:
@@ -34,3 +34,4 @@ jobs:
         - cmake .
         - make
         - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client --help
+        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon --help
