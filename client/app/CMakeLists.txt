@@ -11,3 +11,5 @@ target_include_directories(${CLIENT_NAME} PRIVATE ${client_src_dir})
 target_link_libraries(${CLIENT_NAME} PRIVATE logger)
 
 target_link_libraries(${CLIENT_NAME} PRIVATE imuclient)
+
+install(TARGETS imu-client RUNTIME DESTINATION bin)

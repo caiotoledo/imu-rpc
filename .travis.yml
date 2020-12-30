@@ -39,12 +39,13 @@ jobs:
         # Build project
         - cmake -DCMAKE_BUILD_TYPE=Debug .
         - make
+        - sudo make install
         # Simple binaries test
-        - ./bin/imu-daemon --help
-        - ./bin/imu-client --help
+        - imu-daemon --help
+        - imu-client --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
         # Execute binaries
-        - ./bin/imu-daemon -d
-        - ./bin/imu-client -a -g -t 3
+        - imu-daemon -d
+        - imu-client -a -g -t 3
         - killall imu-daemon
