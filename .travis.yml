@@ -23,6 +23,7 @@ before_install:
   - git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
   - cd dbus-cxx
   - cmake . && make && sudo make install
+  - sudo ldconfig
   - cd ../
 
 before_script:
@@ -39,11 +40,11 @@ jobs:
         - cmake -DCMAKE_BUILD_TYPE=Debug .
         - make
         # Simple binaries test
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon --help
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client --help
+        - ./bin/imu-daemon --help
+        - ./bin/imu-client --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
         # Execute binaries
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon -d
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client -a -g -t 3
+        - ./bin/imu-daemon -d
+        - ./bin/imu-client -a -g -t 3
         - killall imu-daemon
