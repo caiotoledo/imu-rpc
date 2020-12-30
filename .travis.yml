@@ -17,6 +17,8 @@ before_install:
   - sudo apt install libdbus-1-dev libsigc++-2.0-dev m4
   # Install dbus-launch
   - sudo apt install dbus-x11
+  # Install killall command
+  - sudo apt install psmisc
   # Install dbus-cxx library
   - git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
   - cd dbus-cxx
@@ -44,3 +46,4 @@ jobs:
         # Execute binaries
         - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon -d
         - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client -a -g -t 3
+        - killall imu-daemon
