@@ -31,18 +31,14 @@ before_script:
 
 jobs:
   include:
-    - stage: Build
-      script:
-        # Build project
-        - cmake .
-        - make
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon --help
-        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client --help
-    - stage: Test binaries
+    - stage: "Test local"
       script:
         # Build project
         - cmake -DCMAKE_BUILD_TYPE=Debug .
         - make
+        # Simple binaries test
+        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-daemon --help
+        - LD_LIBRARY_PATH=/usr/local/lib/ ./bin/imu-client --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
         # Execute binaries
