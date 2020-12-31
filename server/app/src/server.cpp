@@ -65,13 +65,9 @@ static pid_t daemonize(void)
   return pid;
 }
 
-static int file_isvalid(const char *path) {
+static bool path_isvalid(const char *path) {
   struct stat st;
-
-  if (stat(path, &st) < 0)
-    return -1;
-
-  return S_ISREG(st.st_mode);
+  return (stat(path, &st) >= 0);
 }
 
 int main(int argc, char const *argv[])
@@ -105,7 +101,7 @@ int main(int argc, char const *argv[])
   std::shared_ptr<IMUServer::IIMUServer> serverIMU;
   std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuAbstraction;
 
-  if (file_isvalid(DEVICE_PATH) == 1)
+  if (path_isvalid(DEVICE_PATH) == true)
   {
     imuAbstraction = std::make_shared<IMUAbstraction::IMUIndustrialIO>();
     LOGDEBUG("Using IMUIndustrialIO");
