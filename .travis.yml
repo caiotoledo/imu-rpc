@@ -51,3 +51,4 @@ jobs:
         - imu-daemon -d
         - imu-client -a -g -t 3
         - killall imu-daemon
+        - sleep 1
