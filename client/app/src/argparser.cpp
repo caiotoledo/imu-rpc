@@ -19,9 +19,9 @@ static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"timeout", 't', "TOUT", 0, "Define application runtime",      0},
-  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values", 0},
-  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values",     0},
+  {"timeout", 't', "TOUT", 0, "Define application runtime",           0},
+  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]", 0},
+  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",    0},
   { 0 }
 };
 
