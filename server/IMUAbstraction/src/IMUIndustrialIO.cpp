@@ -26,7 +26,7 @@ IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index) :
     LOGDEBUG("Starting Sample Values Thread");
     while (bThreadSampleValues)
     {
-      for(auto &val : imu_data)
+      for(auto &val : imu_data.axisdata)
       {
         val.accel = this->GetValueInFile<double>(val.DeviceAccelPath.c_str());
         val.gyro = this->GetValueInFile<double>(val.DeviceGyroPath.c_str());
@@ -57,11 +57,11 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
 
     auto sAccelPath = sDevicePath;
     sAccelPath.append("in_accel_" + sAxis + "_raw");
-    imu_data[index].DeviceAccelPath = sAccelPath;
+    imu_data.axisdata[index].DeviceAccelPath = sAccelPath;
 
     auto sGyroPath = sDevicePath;
     sGyroPath.append("in_anglvel_" + sAxis + "_raw");
-    imu_data[index].DeviceGyroPath = sGyroPath;
+    imu_data.axisdata[index].DeviceGyroPath = sGyroPath;
   }
 }
 
@@ -102,7 +102,7 @@ eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   if ((int)axis >= ((int)eAxis::X) && (int)axis <= ((int)eAxis::Z))
   {
-    val = imu_data[(int)axis].accel;
+    val = imu_data.axisdata[(int)axis].accel;
   }
   else
   {
@@ -117,7 +117,7 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   if ((int)axis >= ((int)eAxis::X) && (int)axis <= ((int)eAxis::Z))
   {
-    val = imu_data[(int)axis].gyro;
+    val = imu_data.axisdata[(int)axis].gyro;
   }
   else
   {

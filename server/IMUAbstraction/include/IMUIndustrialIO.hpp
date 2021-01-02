@@ -9,12 +9,17 @@ constexpr int NUM_AXIS = 3;
 namespace IMUAbstraction
 {
 
-  typedef struct imutdata_s
+  typedef struct axisdata_s
   {
     std::string DeviceAccelPath;
     double accel;
     std::string DeviceGyroPath;
     double gyro;
+  } axisdata_t;
+
+  typedef struct imudata_s
+  {
+    axisdata_t axisdata[NUM_AXIS];
   } imudata_t;
 
   class IMUIndustrialIO : public IIMUAbstraction
@@ -23,7 +28,7 @@ namespace IMUAbstraction
     std::vector<std::function<void()>> vecCallback;
 
     std::string DevicePath;
-    imudata_t imu_data[NUM_AXIS];
+    imudata_t imu_data;
 
     bool bThreadSampleValues;
     std::thread thSampleValues;
