@@ -86,7 +86,7 @@ T IMUIndustrialIO::GetValueInFile(const char *path)
   if (ifFile.is_open())
   {
     std::string strValue;
-    while (std::getline(ifFile, strValue))
+    if (std::getline(ifFile, strValue))
     {
       std::stringstream sstrValue;
       sstrValue << strValue;

@@ -29,7 +29,7 @@ namespace IMUAbstraction
     std::thread thSampleValues;
 
     /**
-     * @brief Get value from a File
+     * @brief Get value from first line of a File
      *
      * @tparam T Output data type
      * @param path Path of the file
