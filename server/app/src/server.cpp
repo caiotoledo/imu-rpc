@@ -103,7 +103,7 @@ int main(int argc, char const *argv[])
 
   if (path_isvalid(DEVICE_PATH) == true)
   {
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUIndustrialIO>();
+    imuAbstraction = std::make_shared<IMUAbstraction::IMUIndustrialIO>(DEVICE_PATH, 0);
     LOGDEBUG("Using IMUIndustrialIO");
   }
   else
