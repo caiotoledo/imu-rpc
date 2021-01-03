@@ -4,10 +4,10 @@
 
 #include "IIMUAbstraction.hpp"
 
-constexpr int NUM_AXIS = 3;
-
 namespace IMUAbstraction
 {
+
+  constexpr int NUM_AXIS = 3;
 
   typedef struct axisdata_s
   {
