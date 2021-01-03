@@ -101,7 +101,7 @@ eIMUAbstractionError IMUStub::SetAccelScale(eAccelScale scale)
 eIMUAbstractionError IMUStub::SetGyroScale(eGyroScale scale)
 {
   this->gyroScale = scale;
-  LOGDEBUG("Set Accel Scale [%d]->[%0.2f]", scale, static_cast<double>(mapGyroScale.at(this->gyroScale)));
+  LOGDEBUG("Set Gyro Scale [%d]->[%0.2f]", scale, static_cast<double>(mapGyroScale.at(this->gyroScale)));
 
   return eIMUAbstractionError::eRET_OK;
 }
