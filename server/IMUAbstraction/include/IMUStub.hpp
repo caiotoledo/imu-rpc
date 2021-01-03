@@ -28,7 +28,7 @@ namespace IMUAbstraction
     double GetRandomGyro(void);
 
   public:
-    IMUStub();
+    IMUStub(eAccelScale accelScale=eAccelScale::Accel_2g, eGyroScale gyroScale=eGyroScale::Gyro_250);
 
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError GetRawAccel(eAxis axis, double &val) override;

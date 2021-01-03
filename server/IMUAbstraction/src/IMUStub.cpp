@@ -33,12 +33,12 @@ const std::map<eGyroScale, int> mapGyroScale =
   {eGyroScale::Gyro_2000, 2000*100},
 };
 
-IMUStub::IMUStub()
+IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale)
 {
   srand((unsigned) time(0));
 
-  this->SetAccelScale(eAccelScale::Accel_2g);
-  this->SetGyroScale(eGyroScale::Gyro_250);
+  this->SetAccelScale(accelScale);
+  this->SetGyroScale(gyroScale);
 
   bThreadNotification = true;
   auto func = [this]()
