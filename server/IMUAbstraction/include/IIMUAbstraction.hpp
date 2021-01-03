@@ -47,7 +47,7 @@ namespace IMUAbstraction
      *
      * @param axis IMU Axis
      * @param val Value reference to receive the data
-     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError GetRawAccel(eAxis axis, double &val) = 0;
 
@@ -55,7 +55,7 @@ namespace IMUAbstraction
      * @brief Set Accel Scale
      *
      * @param scale Accelerometer Scale, ref #eAccelScale
-     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError SetAccelScale(eAccelScale scale) = 0;
 
@@ -64,7 +64,7 @@ namespace IMUAbstraction
      *
      * @param axis IMU axis
      * @param val Value reference to receive the data
-     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError GetRawGyro(eAxis axis, double &val) = 0;
 
@@ -72,7 +72,7 @@ namespace IMUAbstraction
      * @brief Set Gyro Scale
      *
      * @param scale Gyroscope Scale, ref #eGyroScale
-     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError SetGyroScale(eGyroScale scale) = 0;
 

@@ -45,6 +45,14 @@ namespace IMUAbstraction
     template <typename T>
     T GetValueInFile(const char *path);
 
+    /**
+     * @brief Write a value in a File
+     *
+     * @tparam T Input data type
+     * @param path Path to the file
+     * @param val Value to write in a file
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
+     */
     template <typename T>
     eIMUAbstractionError SetValueInFile(const char *path, T val);
 
