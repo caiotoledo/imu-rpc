@@ -36,10 +36,17 @@ jobs:
   include:
     - stage: "Test local"
       script:
-        # Build project
-        - cmake -DCMAKE_BUILD_TYPE=Debug .
+        # Release Build project
+        - mkdir -p .build_release/ && cd .build_release/
+        - cmake -DCMAKE_BUILD_TYPE=Release ../
+        - make
+        - cd ../
+        # Debug Build project
+        - mkdir -p .build_debug/ && cd .build_debug/
+        - cmake -DCMAKE_BUILD_TYPE=Debug ../
         - make
         - sudo make install
+        - cd ../
         # Simple binaries test
         - imu-daemon --version
         - imu-daemon --help
