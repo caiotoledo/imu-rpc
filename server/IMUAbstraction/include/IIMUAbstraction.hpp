@@ -16,6 +16,20 @@ namespace IMUAbstraction
     Z
   };
 
+  enum class eAccelScale {
+    Accel_2g,
+    Accel_4g,
+    Accel_8g,
+    Accel_16g,
+  };
+
+  enum class eGyroScale {
+    Gyro_250,
+    Gyro_500,
+    Gyro_1000,
+    Gyro_2000,
+  };
+
   class IIMUAbstraction
   {
   public:
@@ -38,6 +52,14 @@ namespace IMUAbstraction
     virtual eIMUAbstractionError GetRawAccel(eAxis axis, double &val) = 0;
 
     /**
+     * @brief Set Accel Scale
+     *
+     * @param scale Accelerometer Scale, ref #eAccelScale
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     */
+    virtual eIMUAbstractionError SetAccelScale(eAccelScale scale) = 0;
+
+    /**
      * @brief Get raw gyroscope data
      *
      * @param axis IMU axis
@@ -45,6 +67,14 @@ namespace IMUAbstraction
      * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
      */
     virtual eIMUAbstractionError GetRawGyro(eAxis axis, double &val) = 0;
+
+    /**
+     * @brief Set Gyro Scale
+     *
+     * @param scale Gyroscope Scale, ref #eGyroScale
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eRPCError
+     */
+    virtual eIMUAbstractionError SetGyroScale(eGyroScale scale) = 0;
 
     virtual ~IIMUAbstraction() = default;
   };

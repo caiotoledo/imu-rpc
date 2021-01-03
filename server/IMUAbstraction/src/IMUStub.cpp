@@ -1,3 +1,4 @@
+#include <map>
 #include <thread>
 #include <chrono>
 
@@ -16,9 +17,28 @@ constexpr int MAX_AXIS = 3;
 double accel[MAX_AXIS] = {0};
 double gyro[MAX_AXIS] = {0};
 
+const std::map<eAccelScale, int> mapAccelScale =
+{
+  {eAccelScale::Accel_2g,  2000*100},
+  {eAccelScale::Accel_4g,  4000*100},
+  {eAccelScale::Accel_8g,  8000*100},
+  {eAccelScale::Accel_16g, 16000*100},
+};
+
+const std::map<eGyroScale, int> mapGyroScale =
+{
+  {eGyroScale::Gyro_250,  250*100},
+  {eGyroScale::Gyro_500,  500*100},
+  {eGyroScale::Gyro_1000, 1000*100},
+  {eGyroScale::Gyro_2000, 2000*100},
+};
+
 IMUStub::IMUStub()
 {
   srand((unsigned) time(0));
+
+  this->SetAccelScale(eAccelScale::Accel_2g);
+  this->SetGyroScale(eGyroScale::Gyro_250);
 
   bThreadNotification = true;
   auto func = [this]()
@@ -45,7 +65,8 @@ double IMUStub::GetRandomAccel(void)
 {
   bool signal = ((bool)(rand() % 2));
 
-  double r = (rand() % 200000);
+  auto scale = GetAccelScale<int>();
+  double r = (rand() % scale);
   double ret = (r/100);
 
   ret = signal ? ret : (-ret);
@@ -56,7 +77,8 @@ double IMUStub::GetRandomGyro(void)
 {
   bool signal = ((bool)(rand() % 2));
 
-  double r = (rand() % 25000);
+  auto scale = GetGyroScale<int>();
+  double r = (rand() % scale);
   double ret = (r/100);
 
   ret = signal ? ret : (-ret);
@@ -67,6 +89,31 @@ double IMUStub::GetRandomGyro(void)
 void IMUStub::AddUpdateDataCallback(std::function<void()> &&cb)
 {
   vecCallback.push_back(cb);
+}
+
+eIMUAbstractionError IMUStub::SetAccelScale(eAccelScale scale)
+{
+  this->accelScale = scale;
+  LOGDEBUG("Set Accel Scale [%d]->[%0.2f]", scale, static_cast<double>(mapAccelScale.at(this->accelScale)));
+
+  return eIMUAbstractionError::eRET_OK;
+}
+eIMUAbstractionError IMUStub::SetGyroScale(eGyroScale scale)
+{
+  this->gyroScale = scale;
+  LOGDEBUG("Set Accel Scale [%d]->[%0.2f]", scale, static_cast<double>(mapGyroScale.at(this->gyroScale)));
+
+  return eIMUAbstractionError::eRET_OK;
+}
+template <typename T>
+T IMUStub::GetAccelScale()
+{
+  return static_cast<T>(mapAccelScale.at(this->accelScale));
+}
+template <typename T>
+T IMUStub::GetGyroScale()
+{
+  return static_cast<T>(mapGyroScale.at(this->gyroScale));
 }
 
 eIMUAbstractionError IMUStub::GetRawAccel(eAxis axis, double &val)

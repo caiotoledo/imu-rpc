@@ -15,6 +15,15 @@ namespace IMUAbstraction
     std::thread thNotification;
     std::vector<std::function<void()>> vecCallback;
 
+    eAccelScale accelScale;
+    eGyroScale gyroScale;
+
+    template <typename T>
+    T GetAccelScale();
+
+    template <typename T>
+    T GetGyroScale();
+
     double GetRandomAccel(void);
     double GetRandomGyro(void);
 
@@ -23,7 +32,9 @@ namespace IMUAbstraction
 
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError GetRawAccel(eAxis axis, double &val) override;
+    eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(eAxis axis, double &val) override;
+    eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
 
     virtual ~IMUStub();
   };

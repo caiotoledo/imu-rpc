@@ -19,6 +19,8 @@ namespace IMUAbstraction
 
   typedef struct imudata_s
   {
+    std::string DeviceAccelScalePath;
+    std::string DeviceGyroScalePath;
     axisdata_t axisdata[NUM_AXIS];
   } imudata_t;
 
@@ -43,6 +45,9 @@ namespace IMUAbstraction
     template <typename T>
     T GetValueInFile(const char *path);
 
+    template <typename T>
+    eIMUAbstractionError SetValueInFile(const char *path, T val);
+
     /**
      * @brief Initialize the attributes in the class based on the Industrial IO device path
      *
@@ -56,11 +61,18 @@ namespace IMUAbstraction
     void NotifyUpdateData(void);
 
   public:
-    IMUIndustrialIO(const char *path, int device_index);
+    IMUIndustrialIO(
+      const char *path,
+      int device_index,
+      eAccelScale accelScale=eAccelScale::Accel_2g,
+      eGyroScale gyroScale=eGyroScale::Gyro_250
+    );
 
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError GetRawAccel(eAxis axis, double &val) override;
+    eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(eAxis axis, double &val) override;
+    eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
 
     virtual ~IMUIndustrialIO();
   };
