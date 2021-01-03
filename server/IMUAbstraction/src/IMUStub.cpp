@@ -121,7 +121,8 @@ eIMUAbstractionError IMUStub::GetRawAccel(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   int axisVal = (int)axis;
 
-  if ( axisVal >= 0 && axisVal <= (sizeof(accel)/sizeof(accel[0])))
+  auto sizeAccelArray = (int)(sizeof(accel)/sizeof(accel[0]));
+  if ( axisVal >= 0 && axisVal <= sizeAccelArray)
   {
     val = accel[axisVal];
   }
@@ -138,7 +139,8 @@ eIMUAbstractionError IMUStub::GetRawGyro(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   int axisVal = (int)axis;
 
-  if ( axisVal >= 0 && axisVal <= (sizeof(accel)/sizeof(accel[0])))
+  auto sizeGyroArray = (int)(sizeof(gyro)/sizeof(gyro[0]));
+  if ( axisVal >= 0 && axisVal <= sizeGyroArray)
   {
     val = gyro[axisVal];
   }

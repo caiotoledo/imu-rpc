@@ -77,6 +77,11 @@ int main(int argc, char const *argv[])
    */
   ArgParser::arguments args;
   auto retParse = ArgParser::iProcessArgs(argc, argv, args);
+  if (retParse != 0)
+  {
+    LOGERROR("iProcessArgs failed [%d]", retParse);
+    return retParse;
+  }
 
   /**
    * RUN AS DAEMON?
