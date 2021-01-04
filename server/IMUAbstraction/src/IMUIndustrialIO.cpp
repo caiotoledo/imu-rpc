@@ -157,6 +157,14 @@ eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
     auto val = mapAccelScale.at(scale);
     LOGDEBUG("Set Accel Scale [%d]->[%s]", scale, val.c_str());
     ret = this->SetValueInFile(imu_data.DeviceAccelScalePath.c_str(), val);
+
+    /* Verify if the value was written into the file */
+    auto sScale = this->GetValueInFile<std::string>(imu_data.DeviceAccelScalePath.c_str());
+    if (sScale.compare(val) != 0)
+    {
+      ret = eIMUAbstractionError::eRET_ERROR;
+      LOGERROR("Accel Scale not accepted [%s]", val.c_str());
+    }
   }
   else
   {
@@ -179,6 +187,14 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
     auto val = mapGyroScale.at(scale);
     LOGDEBUG("Set Gyro Scale [%d]->[%s]", scale, val.c_str());
     ret = this->SetValueInFile(imu_data.DeviceGyroScalePath.c_str(), val);
+
+    /* Verify if the value was written into the file */
+    auto sScale = this->GetValueInFile<std::string>(imu_data.DeviceGyroScalePath.c_str());
+    if (sScale.compare(val) != 0)
+    {
+      ret = eIMUAbstractionError::eRET_ERROR;
+      LOGERROR("Gyro Scale not accepted [%s]", val.c_str());
+    }
   }
   else
   {
