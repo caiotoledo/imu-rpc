@@ -196,7 +196,7 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
 eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
-  if ((int)axis >= ((int)eAxis::X) && (int)axis <= ((int)eAxis::Z))
+  if (axis >= eAxis::X && axis <= eAxis::Z)
   {
     val = imu_data.axisdata[(int)axis].accel;
   }
@@ -211,7 +211,7 @@ eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
 eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
-  if ((int)axis >= ((int)eAxis::X) && (int)axis <= ((int)eAxis::Z))
+  if (axis >= eAxis::X && axis <= eAxis::Z)
   {
     val = imu_data.axisdata[(int)axis].gyro;
   }
