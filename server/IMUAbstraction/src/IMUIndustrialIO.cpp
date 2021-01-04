@@ -7,10 +7,18 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 
 #include <IMUIndustrialIO.hpp>
 
 #include <LogInstance.h>
+
+#define _USE_MATH_DEFINES
+
+/**
+ * @brief Gravity acceleration value
+ */
+#define M_Gl (9.80665L)
 
 using namespace IMUAbstraction;
 
@@ -222,7 +230,8 @@ eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   if (axis >= eAxis::X && axis <= eAxis::Z)
   {
-    val = imu_data.axisdata[(int)axis].accel;
+    auto val_scale = std::stod(mapAccelScale.at(imu_data.accelScale));
+    val = ((imu_data.axisdata[(int)axis].accel * val_scale)/M_Gl)*1000L;
   }
   else
   {
@@ -237,7 +246,8 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
   auto ret = eIMUAbstractionError::eRET_OK;
   if (axis >= eAxis::X && axis <= eAxis::Z)
   {
-    val = imu_data.axisdata[(int)axis].gyro;
+    auto val_scale = std::stod(mapGyroScale.at(imu_data.gyroScale));
+    val = ((imu_data.axisdata[(int)axis].gyro * val_scale)/M_PIl)*180L;
   }
   else
   {
