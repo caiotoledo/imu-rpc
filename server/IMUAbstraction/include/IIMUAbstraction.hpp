@@ -46,7 +46,7 @@ namespace IMUAbstraction
      * @brief Get raw accelerometer data
      *
      * @param axis IMU Axis
-     * @param val Value reference to receive the data
+     * @param val Variable reference to receive the data
      * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError GetRawAccel(eAxis axis, double &val) = 0;
@@ -63,7 +63,7 @@ namespace IMUAbstraction
      * @brief Get raw gyroscope data
      *
      * @param axis IMU axis
-     * @param val Value reference to receive the data
+     * @param val Variable reference to receive the data
      * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
     virtual eIMUAbstractionError GetRawGyro(eAxis axis, double &val) = 0;
