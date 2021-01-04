@@ -10,34 +10,33 @@
 
 #include "argparser.hpp"
 
+constexpr int NUM_AXIS = 3;
+
 static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro)
 {
   auto ret = IMUClient::eIMUError::eRET_OK;
-  double val[3] = {0};
-  for (size_t i = 0; i < (sizeof(val)/sizeof(val[0])); i++)
+  for (size_t i = 0; i < NUM_AXIS; i++)
   {
+    double valAccel;
+    double valGyro;
     if (bAccel)
     {
-      ret = client->GetRawAccel((IMUClient::eAxis)i, val[i]);
-      if (ret == IMUClient::eIMUError::eRET_OK)
+      ret = client->GetRawAccel((IMUClient::eAxis)i, valAccel);
+      if (ret != IMUClient::eIMUError::eRET_OK)
       {
-        LOGDEBUG("Accel[%d] -> [%0.2f]", i, val[i]);
+        break;
       }
     }
-
     if (bGyro)
     {
-      ret = client->GetRawGyro((IMUClient::eAxis)i, val[i]);
-      if (ret == IMUClient::eIMUError::eRET_OK)
+      ret = client->GetRawGyro((IMUClient::eAxis)i, valGyro);
+      if (ret != IMUClient::eIMUError::eRET_OK)
       {
-        LOGDEBUG("Gyro[%d] -> [%0.2f]", i, val[i]);
+        break;
       }
     }
 
-    if (ret != IMUClient::eIMUError::eRET_OK)
-    {
-      break;
-    }
+    LOGDEBUG("[%d]\tAccel[%0.2f]\tGyro[%0.2f]", i, valAccel, valGyro);
   }
 
   return ret;
