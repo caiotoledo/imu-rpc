@@ -21,6 +21,8 @@ namespace IMUAbstraction
   {
     std::string DeviceAccelScalePath;
     std::string DeviceGyroScalePath;
+    eAccelScale accelScale;
+    eGyroScale gyroScale;
     axisdata_t axisdata[NUM_AXIS];
   } imudata_t;
 

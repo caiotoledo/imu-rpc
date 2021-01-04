@@ -171,7 +171,11 @@ eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
     ret = eIMUAbstractionError::eRET_ERROR;
   }
 
-  if (ret != eIMUAbstractionError::eRET_OK)
+  if (ret == eIMUAbstractionError::eRET_OK)
+  {
+    imu_data.accelScale = scale;
+  }
+  else
   {
     LOGERROR("SetAccelScale failed [%d]", ret);
   }
@@ -201,7 +205,11 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
     ret = eIMUAbstractionError::eRET_ERROR;
   }
 
-  if (ret != eIMUAbstractionError::eRET_OK)
+  if (ret == eIMUAbstractionError::eRET_OK)
+  {
+    imu_data.gyroScale = scale;
+  }
+  else
   {
     LOGERROR("SetGyroScale failed [%d]", ret);
   }
