@@ -22,6 +22,8 @@
 
 using namespace IMUAbstraction;
 
+constexpr int SAMPLE_FREQ = 500;
+
 const std::map<eAccelScale, std::string> mapAccelScale =
 {
   {eAccelScale::Accel_2g,  "0.004785"},
@@ -48,25 +50,40 @@ IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index, eAccelScale
   this->SetAccelScale(accelScale);
   this->SetGyroScale(gyroScale);
 
-  bThreadSampleValues = true;
-  auto sampleValues = [this]()
+  auto sSampleFreq = DevicePath;
+  sSampleFreq.append("sampling_frequency");
+  this->SetValueInFile<int>(sSampleFreq.c_str(), SAMPLE_FREQ);
+  auto freq = this->GetValueInFile<int>(sSampleFreq.c_str());
+  if (freq != SAMPLE_FREQ)
   {
-    LOGDEBUG("Starting Sample Values Thread");
+    LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", SAMPLE_FREQ, freq);
+  }
+
+  bThreadSampleValues = true;
+  auto sampleValues = [this](int sample_freq)
+  {
+    LOGDEBUG("Starting Sample Values Thread [Sample Freq %d]", sample_freq);
     while (bThreadSampleValues)
     {
+      auto start = std::chrono::high_resolution_clock::now();
+
       for(auto &val : imu_data.axisdata)
       {
         val.accel = this->GetValueInFile<double>(val.DeviceAccelPath.c_str());
         val.gyro = this->GetValueInFile<double>(val.DeviceGyroPath.c_str());
       }
-
       this->NotifyUpdateData();
-      /* FIXME: Use the sampling frequency or file interrupt update instead of fixed time */
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+      auto stop = std::chrono::high_resolution_clock::now();
+      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+      if (duration.count() < sample_freq)
+      {
+        std::this_thread::sleep_for(std::chrono::milliseconds(sample_freq-duration.count()));
+      }
     }
     LOGDEBUG("Finishing Sample Values Thread");
   };
-  thSampleValues = std::thread(sampleValues);
+  thSampleValues = std::thread(sampleValues, freq);
 }
 
 void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
