@@ -1,6 +1,5 @@
 #include <string>
 #include <sstream>
-#include <limits>
 
 #include <argp.h>
 
@@ -50,7 +49,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
       case ARGP_KEY_INIT:
         arguments->accel = false;
         arguments->gyro = false;
-        arguments->timeout = std::numeric_limits<int>::max();
+        arguments->timeout = -1;
       break;
 
       case ARGP_KEY_ARG:

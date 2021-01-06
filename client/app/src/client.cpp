@@ -1,7 +1,6 @@
 #include <iostream>
 #include <thread>
 #include <memory>
-#include <limits>
 #include <chrono>
 
 #include <LogInstance.h>
@@ -74,7 +73,7 @@ int main(int argc, char const *argv[])
 
   if (ret == IMUClient::eIMUError::eRET_OK)
   {
-    if (args.timeout != std::numeric_limits<int>::max())
+    if (args.timeout > 0)
     {
       std::this_thread::sleep_for(std::chrono::seconds(args.timeout));
     }
