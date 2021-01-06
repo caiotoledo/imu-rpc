@@ -3,6 +3,7 @@
 #include <fstream>
 #include <map>
 #include <thread>
+#include <future>
 #include <chrono>
 
 #include <cstdlib>
@@ -67,11 +68,35 @@ IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index, eAccelScale
     {
       auto start = std::chrono::high_resolution_clock::now();
 
-      for(auto &val : imu_data.axisdata)
       {
-        val.accel = this->GetValueInFile<double>(val.DeviceAccelPath.c_str());
-        val.gyro = this->GetValueInFile<double>(val.DeviceGyroPath.c_str());
+        std::vector<std::future<void>> vecSampleFunc;
+
+        auto sampleFunc = [this](double &val, const char *file_path)
+        {
+          val = this->GetValueInFile<double>(file_path);
+        };
+
+        for(auto &val : imu_data.axisdata)
+        {
+          vecSampleFunc.push_back(
+            std::async(
+              std::launch::async,
+              sampleFunc,
+              std::ref(val.accel),
+              val.DeviceAccelPath.c_str()
+            )
+          );
+          vecSampleFunc.push_back(
+            std::async(
+              std::launch::async,
+              sampleFunc,
+              std::ref(val.gyro),
+              val.DeviceGyroPath.c_str()
+            )
+          );
+        }
       }
+
       this->NotifyUpdateData();
 
       auto stop = std::chrono::high_resolution_clock::now();
