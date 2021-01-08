@@ -1,4 +1,6 @@
 #include <iostream>
+#include <map>
+#include <iomanip>
 #include <thread>
 #include <memory>
 #include <chrono>
@@ -16,8 +18,11 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
   auto ret = IMUClient::eIMUError::eRET_OK;
   for (size_t i = 0; i < NUM_AXIS; i++)
   {
+    const std::map<int, std::string> mapAxis = { {0, "X"}, {1, "Y"}, {2, "Z"}, };
     double valAccel;
     double valGyro;
+
+    /* Sample data from client */
     if (bAccel)
     {
       ret = client->GetRawAccel((IMUClient::eAxis)i, valAccel);
@@ -35,7 +40,12 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
       }
     }
 
-    LOGDEBUG("[%d]\tAccel[%0.2f]\tGyro[%0.2f]", i, valAccel, valGyro);
+    /* Show Axis data */
+    std::stringstream sAccel;
+    sAccel << "Accel[" << std::fixed << std::setprecision(3) << valAccel << "]";
+    std::stringstream sGyro;
+    sGyro << "Gyro[" << std::fixed << std::setprecision(3) << valGyro << "]";
+    LOGDEBUG("[%s] %-18s %-18s", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str());
   }
 
   return ret;
@@ -43,6 +53,9 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
 
 int main(int argc, char const *argv[])
 {
+  /**
+   * PARSE ARGUMENTS
+   */
   ArgParser::arguments args;
   auto retParse = ArgParser::iProcessArgs(argc, argv, args);
 
@@ -56,6 +69,9 @@ int main(int argc, char const *argv[])
     return retParse;
   }
 
+  /**
+   * START SERVER
+   */
   std::shared_ptr<IMUClient::IIMUClient> client;
 
   client = std::make_shared<IMUClient::DBusIMUClient>();
