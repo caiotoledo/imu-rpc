@@ -10,6 +10,14 @@ namespace IMUAbstraction
 
   constexpr int NUM_AXIS = 3;
 
+  typedef struct imupathdata_s
+  {
+    std::string DeviceBufferPath;
+    std::string DeviceAccelScalePath;
+    std::string DeviceGyroScalePath;
+    std::string DeviceSampleFreqPath;
+  } imupathdata_t;
+
   typedef struct axisdata_s
   {
     std::string DeviceAccelPath;
@@ -20,9 +28,7 @@ namespace IMUAbstraction
 
   typedef struct imudata_s
   {
-    std::string DeviceAccelScalePath;
-    std::string DeviceGyroScalePath;
-    std::string DeviceSampleFreqPath;
+    imupathdata_s paths;
     eAccelScale accelScale;
     eGyroScale gyroScale;
     eSampleFreq sampleFreq;
