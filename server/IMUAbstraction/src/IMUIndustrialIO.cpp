@@ -40,7 +40,22 @@ const std::map<eGyroScale, std::string> mapGyroScale =
   {eGyroScale::Gyro_2000, "0.000133090"},
 };
 
-IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index, eAccelScale accelScale, eGyroScale gyroScale) :
+const std::map<eSampleFreq, int> mapSampleFreq =
+{
+  {eSampleFreq::Freq_10ms,  10},
+  {eSampleFreq::Freq_20ms,  20},
+  {eSampleFreq::Freq_50ms,  50},
+  {eSampleFreq::Freq_100ms, 100},
+  {eSampleFreq::Freq_200ms, 200},
+  {eSampleFreq::Freq_500ms, 500},
+};
+
+IMUIndustrialIO::IMUIndustrialIO(
+  const char *path,
+  int device_index,
+  eAccelScale accelScale,
+  eGyroScale gyroScale,
+  eSampleFreq sampleFreq) :
   DevicePath(path)
 {
   DevicePath.append("/iio:device" + std::to_string(device_index) + "/");
@@ -49,15 +64,7 @@ IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index, eAccelScale
   /* Set default precision */
   this->SetAccelScale(accelScale);
   this->SetGyroScale(gyroScale);
-
-  auto sSampleFreq = DevicePath;
-  sSampleFreq.append("sampling_frequency");
-  this->SetValueInFile<int>(sSampleFreq.c_str(), SAMPLE_FREQ);
-  auto freq = this->GetValueInFile<int>(sSampleFreq.c_str());
-  if (freq != SAMPLE_FREQ)
-  {
-    LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", SAMPLE_FREQ, freq);
-  }
+  this->SetSampleFrequency(sampleFreq);
 
   bThreadSampleValues = true;
   auto sampleValues = [this](int sample_freq)
@@ -83,6 +90,7 @@ IMUIndustrialIO::IMUIndustrialIO(const char *path, int device_index, eAccelScale
     }
     LOGDEBUG("Finishing Sample Values Thread");
   };
+  auto freq = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
   thSampleValues = std::thread(sampleValues, freq);
 }
 
@@ -116,6 +124,10 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
   auto sGyroScalePath = sDevicePath;
   sGyroScalePath.append("in_anglvel_scale");
   imu_data.DeviceGyroScalePath = sGyroScalePath;
+
+  auto sSampleFreqPath = sDevicePath;
+  sSampleFreqPath.append("sampling_frequency");
+  imu_data.DeviceSampleFreqPath = sSampleFreqPath;
 }
 
 void IMUIndustrialIO::AddUpdateDataCallback(std::function<void()> &&cb)
@@ -175,7 +187,27 @@ eIMUAbstractionError IMUIndustrialIO::SetValueInFile(const char *path, T val)
 
 eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
 {
-  return eIMUAbstractionError::eRET_ERROR;
+  auto ret = eIMUAbstractionError::eRET_OK;
+
+  if (mapSampleFreq.find(freq) != mapSampleFreq.end())
+  {
+    auto value = mapSampleFreq.at(freq);
+    ret = this->SetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str(), value);
+    LOGDEBUG("Set Sample Frequency [%d]->[%d ms]", freq, value);
+
+    auto freqInFile = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
+    if (freqInFile != value)
+    {
+      LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
+      ret = eIMUAbstractionError::eRET_ERROR;
+    }
+  }
+  else
+  {
+    ret = eIMUAbstractionError::eRET_ERROR;
+  }
+
+  return ret;
 }
 
 eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)

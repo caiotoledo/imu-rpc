@@ -21,8 +21,10 @@ namespace IMUAbstraction
   {
     std::string DeviceAccelScalePath;
     std::string DeviceGyroScalePath;
+    std::string DeviceSampleFreqPath;
     eAccelScale accelScale;
     eGyroScale gyroScale;
+    eSampleFreq sampleFreq;
     axisdata_t axisdata[NUM_AXIS];
   } imudata_t;
 
@@ -75,7 +77,8 @@ namespace IMUAbstraction
       const char *path,
       int device_index,
       eAccelScale accelScale=eAccelScale::Accel_2g,
-      eGyroScale gyroScale=eGyroScale::Gyro_250
+      eGyroScale gyroScale=eGyroScale::Gyro_250,
+      eSampleFreq sampleFreq=eSampleFreq::Freq_500ms
     );
 
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
