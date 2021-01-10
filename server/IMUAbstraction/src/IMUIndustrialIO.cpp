@@ -22,8 +22,6 @@
 
 using namespace IMUAbstraction;
 
-constexpr int SAMPLE_FREQ = 500;
-
 const std::map<eAccelScale, std::string> mapAccelScale =
 {
   {eAccelScale::Accel_2g,  "0.004785"},
