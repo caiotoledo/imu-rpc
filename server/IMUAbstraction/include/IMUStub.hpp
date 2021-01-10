@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <vector>
 #include <thread>
 
@@ -11,7 +12,7 @@ namespace IMUAbstraction
   class IMUStub : public IIMUAbstraction
   {
   private:
-    bool bThreadNotification;
+    std::atomic<bool> bThreadNotification;
     std::thread thNotification;
     std::vector<std::function<void()>> vecCallback;
 

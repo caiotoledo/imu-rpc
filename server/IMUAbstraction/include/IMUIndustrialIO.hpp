@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <vector>
 
 #include "IIMUAbstraction.hpp"
@@ -36,7 +37,7 @@ namespace IMUAbstraction
     std::string DevicePath;
     imudata_t imu_data;
 
-    bool bThreadSampleValues;
+    std::atomic<bool> bThreadSampleValues;
     std::thread thSampleValues;
 
     /**
