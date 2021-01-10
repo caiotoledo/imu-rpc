@@ -2,7 +2,6 @@
 #include <sstream>
 #include <fstream>
 #include <map>
-#include <thread>
 #include <chrono>
 
 #include <cstdlib>
