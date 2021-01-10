@@ -130,6 +130,11 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
   imu_data.DeviceSampleFreqPath = sSampleFreqPath;
 }
 
+eIMUAbstractionError IMUIndustrialIO::Init(void)
+{
+  return eIMUAbstractionError::eRET_ERROR;
+}
+
 void IMUIndustrialIO::AddUpdateDataCallback(std::function<void()> &&cb)
 {
   vecCallback.push_back(cb);
@@ -310,6 +315,10 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
   }
 
   return ret;
+}
+
+void IMUIndustrialIO::DeInit(void)
+{
 }
 
 IMUIndustrialIO::~IMUIndustrialIO()

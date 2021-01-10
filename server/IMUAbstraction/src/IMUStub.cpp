@@ -98,6 +98,11 @@ double IMUStub::GetRandomGyro(void)
   return ret;
 }
 
+eIMUAbstractionError IMUStub::Init(void)
+{
+  return eIMUAbstractionError::eRET_ERROR;
+}
+
 void IMUStub::AddUpdateDataCallback(std::function<void()> &&cb)
 {
   vecCallback.push_back(cb);
@@ -176,6 +181,10 @@ eIMUAbstractionError IMUStub::GetRawGyro(eAxis axis, double &val)
   }
 
   return ret;
+}
+
+void IMUStub::DeInit(void)
+{
 }
 
 IMUStub::~IMUStub()

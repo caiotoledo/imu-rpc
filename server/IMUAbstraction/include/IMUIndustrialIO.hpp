@@ -81,12 +81,14 @@ namespace IMUAbstraction
       eSampleFreq sampleFreq=eSampleFreq::Freq_500ms
     );
 
+    eIMUAbstractionError Init(void) override;
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError SetSampleFrequency(eSampleFreq freq) override;
     eIMUAbstractionError GetRawAccel(eAxis axis, double &val) override;
     eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(eAxis axis, double &val) override;
     eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
+    void DeInit(void) override;
 
     virtual ~IMUIndustrialIO();
   };
