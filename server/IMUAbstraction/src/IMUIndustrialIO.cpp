@@ -86,6 +86,14 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
     auto sGyroPath = sDevicePath;
     sGyroPath.append("in_anglvel_" + sAxis + "_raw");
     imu_data.axisdata[index].DeviceGyroPath = sGyroPath;
+
+    auto sAccelEnPath = sDevicePath;
+    sAccelEnPath.append("scan_elements/in_accel_" + sAxis + "_en");
+    imu_data.axisdata[index].DeviceAccelBufferEnPath = sAccelEnPath;
+
+    auto sGyroEnPath = sDevicePath;
+    sGyroEnPath.append("scan_elements/in_anglvel_" + sAxis + "_en");
+    imu_data.axisdata[index].DeviceGyroBufferEnPath = sGyroEnPath;
   }
 
   auto sAccelScalePath = sDevicePath;
@@ -99,6 +107,10 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
   auto sSampleFreqPath = sDevicePath;
   sSampleFreqPath.append("sampling_frequency");
   imu_data.paths.DeviceSampleFreqPath = sSampleFreqPath;
+
+  auto sBuferEnablePath = sDevicePath;
+  sBuferEnablePath.append("buffer/enable");
+  imu_data.paths.DeviceBufferEnablePath = sBuferEnablePath;
 }
 
 eIMUAbstractionError IMUIndustrialIO::Init(void)

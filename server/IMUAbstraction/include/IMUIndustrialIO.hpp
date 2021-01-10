@@ -16,13 +16,16 @@ namespace IMUAbstraction
     std::string DeviceAccelScalePath;
     std::string DeviceGyroScalePath;
     std::string DeviceSampleFreqPath;
+    std::string DeviceBufferEnablePath;
   } imupathdata_t;
 
   typedef struct axisdata_s
   {
     std::string DeviceAccelPath;
+    std::string DeviceAccelBufferEnPath;
     double accel;
     std::string DeviceGyroPath;
+    std::string DeviceGyroBufferEnPath;
     double gyro;
   } axisdata_t;
 
