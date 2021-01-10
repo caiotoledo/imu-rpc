@@ -58,40 +58,11 @@ IMUIndustrialIO::IMUIndustrialIO(
   eSampleFreq sampleFreq) :
   DevicePath(path)
 {
-  DevicePath.append("/iio:device" + std::to_string(device_index) + "/");
-  this->InitializePaths(DevicePath);
+  this->DevicePath.append("/iio:device" + std::to_string(device_index) + "/");
 
-  /* Set default precision */
-  this->SetAccelScale(accelScale);
-  this->SetGyroScale(gyroScale);
-  this->SetSampleFrequency(sampleFreq);
-
-  bThreadSampleValues = true;
-  auto sampleValues = [this](int sample_freq)
-  {
-    LOGDEBUG("Starting Sample Values Thread [Sample Freq %d]", sample_freq);
-    while (bThreadSampleValues)
-    {
-      auto start = std::chrono::high_resolution_clock::now();
-
-      for(auto &val : imu_data.axisdata)
-      {
-        val.accel = this->GetValueInFile<double>(val.DeviceAccelPath.c_str());
-        val.gyro = this->GetValueInFile<double>(val.DeviceGyroPath.c_str());
-      }
-      this->NotifyUpdateData();
-
-      auto stop = std::chrono::high_resolution_clock::now();
-      auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-      if (duration.count() < sample_freq)
-      {
-        std::this_thread::sleep_for(std::chrono::milliseconds(sample_freq-duration.count()));
-      }
-    }
-    LOGDEBUG("Finishing Sample Values Thread");
-  };
-  auto freq = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
-  thSampleValues = std::thread(sampleValues, freq);
+  this->imu_data.accelScale = accelScale;
+  this->imu_data.gyroScale = gyroScale;
+  this->imu_data.sampleFreq = sampleFreq;
 }
 
 void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
@@ -132,7 +103,53 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
 
 eIMUAbstractionError IMUIndustrialIO::Init(void)
 {
-  return eIMUAbstractionError::eRET_ERROR;
+  auto ret = eIMUAbstractionError::eRET_OK;
+
+  this->InitializePaths(this->DevicePath);
+
+  /* Set default precision */
+  auto retAccel = static_cast<int>(this->SetAccelScale(imu_data.accelScale));
+  auto retGyro = static_cast<int>(this->SetGyroScale(imu_data.gyroScale));
+  auto retSample = static_cast<int>(this->SetSampleFrequency(imu_data.sampleFreq));
+  ret = static_cast<eIMUAbstractionError>(retAccel + retGyro + retSample);
+
+  /* Initialize Sampling IMU Thread if needed */
+  if ((!thSampleValues.joinable()) && (ret == eIMUAbstractionError::eRET_OK))
+  {
+    bThreadSampleValues = true;
+    auto sampleValues = [this](int sample_freq)
+    {
+      LOGDEBUG("Starting Sample Values Thread [Sample Freq %d]", sample_freq);
+      while (bThreadSampleValues)
+      {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        for(auto &val : imu_data.axisdata)
+        {
+          val.accel = this->GetValueInFile<double>(val.DeviceAccelPath.c_str());
+          val.gyro = this->GetValueInFile<double>(val.DeviceGyroPath.c_str());
+        }
+        this->NotifyUpdateData();
+
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+        if (duration.count() < sample_freq)
+        {
+          std::this_thread::sleep_for(std::chrono::milliseconds(sample_freq-duration.count()));
+        }
+      }
+      LOGDEBUG("Finishing Sample Values Thread");
+    };
+    auto freq = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
+    thSampleValues = std::thread(sampleValues, freq);
+    if (!thSampleValues.joinable())
+    {
+      /* Thread not initialized */
+      ret = eIMUAbstractionError::eRET_ERROR;
+    }
+  }
+
+  return ret;
 }
 
 void IMUIndustrialIO::AddUpdateDataCallback(std::function<void()> &&cb)
@@ -319,13 +336,14 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
 
 void IMUIndustrialIO::DeInit(void)
 {
-}
-
-IMUIndustrialIO::~IMUIndustrialIO()
-{
   if (thSampleValues.joinable())
   {
     bThreadSampleValues = false;
     thSampleValues.join();
   }
+}
+
+IMUIndustrialIO::~IMUIndustrialIO()
+{
+  this->DeInit();
 }
