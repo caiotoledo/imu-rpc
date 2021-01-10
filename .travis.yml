@@ -34,10 +34,9 @@ before_script:
   - g++ --version
   - cmake --version
 
-jobs:
+matrix:
   include:
-    - stage: "Test local"
-      script:
+    - script:
         # Release Build project
         - mkdir -p .build_release/ && cd .build_release/
         - cmake -DCMAKE_BUILD_TYPE=Release ../
@@ -61,8 +60,7 @@ jobs:
         - imu-client -a -g -t 3
         - killall imu-daemon
         - sleep 1
-    - stage: "Static analyzer"
-      script:
+    - script:
         # Static Analysis Build
         - mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
         - scan-build cmake ../
