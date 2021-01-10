@@ -40,7 +40,7 @@ namespace IMUAbstraction
 
   class IMUIndustrialIO : public IIMUAbstraction
   {
-  private:
+  protected:
     std::vector<std::function<void()>> vecCallback;
 
     std::string DevicePath;
