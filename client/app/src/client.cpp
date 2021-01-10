@@ -19,8 +19,8 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
   for (size_t i = 0; i < NUM_AXIS; i++)
   {
     const std::map<int, std::string> mapAxis = { {0, "X"}, {1, "Y"}, {2, "Z"}, };
-    double valAccel;
-    double valGyro;
+    double valAccel = 0;
+    double valGyro = 0;
 
     /* Sample data from client */
     if (bAccel)
