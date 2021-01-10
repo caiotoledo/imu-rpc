@@ -34,7 +34,7 @@ namespace IMUAbstraction
   public:
     IMUStub(
       eAccelScale accelScale=eAccelScale::Accel_2g,
-      eGyroScale gyroScale=eGyroScale::Gyro_250,
+      eGyroScale gyroScale=eGyroScale::Gyro_250dps,
       eSampleFreq sampleFreq=eSampleFreq::Freq_500ms
     );
 

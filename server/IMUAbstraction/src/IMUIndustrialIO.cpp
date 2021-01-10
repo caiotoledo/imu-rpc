@@ -34,10 +34,10 @@ const std::map<eAccelScale, std::string> mapAccelScale =
 
 const std::map<eGyroScale, std::string> mapGyroScale =
 {
-  {eGyroScale::Gyro_250,  "0.001064724"},
-  {eGyroScale::Gyro_500,  "0.000532362"},
-  {eGyroScale::Gyro_1000, "0.000266181"},
-  {eGyroScale::Gyro_2000, "0.000133090"},
+  {eGyroScale::Gyro_250dps,  "0.001064724"},
+  {eGyroScale::Gyro_500dps,  "0.000532362"},
+  {eGyroScale::Gyro_1000dps, "0.000266181"},
+  {eGyroScale::Gyro_2000dps, "0.000133090"},
 };
 
 const std::map<eSampleFreq, int> mapSampleFreq =

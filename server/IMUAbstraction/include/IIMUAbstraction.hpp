@@ -24,10 +24,10 @@ namespace IMUAbstraction
   };
 
   enum class eGyroScale {
-    Gyro_250,
-    Gyro_500,
-    Gyro_1000,
-    Gyro_2000,
+    Gyro_250dps,
+    Gyro_500dps,
+    Gyro_1000dps,
+    Gyro_2000dps,
   };
 
   enum class eSampleFreq {
