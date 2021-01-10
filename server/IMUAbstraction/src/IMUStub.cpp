@@ -91,6 +91,11 @@ void IMUStub::AddUpdateDataCallback(std::function<void()> &&cb)
   vecCallback.push_back(cb);
 }
 
+eIMUAbstractionError IMUStub::SetSampleFrequency(eSampleFreq freq)
+{
+  return eIMUAbstractionError::eRET_ERROR;
+}
+
 eIMUAbstractionError IMUStub::SetAccelScale(eAccelScale scale)
 {
   this->accelScale = scale;

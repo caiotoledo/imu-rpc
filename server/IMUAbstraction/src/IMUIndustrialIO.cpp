@@ -173,6 +173,11 @@ eIMUAbstractionError IMUIndustrialIO::SetValueInFile(const char *path, T val)
   return ret;
 }
 
+eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
+{
+  return eIMUAbstractionError::eRET_ERROR;
+}
+
 eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
