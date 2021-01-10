@@ -17,6 +17,7 @@ namespace IMUAbstraction
 
     eAccelScale accelScale;
     eGyroScale gyroScale;
+    eSampleFreq sampleFreq;
 
     template <typename T>
     T GetAccelScale();
@@ -24,11 +25,18 @@ namespace IMUAbstraction
     template <typename T>
     T GetGyroScale();
 
+    template <typename T>
+    T GetSampleFrequency();
+
     double GetRandomAccel(void);
     double GetRandomGyro(void);
 
   public:
-    IMUStub(eAccelScale accelScale=eAccelScale::Accel_2g, eGyroScale gyroScale=eGyroScale::Gyro_250);
+    IMUStub(
+      eAccelScale accelScale=eAccelScale::Accel_2g,
+      eGyroScale gyroScale=eGyroScale::Gyro_250,
+      eSampleFreq sampleFreq=eSampleFreq::Freq_500ms
+    );
 
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError SetSampleFrequency(eSampleFreq freq) override;
