@@ -30,6 +30,15 @@ namespace IMUAbstraction
     Gyro_2000,
   };
 
+  enum class eSampleFreq {
+    Freq_10ms,
+    Freq_20ms,
+    Freq_50ms,
+    Freq_100ms,
+    Freq_200ms,
+    Freq_500ms,
+  };
+
   class IIMUAbstraction
   {
   public:
@@ -41,6 +50,14 @@ namespace IMUAbstraction
      * @param cb Function callback
      */
     virtual void AddUpdateDataCallback(std::function<void()> &&cb) = 0;
+
+    /**
+     * @brief Set Sample Frequency in ms
+     *
+     * @param freq Sample period in ms, ref #eSampleFreq
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
+     */
+    virtual eIMUAbstractionError SetSampleFrequency(eSampleFreq freq) = 0;
 
     /**
      * @brief Get raw accelerometer data

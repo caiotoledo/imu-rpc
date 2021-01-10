@@ -11,7 +11,6 @@
 
 using namespace IMUAbstraction;
 
-constexpr int NOTIFICATION_DELAY = 1000;
 constexpr int MAX_AXIS = 3;
 
 double accel[MAX_AXIS] = {0};
@@ -33,12 +32,23 @@ const std::map<eGyroScale, int> mapGyroScale =
   {eGyroScale::Gyro_2000, 2000*100},
 };
 
-IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale)
+const std::map<eSampleFreq, int> mapSampleFreq =
+{
+  {eSampleFreq::Freq_10ms,  10},
+  {eSampleFreq::Freq_20ms,  20},
+  {eSampleFreq::Freq_50ms,  50},
+  {eSampleFreq::Freq_100ms, 100},
+  {eSampleFreq::Freq_200ms, 200},
+  {eSampleFreq::Freq_500ms, 500},
+};
+
+IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq)
 {
   srand((unsigned) time(0));
 
   this->SetAccelScale(accelScale);
   this->SetGyroScale(gyroScale);
+  this->SetSampleFrequency(sampleFreq);
 
   bThreadNotification = true;
   auto func = [this]()
@@ -55,7 +65,9 @@ IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale)
       {
         cb();
       }
-      std::this_thread::sleep_for(std::chrono::milliseconds(NOTIFICATION_DELAY));
+
+      auto sample_delay = this->GetSampleFrequency<int>();
+      std::this_thread::sleep_for(std::chrono::milliseconds(sample_delay));
     }
   };
   thNotification = std::thread(func);
@@ -91,6 +103,14 @@ void IMUStub::AddUpdateDataCallback(std::function<void()> &&cb)
   vecCallback.push_back(cb);
 }
 
+eIMUAbstractionError IMUStub::SetSampleFrequency(eSampleFreq freq)
+{
+  this->sampleFreq = freq;
+  LOGDEBUG("Set Frequency Scale [%d]->[%d ms]", freq, static_cast<int>(mapSampleFreq.at(this->sampleFreq)));
+
+  return eIMUAbstractionError::eRET_OK;
+}
+
 eIMUAbstractionError IMUStub::SetAccelScale(eAccelScale scale)
 {
   this->accelScale = scale;
@@ -114,6 +134,11 @@ template <typename T>
 T IMUStub::GetGyroScale()
 {
   return static_cast<T>(mapGyroScale.at(this->gyroScale));
+}
+template <typename T>
+T IMUStub::GetSampleFrequency()
+{
+  return static_cast<T>(mapSampleFreq.at(this->sampleFreq));
 }
 
 eIMUAbstractionError IMUStub::GetRawAccel(eAxis axis, double &val)
