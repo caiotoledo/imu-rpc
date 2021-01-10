@@ -51,4 +51,4 @@ namespace IMUAbstraction
     virtual ~IMUStub();
   };
 
-} // namespace IMUServer
+} // namespace IMUAbstraction

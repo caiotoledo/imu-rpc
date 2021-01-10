@@ -94,4 +94,4 @@ namespace IMUAbstraction
     virtual ~IMUIndustrialIO();
   };
 
-} // namespace IMUServer
+} // namespace IMUAbstraction

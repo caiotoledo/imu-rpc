@@ -106,4 +106,4 @@ namespace IMUAbstraction
     virtual ~IIMUAbstraction() = default;
   };
 
-} // namespace IMUServer
+} // namespace IMUAbstraction
