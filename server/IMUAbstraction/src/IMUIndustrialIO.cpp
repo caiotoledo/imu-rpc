@@ -225,14 +225,18 @@ eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
   if (mapSampleFreq.find(freq) != mapSampleFreq.end())
   {
     auto value = mapSampleFreq.at(freq);
-    ret = this->SetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str(), value);
-    LOGDEBUG("Set Sample Frequency [%d]->[%d ms]", freq, value);
-
-    auto freqInFile = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
-    if (freqInFile != value)
+    auto iScaleFileBefore = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
+    if (iScaleFileBefore != value)
     {
-      LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
-      ret = eIMUAbstractionError::eRET_ERROR;
+      ret = this->SetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str(), value);
+      LOGDEBUG("Set Sample Frequency [%d]->[%d ms]", freq, value);
+
+      auto freqInFile = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
+      if (freqInFile != value)
+      {
+        LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
+        ret = eIMUAbstractionError::eRET_ERROR;
+      }
     }
   }
   else
@@ -250,15 +254,19 @@ eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
   if (mapAccelScale.find(scale) != mapAccelScale.end())
   {
     auto val = mapAccelScale.at(scale);
-    LOGDEBUG("Set Accel Scale [%d]->[%s]", scale, val.c_str());
-    ret = this->SetValueInFile(imu_data.paths.DeviceAccelScalePath.c_str(), val);
-
-    /* Verify if the value was written into the file */
-    auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceAccelScalePath.c_str());
-    if (sScale.compare(val) != 0)
+    auto sScaleFileBefore = this->GetValueInFile<std::string>(imu_data.paths.DeviceAccelScalePath.c_str());
+    if (sScaleFileBefore.compare(val) != 0)
     {
-      ret = eIMUAbstractionError::eRET_ERROR;
-      LOGERROR("Accel Scale not accepted [%s]", val.c_str());
+      LOGDEBUG("Set Accel Scale [%d]->[%s]", scale, val.c_str());
+      ret = this->SetValueInFile(imu_data.paths.DeviceAccelScalePath.c_str(), val);
+
+      /* Verify if the value was written into the file */
+      auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceAccelScalePath.c_str());
+      if (sScale.compare(val) != 0)
+      {
+        ret = eIMUAbstractionError::eRET_ERROR;
+        LOGERROR("Accel Scale not accepted [%s]", val.c_str());
+      }
     }
   }
   else
@@ -284,15 +292,19 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
   if (mapGyroScale.find(scale) != mapGyroScale.end())
   {
     auto val = mapGyroScale.at(scale);
-    LOGDEBUG("Set Gyro Scale [%d]->[%s]", scale, val.c_str());
-    ret = this->SetValueInFile(imu_data.paths.DeviceGyroScalePath.c_str(), val);
-
-    /* Verify if the value was written into the file */
-    auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceGyroScalePath.c_str());
-    if (sScale.compare(val) != 0)
+    auto sScaleFileBefore = this->GetValueInFile<std::string>(imu_data.paths.DeviceGyroScalePath.c_str());
+    if (sScaleFileBefore.compare(val) != 0)
     {
-      ret = eIMUAbstractionError::eRET_ERROR;
-      LOGERROR("Gyro Scale not accepted [%s]", val.c_str());
+      LOGDEBUG("Set Gyro Scale [%d]->[%s]", scale, val.c_str());
+      ret = this->SetValueInFile(imu_data.paths.DeviceGyroScalePath.c_str(), val);
+
+      /* Verify if the value was written into the file */
+      auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceGyroScalePath.c_str());
+      if (sScale.compare(val) != 0)
+      {
+        ret = eIMUAbstractionError::eRET_ERROR;
+        LOGERROR("Gyro Scale not accepted [%s]", val.c_str());
+      }
     }
   }
   else
