@@ -42,35 +42,9 @@ const std::map<eSampleFreq, int> mapSampleFreq =
   {eSampleFreq::Freq_500ms, 500},
 };
 
-IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq)
+IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq) :
+  accelScale(accelScale), gyroScale(gyroScale), sampleFreq(sampleFreq)
 {
-  srand((unsigned) time(0));
-
-  this->SetAccelScale(accelScale);
-  this->SetGyroScale(gyroScale);
-  this->SetSampleFrequency(sampleFreq);
-
-  bThreadNotification = true;
-  auto func = [this]()
-  {
-    while (bThreadNotification)
-    {
-      for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
-      {
-        accel[i] = this->GetRandomAccel();
-        gyro[i] = this->GetRandomGyro();
-      }
-
-      for(auto &cb : vecCallback)
-      {
-        cb();
-      }
-
-      auto sample_delay = this->GetSampleFrequency<int>();
-      std::this_thread::sleep_for(std::chrono::milliseconds(sample_delay));
-    }
-  };
-  thNotification = std::thread(func);
 }
 
 double IMUStub::GetRandomAccel(void)
@@ -94,6 +68,53 @@ double IMUStub::GetRandomGyro(void)
   double ret = (r/100);
 
   ret = signal ? ret : (-ret);
+
+  return ret;
+}
+
+eIMUAbstractionError IMUStub::Init(void)
+{
+  auto ret = eIMUAbstractionError::eRET_OK;
+
+  /* Random Seed Initialization */
+  srand((unsigned) time(0));
+
+  /* IMU Configuration */
+  auto retAccel = static_cast<int>(this->SetAccelScale(this->accelScale));
+  auto retGyro = static_cast<int>(this->SetGyroScale(this->gyroScale));
+  auto retSample = static_cast<int>(this->SetSampleFrequency(this->sampleFreq));
+  ret = static_cast<eIMUAbstractionError>(retAccel + retGyro + retSample);
+
+  /* Initialize Sampling IMU Thread if needed */
+  if ((!thNotification.joinable()) && (ret == eIMUAbstractionError::eRET_OK))
+  {
+    bThreadNotification = true;
+    auto func = [this]()
+    {
+      while (bThreadNotification)
+      {
+        for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
+        {
+          accel[i] = this->GetRandomAccel();
+          gyro[i] = this->GetRandomGyro();
+        }
+
+        for(auto &cb : vecCallback)
+        {
+          cb();
+        }
+
+        auto sample_delay = this->GetSampleFrequency<int>();
+        std::this_thread::sleep_for(std::chrono::milliseconds(sample_delay));
+      }
+    };
+    thNotification = std::thread(func);
+    if (!thNotification.joinable())
+    {
+      /* Thread not initialized */
+      ret = eIMUAbstractionError::eRET_ERROR;
+    }
+  }
 
   return ret;
 }
@@ -178,11 +199,16 @@ eIMUAbstractionError IMUStub::GetRawGyro(eAxis axis, double &val)
   return ret;
 }
 
-IMUStub::~IMUStub()
+void IMUStub::DeInit(void)
 {
   if (thNotification.joinable())
   {
     bThreadNotification = false;
     thNotification.join();
   }
+}
+
+IMUStub::~IMUStub()
+{
+  this->DeInit();
 }

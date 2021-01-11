@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <vector>
 #include <thread>
 
@@ -11,7 +12,7 @@ namespace IMUAbstraction
   class IMUStub : public IIMUAbstraction
   {
   private:
-    bool bThreadNotification;
+    std::atomic<bool> bThreadNotification;
     std::thread thNotification;
     std::vector<std::function<void()>> vecCallback;
 
@@ -38,14 +39,16 @@ namespace IMUAbstraction
       eSampleFreq sampleFreq=eSampleFreq::Freq_500ms
     );
 
+    eIMUAbstractionError Init(void) override;
     void AddUpdateDataCallback(std::function<void()> &&cb) override;
     eIMUAbstractionError SetSampleFrequency(eSampleFreq freq) override;
     eIMUAbstractionError GetRawAccel(eAxis axis, double &val) override;
     eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(eAxis axis, double &val) override;
     eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
+    void DeInit(void) override;
 
     virtual ~IMUStub();
   };
 
-} // namespace IMUServer
+} // namespace IMUAbstraction

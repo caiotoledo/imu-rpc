@@ -45,6 +45,11 @@ namespace IMUAbstraction
     IIMUAbstraction() = default;
 
     /**
+     * @brief Initialize IMU Abstraction
+     */
+    virtual eIMUAbstractionError Init(void) = 0;
+
+    /**
      * @brief Set callback notification which is trigger whenever the IMU data was updated
      *
      * @param cb Function callback
@@ -93,7 +98,12 @@ namespace IMUAbstraction
      */
     virtual eIMUAbstractionError SetGyroScale(eGyroScale scale) = 0;
 
+    /**
+     * @brief DeInitialize IMU Abstraction
+     */
+    virtual void DeInit(void) = 0;
+
     virtual ~IIMUAbstraction() = default;
   };
 
-} // namespace IMUServer
+} // namespace IMUAbstraction

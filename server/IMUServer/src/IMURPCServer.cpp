@@ -25,8 +25,12 @@ eIMUServerError IMURPCServer::StartServer(void)
 {
   auto ret = eIMUServerError::eRET_ERROR;
 
-  auto retServer = instanceServer->Init();
-  if (retServer != RPCServer::eRPCError::eRET_OK)
+  /* Initialize Instances */
+  auto retImu = static_cast<int>(instanceImu->Init());
+  auto retServer = static_cast<int>(instanceServer->Init());
+  auto retInstance = retImu + retServer;
+
+  if (retInstance != 0)
   {
     LOGERROR("Failed Server initialization [%d]", retServer);
     ret = eIMUServerError::eRET_ERROR;
