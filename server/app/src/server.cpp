@@ -113,10 +113,24 @@ int main(int argc, char const *argv[])
   if (path_isvalid(DEVICE_PATH) == true)
   {
 #ifdef IMU_BUFFER_IIO
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUBufferIIO>(DEVICE_PATH, 0);
+    imuAbstraction =
+      std::make_shared<IMUAbstraction::IMUBufferIIO>(
+        DEVICE_PATH,
+        0,
+        IMUAbstraction::eAccelScale::Accel_2g,
+        IMUAbstraction::eGyroScale::Gyro_250dps,
+        IMUAbstraction::eSampleFreq::Freq_10ms
+      );
     LOGDEBUG("Using IMU Industrial IO Buffering");
 #else
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUIndustrialIO>(DEVICE_PATH, 0);
+    imuAbstraction =
+      std::make_shared<IMUAbstraction::IMUIndustrialIO>(
+        DEVICE_PATH,
+        0,
+        IMUAbstraction::eAccelScale::Accel_2g,
+        IMUAbstraction::eGyroScale::Gyro_250dps,
+        IMUAbstraction::eSampleFreq::Freq_500ms
+      );
     LOGDEBUG("Using IMUIndustrialIO");
 #endif
   }
