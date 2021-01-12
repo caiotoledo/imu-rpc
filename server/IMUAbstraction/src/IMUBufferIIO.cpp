@@ -76,8 +76,8 @@ void IMUBufferIIO::SamplingIMUValuesThread(uint16_t sample_freq)
 
       FD_ZERO(&rfds);
       FD_SET(fdBufDevice, &rfds);
-      tv.tv_sec = 0;
-      tv.tv_usec = sample_freq*1000;
+      tv.tv_sec = 1;
+      tv.tv_usec = 0;
 
       auto retselect = select(fdBufDevice+1, &rfds, NULL, NULL, &tv);
       if (retselect == 1)
@@ -124,7 +124,8 @@ void IMUBufferIIO::SamplingIMUValuesThread(uint16_t sample_freq)
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     if (duration.count() < sample_freq)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(sample_freq-duration.count()));
+      auto delay = sample_freq-duration.count();
+      std::this_thread::sleep_for(std::chrono::milliseconds(delay));
     }
   }
 
