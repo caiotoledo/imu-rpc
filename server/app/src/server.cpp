@@ -15,10 +15,14 @@
 
 #include <IMUStub.hpp>
 #include <IMUIndustrialIO.hpp>
+#include <IMUBufferIIO.hpp>
 
 #include "argparser.hpp"
 
 #define DEVICE_PATH   "/sys/bus/iio/devices/"
+
+/* Using IMU Industrial IO Buffering */
+#define IMU_BUFFER_IIO
 
 constexpr auto DELAY_CHILD_CREATION = std::chrono::milliseconds(1);
 
@@ -108,8 +112,27 @@ int main(int argc, char const *argv[])
 
   if (path_isvalid(DEVICE_PATH) == true)
   {
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUIndustrialIO>(DEVICE_PATH, 0);
+#ifdef IMU_BUFFER_IIO
+    imuAbstraction =
+      std::make_shared<IMUAbstraction::IMUBufferIIO>(
+        DEVICE_PATH,
+        0,
+        IMUAbstraction::eAccelScale::Accel_2g,
+        IMUAbstraction::eGyroScale::Gyro_250dps,
+        IMUAbstraction::eSampleFreq::Freq_10ms
+      );
+    LOGDEBUG("Using IMU Industrial IO Buffering");
+#else
+    imuAbstraction =
+      std::make_shared<IMUAbstraction::IMUIndustrialIO>(
+        DEVICE_PATH,
+        0,
+        IMUAbstraction::eAccelScale::Accel_2g,
+        IMUAbstraction::eGyroScale::Gyro_250dps,
+        IMUAbstraction::eSampleFreq::Freq_500ms
+      );
     LOGDEBUG("Using IMUIndustrialIO");
+#endif
   }
   else
   {

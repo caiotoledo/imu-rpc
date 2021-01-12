@@ -2,7 +2,6 @@
 #include <sstream>
 #include <fstream>
 #include <map>
-#include <thread>
 #include <chrono>
 
 #include <cstdlib>
@@ -58,6 +57,8 @@ IMUIndustrialIO::IMUIndustrialIO(
 {
   this->DevicePath.append("/iio:device" + std::to_string(device_index) + "/");
 
+  this->imu_data.paths.DeviceBufferPath = std::string("/dev/iio:device" + std::to_string(device_index));
+
   this->imu_data.accelScale = accelScale;
   this->imu_data.gyroScale = gyroScale;
   this->imu_data.sampleFreq = sampleFreq;
@@ -84,19 +85,31 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
     auto sGyroPath = sDevicePath;
     sGyroPath.append("in_anglvel_" + sAxis + "_raw");
     imu_data.axisdata[index].DeviceGyroPath = sGyroPath;
+
+    auto sAccelEnPath = sDevicePath;
+    sAccelEnPath.append("scan_elements/in_accel_" + sAxis + "_en");
+    imu_data.axisdata[index].DeviceAccelBufferEnPath = sAccelEnPath;
+
+    auto sGyroEnPath = sDevicePath;
+    sGyroEnPath.append("scan_elements/in_anglvel_" + sAxis + "_en");
+    imu_data.axisdata[index].DeviceGyroBufferEnPath = sGyroEnPath;
   }
 
   auto sAccelScalePath = sDevicePath;
   sAccelScalePath.append("in_accel_scale");
-  imu_data.DeviceAccelScalePath = sAccelScalePath;
+  imu_data.paths.DeviceAccelScalePath = sAccelScalePath;
 
   auto sGyroScalePath = sDevicePath;
   sGyroScalePath.append("in_anglvel_scale");
-  imu_data.DeviceGyroScalePath = sGyroScalePath;
+  imu_data.paths.DeviceGyroScalePath = sGyroScalePath;
 
   auto sSampleFreqPath = sDevicePath;
   sSampleFreqPath.append("sampling_frequency");
-  imu_data.DeviceSampleFreqPath = sSampleFreqPath;
+  imu_data.paths.DeviceSampleFreqPath = sSampleFreqPath;
+
+  auto sBuferEnablePath = sDevicePath;
+  sBuferEnablePath.append("buffer/enable");
+  imu_data.paths.DeviceBufferEnablePath = sBuferEnablePath;
 }
 
 eIMUAbstractionError IMUIndustrialIO::Init(void)
@@ -138,7 +151,7 @@ eIMUAbstractionError IMUIndustrialIO::Init(void)
       }
       LOGDEBUG("Finishing Sample Values Thread");
     };
-    auto freq = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
+    auto freq = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
     thSampleValues = std::thread(sampleValues, freq);
     if (!thSampleValues.joinable())
     {
@@ -212,14 +225,18 @@ eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
   if (mapSampleFreq.find(freq) != mapSampleFreq.end())
   {
     auto value = mapSampleFreq.at(freq);
-    ret = this->SetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str(), value);
-    LOGDEBUG("Set Sample Frequency [%d]->[%d ms]", freq, value);
-
-    auto freqInFile = this->GetValueInFile<int>(imu_data.DeviceSampleFreqPath.c_str());
-    if (freqInFile != value)
+    auto iScaleFileBefore = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
+    if (iScaleFileBefore != value)
     {
-      LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
-      ret = eIMUAbstractionError::eRET_ERROR;
+      ret = this->SetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str(), value);
+      LOGDEBUG("Set Sample Frequency [%d]->[%d ms]", freq, value);
+
+      auto freqInFile = this->GetValueInFile<int>(imu_data.paths.DeviceSampleFreqPath.c_str());
+      if (freqInFile != value)
+      {
+        LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
+        ret = eIMUAbstractionError::eRET_ERROR;
+      }
     }
   }
   else
@@ -237,15 +254,19 @@ eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
   if (mapAccelScale.find(scale) != mapAccelScale.end())
   {
     auto val = mapAccelScale.at(scale);
-    LOGDEBUG("Set Accel Scale [%d]->[%s]", scale, val.c_str());
-    ret = this->SetValueInFile(imu_data.DeviceAccelScalePath.c_str(), val);
-
-    /* Verify if the value was written into the file */
-    auto sScale = this->GetValueInFile<std::string>(imu_data.DeviceAccelScalePath.c_str());
-    if (sScale.compare(val) != 0)
+    auto sScaleFileBefore = this->GetValueInFile<std::string>(imu_data.paths.DeviceAccelScalePath.c_str());
+    if (sScaleFileBefore.compare(val) != 0)
     {
-      ret = eIMUAbstractionError::eRET_ERROR;
-      LOGERROR("Accel Scale not accepted [%s]", val.c_str());
+      LOGDEBUG("Set Accel Scale [%d]->[%s]", scale, val.c_str());
+      ret = this->SetValueInFile(imu_data.paths.DeviceAccelScalePath.c_str(), val);
+
+      /* Verify if the value was written into the file */
+      auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceAccelScalePath.c_str());
+      if (sScale.compare(val) != 0)
+      {
+        ret = eIMUAbstractionError::eRET_ERROR;
+        LOGERROR("Accel Scale not accepted [%s]", val.c_str());
+      }
     }
   }
   else
@@ -271,15 +292,19 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
   if (mapGyroScale.find(scale) != mapGyroScale.end())
   {
     auto val = mapGyroScale.at(scale);
-    LOGDEBUG("Set Gyro Scale [%d]->[%s]", scale, val.c_str());
-    ret = this->SetValueInFile(imu_data.DeviceGyroScalePath.c_str(), val);
-
-    /* Verify if the value was written into the file */
-    auto sScale = this->GetValueInFile<std::string>(imu_data.DeviceGyroScalePath.c_str());
-    if (sScale.compare(val) != 0)
+    auto sScaleFileBefore = this->GetValueInFile<std::string>(imu_data.paths.DeviceGyroScalePath.c_str());
+    if (sScaleFileBefore.compare(val) != 0)
     {
-      ret = eIMUAbstractionError::eRET_ERROR;
-      LOGERROR("Gyro Scale not accepted [%s]", val.c_str());
+      LOGDEBUG("Set Gyro Scale [%d]->[%s]", scale, val.c_str());
+      ret = this->SetValueInFile(imu_data.paths.DeviceGyroScalePath.c_str(), val);
+
+      /* Verify if the value was written into the file */
+      auto sScale = this->GetValueInFile<std::string>(imu_data.paths.DeviceGyroScalePath.c_str());
+      if (sScale.compare(val) != 0)
+      {
+        ret = eIMUAbstractionError::eRET_ERROR;
+        LOGERROR("Gyro Scale not accepted [%s]", val.c_str());
+      }
     }
   }
   else

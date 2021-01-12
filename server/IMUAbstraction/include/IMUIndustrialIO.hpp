@@ -2,6 +2,7 @@
 
 #include <atomic>
 #include <vector>
+#include <thread>
 
 #include "IIMUAbstraction.hpp"
 
@@ -10,19 +11,28 @@ namespace IMUAbstraction
 
   constexpr int NUM_AXIS = 3;
 
+  typedef struct imupathdata_s
+  {
+    std::string DeviceBufferPath;
+    std::string DeviceAccelScalePath;
+    std::string DeviceGyroScalePath;
+    std::string DeviceSampleFreqPath;
+    std::string DeviceBufferEnablePath;
+  } imupathdata_t;
+
   typedef struct axisdata_s
   {
     std::string DeviceAccelPath;
+    std::string DeviceAccelBufferEnPath;
     double accel;
     std::string DeviceGyroPath;
+    std::string DeviceGyroBufferEnPath;
     double gyro;
   } axisdata_t;
 
   typedef struct imudata_s
   {
-    std::string DeviceAccelScalePath;
-    std::string DeviceGyroScalePath;
-    std::string DeviceSampleFreqPath;
+    imupathdata_s paths;
     eAccelScale accelScale;
     eGyroScale gyroScale;
     eSampleFreq sampleFreq;
@@ -31,7 +41,7 @@ namespace IMUAbstraction
 
   class IMUIndustrialIO : public IIMUAbstraction
   {
-  private:
+  protected:
     std::vector<std::function<void()>> vecCallback;
 
     std::string DevicePath;
