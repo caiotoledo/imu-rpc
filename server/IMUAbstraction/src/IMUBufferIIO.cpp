@@ -82,7 +82,8 @@ void IMUBufferIIO::SamplingIMUValuesThread(uint16_t sample_freq)
       auto retselect = select(fdBufDevice+1, &rfds, NULL, NULL, &tv);
       if (retselect == 1)
       {
-        uint8_t val[NUM_AXIS*2*4];
+        /* 6 Bytes for Accel + 6 Bytes for Gyro */
+        uint8_t val[NUM_AXIS*2*2];
 
         auto size_read = read(fdBufDevice, val, sizeof(val));
         if (size_read >= 0)
