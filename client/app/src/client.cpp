@@ -16,6 +16,7 @@ constexpr int NUM_AXIS = 3;
 static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro)
 {
   auto ret = IMUClient::eIMUError::eRET_OK;
+
   for (size_t i = 0; i < NUM_AXIS; i++)
   {
     const std::map<int, std::string> mapAxis = { {0, "X"}, {1, "Y"}, {2, "Z"}, };
@@ -45,8 +46,9 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     sAccel << "Accel[" << std::fixed << std::setprecision(3) << valAccel << "]";
     std::stringstream sGyro;
     sGyro << "Gyro[" << std::fixed << std::setprecision(3) << valGyro << "]";
-    LOGDEBUG("[%s] %-18s %-18s", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str());
+    printf("[%s] %-18s %-18s\n", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str());
   }
+  printf("\n");
 
   return ret;
 }
