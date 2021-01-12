@@ -19,7 +19,7 @@ IMUBufferIIO::IMUBufferIIO(
   eGyroScale gyroScale,
   eSampleFreq sampleFreq
 ) :
-  IMUIndustrialIO(path, device_index)
+  IMUIndustrialIO(path, device_index, accelScale, gyroScale, sampleFreq)
 {
 }
 
