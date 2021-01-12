@@ -8,6 +8,11 @@ namespace IMUAbstraction
   class IMUBufferIIO : public IMUIndustrialIO
   {
   private:
+    /**
+     * @brief Configure Industrial IO buffering
+     *
+     * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
+     */
     eIMUAbstractionError ConfigureBuffering(void);
 
     /**
