@@ -1,3 +1,6 @@
+# Add IMUClient
+add_subdirectory(IMUClient)
+
 # Add DBus Types
 add_subdirectory(DBusTypes)
 
