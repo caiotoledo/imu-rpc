@@ -28,14 +28,14 @@ namespace IMUMath
     virtual eIMUMathError Init(void) = 0;
 
     /**
-     * @brief Get Euler Angles of an axis
+     * @brief Get Euler Angle of an axis
      *
      * @param value Get Angle Value
      * @param axis Desired axis (X = Roll, Y = Pitch, Z = Yaw)
      * @param unit Desired angle unit
      * @return eIMUMathError Returns #eRET_OK when successful, ref #eIMUMathError
      */
-    virtual eIMUMathError GetEulerAngles(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) = 0;
+    virtual eIMUMathError GetEulerAngle(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) = 0;
 
     /**
      * @brief DeInitialize IMU Abstraction

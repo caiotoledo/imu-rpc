@@ -20,7 +20,7 @@ eIMUMathError IMUMathImpl::Init(void)
   return static_cast<eIMUMathError>(this->instanceImu->Init());
 }
 
-eIMUMathError IMUMathImpl::GetEulerAngles(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit)
+eIMUMathError IMUMathImpl::GetEulerAngle(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit)
 {
   auto ret = eIMUMathError::eRET_OK;
   double valueAngle = 0;

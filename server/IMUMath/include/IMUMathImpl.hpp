@@ -18,7 +18,7 @@ namespace IMUMath
     IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu);
 
     eIMUMathError Init(void) override;
-    eIMUMathError GetEulerAngles(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) override;
+    eIMUMathError GetEulerAngle(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) override;
     void DeInit(void) override;
 
     virtual ~IMUMathImpl();
