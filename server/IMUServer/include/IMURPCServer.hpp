@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <IIMUAbstraction.hpp>
+
 #include "IIMUServer.hpp"
 
 namespace IMUServer

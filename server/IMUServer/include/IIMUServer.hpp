@@ -3,7 +3,6 @@
 #include <memory>
 
 #include <IRPCServer.hpp>
-#include <IIMUAbstraction.hpp>
 
 namespace IMUServer
 {
