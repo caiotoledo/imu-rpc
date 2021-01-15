@@ -1,5 +1,7 @@
 #pragma once
 
+#include <IIMUAbstraction.hpp>
+
 namespace IMUMath
 {
 
@@ -26,15 +28,14 @@ namespace IMUMath
     virtual eIMUMathError Init(void) = 0;
 
     /**
-     * @brief Get Euler Angles
+     * @brief Get Euler Angles of an axis
      *
-     * @param axis_x Get Roll axis angle
-     * @param axis_y Get Pitch axis angle
-     * @param axis_z Get Yaw axis angle
+     * @param value Get Angle Value
+     * @param axis Desired axis (X = Roll, Y = Pitch, Z = Yaw)
      * @param unit Desired angle unit
      * @return eIMUMathError Returns #eRET_OK when successful, ref #eIMUMathError
      */
-    virtual eIMUMathError GetEulerAngles(double &axis_x, double &axis_y, double &axis_z, const eAngleUnit &unit) = 0;
+    virtual eIMUMathError GetEulerAngles(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) = 0;
 
     /**
      * @brief DeInitialize IMU Abstraction

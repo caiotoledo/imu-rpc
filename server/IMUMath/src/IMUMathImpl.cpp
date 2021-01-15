@@ -20,9 +20,10 @@ eIMUMathError IMUMathImpl::Init(void)
   return static_cast<eIMUMathError>(this->instanceImu->Init());
 }
 
-eIMUMathError IMUMathImpl::GetEulerAngles(double &axis_x, double &axis_y, double &axis_z, const eAngleUnit &unit)
+eIMUMathError IMUMathImpl::GetEulerAngles(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit)
 {
   auto ret = eIMUMathError::eRET_OK;
+  double valueAngle = 0;
 
   /* Define function to convert Accelerometer Value to Angle rad */
   auto calcAngleRad = [](double catOp, double catAdj)
@@ -47,17 +48,26 @@ eIMUMathError IMUMathImpl::GetEulerAngles(double &axis_x, double &axis_y, double
   }
 
   /* Convert Raw Accelerometer Data to Angle rad */
-  axis_x = calcAngleRad(-valAccel[1], -valAccel[2]); /* atan2(-Y,-Z) */
-  axis_y = calcAngleRad(-valAccel[0], -valAccel[2]); /* atan2(-X,-Z) */
-  axis_z = calcAngleRad(-valAccel[1], -valAccel[0]); /* atan2(-Y,-X) */
+  switch (axis)
+  {
+  case IMUAbstraction::eAxis::X:
+    valueAngle = calcAngleRad(-valAccel[1], -valAccel[2]); /* atan2(-Y,-Z) */
+    break;
+  case IMUAbstraction::eAxis::Y:
+    valueAngle = calcAngleRad(-valAccel[0], -valAccel[2]); /* atan2(-X,-Z) */
+    break;
+  case IMUAbstraction::eAxis::Z:
+    valueAngle = calcAngleRad(-valAccel[1], -valAccel[0]); /* atan2(-Y,-X) */
+    break;
+  default:
+    break;
+  }
 
   /* Convert Angle unit */
   switch (unit)
   {
   case eAngleUnit::eDegrees:
-    axis_x = RAD_TO_DEG(axis_x);
-    axis_y = RAD_TO_DEG(axis_y);
-    axis_z = RAD_TO_DEG(axis_z);
+    value = RAD_TO_DEG(valueAngle);
     break;
   case eAngleUnit::eRadians:
   default:
