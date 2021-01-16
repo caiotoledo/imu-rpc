@@ -13,7 +13,7 @@
 
 constexpr int NUM_AXIS = 3;
 
-static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro)
+static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro, bool bAngle)
 {
   auto ret = IMUClient::eIMUError::eRET_OK;
 
@@ -22,6 +22,7 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     const std::map<int, std::string> mapAxis = { {0, "X"}, {1, "Y"}, {2, "Z"}, };
     double valAccel = 0;
     double valGyro = 0;
+    double valAngle = 0;
 
     /* Sample data from client */
     if (bAccel)
@@ -40,13 +41,23 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
         break;
       }
     }
+    if (bAngle)
+    {
+      ret = client->GetEulerAngle((IMUClient::eAxis)i, IMUClient::eAngleUnit::eDegrees, valAngle);
+      if (ret != IMUClient::eIMUError::eRET_OK)
+      {
+        break;
+      }
+    }
 
     /* Show Axis data */
     std::stringstream sAccel;
     sAccel << "Accel[" << std::fixed << std::setprecision(3) << valAccel << "]";
     std::stringstream sGyro;
     sGyro << "Gyro[" << std::fixed << std::setprecision(3) << valGyro << "]";
-    printf("[%s] %-18s %-18s\n", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str());
+    std::stringstream sAngle;
+    sAngle << "Angle[" << std::fixed << std::setprecision(3) << valAngle << "]";
+    printf("[%s] %-18s %-18s %-18s\n", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str(), sAngle.str().c_str());
   }
   printf("\n");
 
@@ -81,7 +92,7 @@ int main(int argc, char const *argv[])
 
   auto func = [&client, &args]()
   {
-    auto ret = PrintRawValues(client, args.accel, args.gyro);
+    auto ret = PrintRawValues(client, args.accel, args.gyro, args.euler);
     if (ret != IMUClient::eIMUError::eRET_OK)
     {
       LOGERROR("IMU Error [%d]", ((int)ret));

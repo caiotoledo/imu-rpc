@@ -6,6 +6,7 @@ namespace ArgParser
     int timeout;
     bool accel;
     bool gyro;
+    bool euler;
   };
 
   /**

@@ -21,6 +21,7 @@ static struct argp_option options[] = {
   {"timeout", 't', "TOUT", 0, "Define application runtime",           0},
   {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]", 0},
   {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",    0},
+  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",               0},
   { 0 }
 };
 
@@ -38,6 +39,9 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
       case 'g':
         arguments->gyro = true;
       break;
+      case 'e':
+        arguments->euler = true;
+      break;
       case 't':
         {
           std::stringstream strValue;
@@ -49,6 +53,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
       case ARGP_KEY_INIT:
         arguments->accel = false;
         arguments->gyro = false;
+        arguments->euler = false;
         arguments->timeout = -1;
       break;
 

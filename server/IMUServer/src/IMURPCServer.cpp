@@ -5,9 +5,11 @@
 using namespace IMUServer;
 
 IMURPCServer::IMURPCServer(std::shared_ptr<RPCServer::IRPCServer> server,
-                           std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu) :
+                           std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu,
+                           std::shared_ptr<IMUMath::IIMUMath> math) :
 instanceServer(server),
-instanceImu(imu)
+instanceImu(imu),
+instanceMath(math)
 {
   auto cbIMU = [this]()
   {
@@ -28,7 +30,8 @@ eIMUServerError IMURPCServer::StartServer(void)
   /* Initialize Instances */
   auto retImu = static_cast<int>(instanceImu->Init());
   auto retServer = static_cast<int>(instanceServer->Init());
-  auto retInstance = retImu + retServer;
+  auto retMath = static_cast<int>(instanceMath->Init());
+  auto retInstance = retImu + retServer + retMath;
 
   if (retInstance != 0)
   {
@@ -79,14 +82,32 @@ eIMUServerError IMURPCServer::InitGetRawGyro(void)
   return ret;
 }
 
+eIMUServerError IMURPCServer::InitGetEulerAngle(void)
+{
+  auto ret = eIMUServerError::eRET_OK;
+
+  auto func = [this](int axis, int unit)
+  {
+    double val = 0;
+    instanceMath->GetEulerAngle(val, (IMUAbstraction::eAxis)axis, (IMUMath::eAngleUnit)unit);
+    return val;
+  };
+  auto retServer = instanceServer->setGetEulerAngleCallback(func);
+  ret = (retServer == RPCServer::eRPCError::eRET_OK) ? eIMUServerError::eRET_OK : eIMUServerError::eRET_ERROR;
+
+  return ret;
+}
+
 eIMUServerError IMURPCServer::InitServer()
 {
   auto ret = eIMUServerError::eRET_OK;
 
-  auto ret1 = this->InitGetRawAccel();
-  auto ret2 = this->InitGetRawGyro();
+  auto retAccel = static_cast<int>(this->InitGetRawAccel());
+  auto retGyro =  static_cast<int>(this->InitGetRawGyro());
+  auto retAngle = static_cast<int>(this->InitGetEulerAngle());
+  auto retInit = retAccel + retGyro + retAngle;
 
-  if (ret1 != eIMUServerError::eRET_OK || ret2 != eIMUServerError::eRET_OK)
+  if (retInit != 0)
   {
     ret = eIMUServerError::eRET_ERROR;
   }

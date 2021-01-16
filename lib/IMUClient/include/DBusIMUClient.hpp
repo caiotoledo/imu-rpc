@@ -28,6 +28,7 @@ namespace IMUClient
     virtual void AddUpdateDataCallback(std::function<void()> &&cb) override;
     virtual eIMUError GetRawAccel(eAxis axis, double &val) override;
     virtual eIMUError GetRawGyro(eAxis axis, double &val) override;
+    virtual eIMUError GetEulerAngle(eAxis axis, eAngleUnit unit, double &val) override;
     virtual void DeInit(void) override;
 
     virtual ~DBusIMUClient();

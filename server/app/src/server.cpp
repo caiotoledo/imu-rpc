@@ -10,12 +10,14 @@
 #include <LogInstance.h>
 
 #include <DBusCxxServer.hpp>
+
 #include <IMURPCServer.hpp>
-#include <IMUIndustrialIO.hpp>
 
 #include <IMUStub.hpp>
 #include <IMUIndustrialIO.hpp>
 #include <IMUBufferIIO.hpp>
+
+#include <IMUMathImpl.hpp>
 
 #include "argparser.hpp"
 
@@ -109,6 +111,7 @@ int main(int argc, char const *argv[])
   std::shared_ptr<RPCServer::IRPCServer> serverRPC;
   std::shared_ptr<IMUServer::IIMUServer> serverIMU;
   std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuAbstraction;
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
 
   if (path_isvalid(DEVICE_PATH) == true)
   {
@@ -139,8 +142,9 @@ int main(int argc, char const *argv[])
     imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>();
     LOGDEBUG("Using IMUStub");
   }
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction);
   serverRPC = std::make_shared<RPCServer::DBusCxxServer>();
-  serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction);
+  serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction, imuMath);
 
   auto ret = serverIMU->StartServer();
   LOGDEBUG("Server Started [%d]", (int)ret);
