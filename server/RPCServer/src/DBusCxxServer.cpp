@@ -114,9 +114,9 @@ void DBusCxxServer::DeInit(void) {
     this->dispatcher->stop();
 
     /* Reset DBus pointers */
-    this->object = nullptr;
-    this->conn = nullptr;
-    this->dispatcher = nullptr;
+    this->object.reset();
+    this->conn.reset();
+    this->dispatcher.reset();
 
     /* Reset connection flag */
     isConnected = false;

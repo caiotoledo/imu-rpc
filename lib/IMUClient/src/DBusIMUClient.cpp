@@ -140,9 +140,9 @@ void DBusIMUClient::DeInit(void)
     this->dispatcher->stop();
 
     /* Reset DBus pointers */
-    this->object = nullptr;
-    this->connection = nullptr;
-    this->dispatcher = nullptr;
+    this->object.reset();
+    this->connection.reset();
+    this->dispatcher.reset();
 
     /* Reset connection flag */
     isConnected = false;
