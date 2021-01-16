@@ -57,7 +57,7 @@ matrix:
         - eval `dbus-launch --sh-syntax`
         # Execute binaries
         - imu-daemon -d
-        - imu-client -a -g -t 3
+        - imu-client -a -g -e -t 3
         - killall imu-daemon
         - sleep 1
     - script:
