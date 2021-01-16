@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <IIMUAbstraction.hpp>
+#include <IIMUMath.hpp>
 
 #include "IIMUServer.hpp"
 
@@ -14,15 +15,18 @@ namespace IMUServer
   private:
     std::shared_ptr<RPCServer::IRPCServer> instanceServer;
     std::shared_ptr<IMUAbstraction::IIMUAbstraction> instanceImu;
+    std::shared_ptr<IMUMath::IIMUMath> instanceMath;
 
     eIMUServerError InitServer(void);
     eIMUServerError InitGetRawAccel(void);
     eIMUServerError InitGetRawGyro(void);
+    eIMUServerError InitGetEulerAngle(void);
 
   public:
     IMURPCServer(
       std::shared_ptr<RPCServer::IRPCServer> server,
-      std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu);
+      std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu,
+      std::shared_ptr<IMUMath::IIMUMath> math);
 
     /**
      * @brief Start IMU Server
