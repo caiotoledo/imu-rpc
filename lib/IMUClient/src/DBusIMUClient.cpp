@@ -132,6 +132,34 @@ eIMUError DBusIMUClient::GetRawGyro(eAxis axis, double &val)
   return ret;
 }
 
+eIMUError DBusIMUClient::GetEulerAngle(eAxis axis, eAngleUnit unit, double &val)
+{
+  auto ret = eIMUError::eRET_OK;
+
+  /* Check Connection */
+  if (!this->isInitialized())
+  {
+    return eIMUError::eRET_ERROR;
+  }
+
+  /* Initialize Method Proxies */
+  auto GetEulerAngle_proxy
+    = *(this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETEULERANGLE));
+
+  /* Execute Method Requests */
+  try
+  {
+    val = GetEulerAngle_proxy((int)axis, (int)unit);
+  }
+  catch(std::shared_ptr<DBus::Error> e)
+  {
+    LOGERROR("%s", e->what());
+    ret = eIMUError::eRET_ERROR;
+  }
+
+  return ret;
+}
+
 void DBusIMUClient::DeInit(void)
 {
   if (this->isInitialized())

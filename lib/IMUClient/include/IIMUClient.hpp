@@ -14,6 +14,12 @@ namespace IMUClient
     Z
   };
 
+  enum class eAngleUnit
+  {
+    eRadians,
+    eDegrees,
+  };
+
   class IIMUClient
   {
   public:
@@ -50,6 +56,16 @@ namespace IMUClient
      * @return eIMUError Returns #eRET_OK when successful, ref #eIMUError
      */
     virtual eIMUError GetRawGyro(eAxis axis, double &val) = 0;
+
+    /**
+     * @brief Get Euler Angle of an axis
+     *
+     * @param axis Get Angle Value
+     * @param unit Desired axis (X = Roll, Y = Pitch, Z = Yaw)
+     * @param val Desired angle unit
+     * @return eIMUError Returns #eRET_OK when successful, ref #eIMUError
+     */
+    virtual eIMUError GetEulerAngle(eAxis axis, eAngleUnit unit, double &val) = 0;
 
     /**
      * @brief DeInitialize RPC Client
