@@ -46,6 +46,14 @@ namespace RPCServer
     virtual eRPCError setGetRawGyroCallback(std::function<double(int)> &&cb) = 0;
 
     /**
+     * @brief Register GetEulerAngles Callback
+     *
+     * @param cb Callback to be called
+     * @return eRPCError Returns #eRET_OK when successful, ref #eRPCError
+     */
+    virtual eRPCError setGetEulerAngleCallback(std::function<double(int, int)> &&cb) = 0;
+
+    /**
      * @brief DeInitialize Request Handler
      */
     virtual void DeInit(void) = 0;

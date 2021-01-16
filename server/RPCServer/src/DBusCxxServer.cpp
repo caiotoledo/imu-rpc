@@ -108,6 +108,26 @@ eRPCError DBusCxxServer::setGetRawGyroCallback(std::function<double(int)> &&cb)
   return ret;
 }
 
+eRPCError DBusCxxServer::setGetEulerAngleCallback(std::function<double(int, int)> &&cb)
+{
+  auto ret = eRPCError::eRET_OK;
+
+  /* Check Connection */
+  if (!this->isInitialized()) {
+    return eRPCError::eRET_ERROR;
+  }
+
+  /* Assing the callback to the method */
+  try {
+    this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETEULERANGLE, cb);
+  } catch(std::shared_ptr<DBus::Error> e) {
+    LOGERROR("%s", e->what());
+    ret = eRPCError::eRET_ERROR;
+  }
+
+  return ret;
+}
+
 void DBusCxxServer::DeInit(void) {
   if (this->isInitialized()) {
     /* Close Dispatcher connection */
