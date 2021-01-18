@@ -3,6 +3,19 @@
 namespace DBusTypes
 {
 
+  enum class eAxis
+  {
+    X,
+    Y,
+    Z
+  };
+
+  enum class eAngleUnit
+  {
+    eRadians,
+    eDegrees,
+  };
+
   constexpr const char *DBUS_NAME = "imu.daemon";
   constexpr const char *DBUS_PATH = "/imu/server";
 

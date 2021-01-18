@@ -162,7 +162,7 @@ T IMUStub::GetSampleFrequency()
   return static_cast<T>(mapSampleFreq.at(this->sampleFreq));
 }
 
-eIMUAbstractionError IMUStub::GetRawAccel(eAxis axis, double &val)
+eIMUAbstractionError IMUStub::GetRawAccel(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
   int axisVal = (int)axis;
@@ -180,7 +180,7 @@ eIMUAbstractionError IMUStub::GetRawAccel(eAxis axis, double &val)
 
   return ret;
 }
-eIMUAbstractionError IMUStub::GetRawGyro(eAxis axis, double &val)
+eIMUAbstractionError IMUStub::GetRawGyro(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
   int axisVal = (int)axis;

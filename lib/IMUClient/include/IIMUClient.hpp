@@ -1,23 +1,13 @@
 #pragma once
 
+#include <DBusTypes.hpp>
+
 namespace IMUClient
 {
 
   enum class eIMUError {
     eRET_OK,
     eRET_ERROR
-  };
-
-  enum class eAxis {
-    X,
-    Y,
-    Z
-  };
-
-  enum class eAngleUnit
-  {
-    eRadians,
-    eDegrees,
   };
 
   class IIMUClient
@@ -46,7 +36,7 @@ namespace IMUClient
      * @param val Value reference to receive the data
      * @return eIMUError Returns #eRET_OK when successful, ref #eIMUError
      */
-    virtual eIMUError GetRawAccel(eAxis axis, double &val) = 0;
+    virtual eIMUError GetRawAccel(DBusTypes::eAxis axis, double &val) = 0;
 
     /**
      * @brief Get Raw Accelerometer data
@@ -55,7 +45,7 @@ namespace IMUClient
      * @param val Value reference to receive the data
      * @return eIMUError Returns #eRET_OK when successful, ref #eIMUError
      */
-    virtual eIMUError GetRawGyro(eAxis axis, double &val) = 0;
+    virtual eIMUError GetRawGyro(DBusTypes::eAxis axis, double &val) = 0;
 
     /**
      * @brief Get Euler Angle of an axis
@@ -65,7 +55,7 @@ namespace IMUClient
      * @param val Desired angle unit
      * @return eIMUError Returns #eRET_OK when successful, ref #eIMUError
      */
-    virtual eIMUError GetEulerAngle(eAxis axis, eAngleUnit unit, double &val) = 0;
+    virtual eIMUError GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val) = 0;
 
     /**
      * @brief DeInitialize RPC Client

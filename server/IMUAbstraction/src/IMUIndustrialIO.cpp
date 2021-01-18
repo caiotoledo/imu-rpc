@@ -324,10 +324,10 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
   return ret;
 }
 
-eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
+eIMUAbstractionError IMUIndustrialIO::GetRawAccel(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
-  if (axis >= eAxis::X && axis <= eAxis::Z)
+  if (axis >= DBusTypes::eAxis::X && axis <= DBusTypes::eAxis::Z)
   {
     auto val_scale = std::stod(mapAccelScale.at(imu_data.accelScale));
     val = ((imu_data.axisdata[(int)axis].accel * val_scale)/M_Gl)*1000L;
@@ -340,10 +340,10 @@ eIMUAbstractionError IMUIndustrialIO::GetRawAccel(eAxis axis, double &val)
 
   return ret;
 }
-eIMUAbstractionError IMUIndustrialIO::GetRawGyro(eAxis axis, double &val)
+eIMUAbstractionError IMUIndustrialIO::GetRawGyro(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
-  if (axis >= eAxis::X && axis <= eAxis::Z)
+  if (axis >= DBusTypes::eAxis::X && axis <= DBusTypes::eAxis::Z)
   {
     auto val_scale = std::stod(mapGyroScale.at(imu_data.gyroScale));
     val = ((imu_data.axisdata[(int)axis].gyro * val_scale)/M_PIl)*180L;
