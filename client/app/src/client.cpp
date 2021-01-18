@@ -59,10 +59,22 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     std::stringstream sAngle;
     sAngle << "Angle[" << std::fixed << std::setprecision(3) << valAngle << "]";
 
-    std::cout << std::left << "[" << mapAxis.at(i).c_str() << "] "
-              << std::setw(COUNT_ALIGN) << sAccel.str()
-              << std::setw(COUNT_ALIGN) << sGyro.str()
-              << std::setw(COUNT_ALIGN) << sAngle.str()
+    std::stringstream sOut;
+    if (bAccel)
+    {
+      sOut << std::left << std::setw(COUNT_ALIGN) << sAccel.str();
+    }
+    if (bGyro)
+    {
+      sOut << std::left << std::setw(COUNT_ALIGN) << sGyro.str();
+    }
+    if (bAngle)
+    {
+      sOut << std::left << std::setw(COUNT_ALIGN) << sAngle.str();
+    }
+
+    std::cout << "[" << mapAxis.at(i).c_str() << "] "
+              << sOut.str()
               << std::endl;
   }
   printf("\n");
