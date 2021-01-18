@@ -33,4 +33,4 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
 install(TARGETS ${LIBRARY_NAME}
           LIBRARY DESTINATION lib)
 install(FILES ${public_hdr_files}
-          DESTINATION include)
+          DESTINATION include/imu-dbus)
