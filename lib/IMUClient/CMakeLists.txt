@@ -21,6 +21,9 @@ target_link_libraries(${LIBRARY_NAME} PRIVATE dbustypes)
 target_include_directories(${LIBRARY_NAME} PRIVATE ${src_dir})
 target_include_directories(${LIBRARY_NAME} PUBLIC ${inc_dir})
 
+# Common Types between server and client
+target_link_libraries(${LIBRARY_NAME} PUBLIC dbustypes)
+
 # Set up library version
 set_target_properties(${LIBRARY_NAME} PROPERTIES
                         SOVERSION ${IMUCLIENT_VERSION_MAJOR}

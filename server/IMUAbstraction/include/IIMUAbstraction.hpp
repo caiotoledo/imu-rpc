@@ -2,18 +2,14 @@
 
 #include <functional>
 
+#include <DBusTypes.hpp>
+
 namespace IMUAbstraction
 {
 
   enum class eIMUAbstractionError {
     eRET_OK,
     eRET_ERROR,
-  };
-
-  enum class eAxis {
-    X,
-    Y,
-    Z
   };
 
   enum class eAccelScale {
@@ -71,7 +67,7 @@ namespace IMUAbstraction
      * @param val Accelerometer value in milli g-force
      * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
-    virtual eIMUAbstractionError GetRawAccel(eAxis axis, double &val) = 0;
+    virtual eIMUAbstractionError GetRawAccel(DBusTypes::eAxis axis, double &val) = 0;
 
     /**
      * @brief Set Accel Scale
@@ -88,7 +84,7 @@ namespace IMUAbstraction
      * @param val Gyroscope value in Degrees per second
      * @return eIMUAbstractionError Returns #eRET_OK when successful, ref #eIMUAbstractionError
      */
-    virtual eIMUAbstractionError GetRawGyro(eAxis axis, double &val) = 0;
+    virtual eIMUAbstractionError GetRawGyro(DBusTypes::eAxis axis, double &val) = 0;
 
     /**
      * @brief Set Gyro Scale

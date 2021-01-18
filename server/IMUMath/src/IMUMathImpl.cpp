@@ -20,7 +20,7 @@ eIMUMathError IMUMathImpl::Init(void)
   return static_cast<eIMUMathError>(this->instanceImu->Init());
 }
 
-eIMUMathError IMUMathImpl::GetEulerAngle(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit)
+eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit)
 {
   auto ret = eIMUMathError::eRET_OK;
   double valueAngle = 0;
@@ -36,12 +36,12 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, IMUAbstraction::eAxis ax
   for (size_t i = 0; i < (sizeof(valAccel)/sizeof(double)); i++)
   {
     auto index = i;
-    auto eAxis = static_cast<IMUAbstraction::eAxis>(index);
+    auto axis = static_cast<DBusTypes::eAxis>(index);
 
-    auto ret = this->instanceImu->GetRawAccel(eAxis, valAccel[index]);
+    auto ret = this->instanceImu->GetRawAccel(axis, valAccel[index]);
     if (ret != IMUAbstraction::eIMUAbstractionError::eRET_OK)
     {
-      LOGWARN("Fail to GetRawAccel Axis[%d] ret[%d]", eAxis, ret);
+      LOGWARN("Fail to GetRawAccel Axis[%d] ret[%d]", axis, ret);
       /* TODO: Create table to convert from eIMUAbstractionError to eIMUMathError */
       return static_cast<eIMUMathError>(ret);
     }
@@ -50,13 +50,13 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, IMUAbstraction::eAxis ax
   /* Convert Raw Accelerometer Data to Angle rad */
   switch (axis)
   {
-  case IMUAbstraction::eAxis::X:
+  case DBusTypes::eAxis::X:
     valueAngle = calcAngleRad(-valAccel[1], -valAccel[2]); /* atan2(-Y,-Z) */
     break;
-  case IMUAbstraction::eAxis::Y:
+  case DBusTypes::eAxis::Y:
     valueAngle = calcAngleRad(-valAccel[0], -valAccel[2]); /* atan2(-X,-Z) */
     break;
-  case IMUAbstraction::eAxis::Z:
+  case DBusTypes::eAxis::Z:
     valueAngle = calcAngleRad(-valAccel[1], -valAccel[0]); /* atan2(-Y,-X) */
     break;
   default:
@@ -66,10 +66,10 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, IMUAbstraction::eAxis ax
   /* Convert Angle unit */
   switch (unit)
   {
-  case eAngleUnit::eDegrees:
+  case DBusTypes::eAngleUnit::eDegrees:
     value = RAD_TO_DEG(valueAngle);
     break;
-  case eAngleUnit::eRadians:
+  case DBusTypes::eAngleUnit::eRadians:
   default:
     break;
   }

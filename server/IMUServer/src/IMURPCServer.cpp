@@ -58,7 +58,7 @@ eIMUServerError IMURPCServer::InitGetRawAccel(void)
   auto func = [this](int axis)
   {
     double val = 0;
-    instanceImu->GetRawAccel((IMUAbstraction::eAxis)axis, val);
+    instanceImu->GetRawAccel((DBusTypes::eAxis)axis, val);
     return val;
   };
   auto retServer = instanceServer->setGetRawAccelCallback(func);
@@ -73,7 +73,7 @@ eIMUServerError IMURPCServer::InitGetRawGyro(void)
   auto func = [this](int axis)
   {
     double val = 0;
-    instanceImu->GetRawGyro((IMUAbstraction::eAxis)axis, val);
+    instanceImu->GetRawGyro((DBusTypes::eAxis)axis, val);
     return val;
   };
   auto retServer = instanceServer->setGetRawGyroCallback(func);
@@ -89,7 +89,7 @@ eIMUServerError IMURPCServer::InitGetEulerAngle(void)
   auto func = [this](int axis, int unit)
   {
     double val = 0;
-    instanceMath->GetEulerAngle(val, (IMUAbstraction::eAxis)axis, (IMUMath::eAngleUnit)unit);
+    instanceMath->GetEulerAngle(val, (DBusTypes::eAxis)axis, (DBusTypes::eAngleUnit)unit);
     return val;
   };
   auto retServer = instanceServer->setGetEulerAngleCallback(func);

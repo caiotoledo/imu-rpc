@@ -77,7 +77,7 @@ void DBusIMUClient::AddUpdateDataCallback(std::function<void()> &&cb)
   vecCallback.push_back(cb);
 }
 
-eIMUError DBusIMUClient::GetRawAccel(eAxis axis, double &val)
+eIMUError DBusIMUClient::GetRawAccel(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUError::eRET_OK;
 
@@ -104,7 +104,7 @@ eIMUError DBusIMUClient::GetRawAccel(eAxis axis, double &val)
 
   return ret;
 }
-eIMUError DBusIMUClient::GetRawGyro(eAxis axis, double &val)
+eIMUError DBusIMUClient::GetRawGyro(DBusTypes::eAxis axis, double &val)
 {
   auto ret = eIMUError::eRET_OK;
 
@@ -132,7 +132,7 @@ eIMUError DBusIMUClient::GetRawGyro(eAxis axis, double &val)
   return ret;
 }
 
-eIMUError DBusIMUClient::GetEulerAngle(eAxis axis, eAngleUnit unit, double &val)
+eIMUError DBusIMUClient::GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val)
 {
   auto ret = eIMUError::eRET_OK;
 

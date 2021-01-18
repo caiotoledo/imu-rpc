@@ -28,7 +28,7 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     /* Sample data from client */
     if (bAccel)
     {
-      ret = client->GetRawAccel((IMUClient::eAxis)i, valAccel);
+      ret = client->GetRawAccel((DBusTypes::eAxis)i, valAccel);
       if (ret != IMUClient::eIMUError::eRET_OK)
       {
         break;
@@ -36,7 +36,7 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     }
     if (bGyro)
     {
-      ret = client->GetRawGyro((IMUClient::eAxis)i, valGyro);
+      ret = client->GetRawGyro((DBusTypes::eAxis)i, valGyro);
       if (ret != IMUClient::eIMUError::eRET_OK)
       {
         break;
@@ -44,7 +44,7 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     }
     if (bAngle)
     {
-      ret = client->GetEulerAngle((IMUClient::eAxis)i, IMUClient::eAngleUnit::eDegrees, valAngle);
+      ret = client->GetEulerAngle((DBusTypes::eAxis)i, DBusTypes::eAngleUnit::eDegrees, valAngle);
       if (ret != IMUClient::eIMUError::eRET_OK)
       {
         break;

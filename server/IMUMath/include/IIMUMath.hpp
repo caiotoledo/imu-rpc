@@ -1,5 +1,7 @@
 #pragma once
 
+#include <DBusTypes.hpp>
+
 #include <IIMUAbstraction.hpp>
 
 namespace IMUMath
@@ -9,12 +11,6 @@ namespace IMUMath
   {
     eRET_OK,
     eRET_ERROR,
-  };
-
-  enum class eAngleUnit
-  {
-    eRadians,
-    eDegrees,
   };
 
   class IIMUMath
@@ -35,7 +31,7 @@ namespace IMUMath
      * @param unit Desired angle unit
      * @return eIMUMathError Returns #eRET_OK when successful, ref #eIMUMathError
      */
-    virtual eIMUMathError GetEulerAngle(double &value, IMUAbstraction::eAxis axis, const eAngleUnit &unit) = 0;
+    virtual eIMUMathError GetEulerAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit) = 0;
 
     /**
      * @brief DeInitialize IMU Abstraction
