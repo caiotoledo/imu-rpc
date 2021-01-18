@@ -11,6 +11,7 @@
 
 #include "argparser.hpp"
 
+constexpr auto COUNT_ALIGN = 18;
 constexpr int NUM_AXIS = 3;
 
 static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient> &client, bool bAccel, bool bGyro, bool bAngle)
@@ -57,7 +58,12 @@ static IMUClient::eIMUError PrintRawValues(std::shared_ptr<IMUClient::IIMUClient
     sGyro << "Gyro[" << std::fixed << std::setprecision(3) << valGyro << "]";
     std::stringstream sAngle;
     sAngle << "Angle[" << std::fixed << std::setprecision(3) << valAngle << "]";
-    printf("[%s] %-18s %-18s %-18s\n", mapAxis.at(i).c_str(), sAccel.str().c_str(), sGyro.str().c_str(), sAngle.str().c_str());
+
+    std::cout << std::left << "[" << mapAxis.at(i).c_str() << "] "
+              << std::setw(COUNT_ALIGN) << sAccel.str()
+              << std::setw(COUNT_ALIGN) << sGyro.str()
+              << std::setw(COUNT_ALIGN) << sAngle.str()
+              << std::endl;
   }
   printf("\n");
 
