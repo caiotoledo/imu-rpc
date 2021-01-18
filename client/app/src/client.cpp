@@ -93,6 +93,7 @@ int main(int argc, char const *argv[])
   LOGDEBUG("ReturnParser: %d", retParse);
   LOGDEBUG("Arg accel\t[%s]", args.accel ? "Enable" : "Disable");
   LOGDEBUG("Arg gyro\t[%s]", args.gyro ? "Enable" : "Disable");
+  LOGDEBUG("Arg euler\t[%s]", args.euler ? "Enable" : "Disable");
   LOGDEBUG("Arg timeout\t[%d] seconds", args.timeout);
 
   if (retParse != 0) {
