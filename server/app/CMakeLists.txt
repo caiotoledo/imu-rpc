@@ -10,4 +10,4 @@ target_link_libraries(${SERVER_NAME} PRIVATE logger)
 
 target_link_libraries(${SERVER_NAME} PRIVATE imuserver)
 
-install(TARGETS imu-daemon RUNTIME DESTINATION bin)
+install(TARGETS ${SERVER_NAME} RUNTIME DESTINATION bin)

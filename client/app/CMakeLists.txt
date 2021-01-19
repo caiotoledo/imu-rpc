@@ -12,4 +12,4 @@ target_link_libraries(${CLIENT_NAME} PRIVATE logger)
 
 target_link_libraries(${CLIENT_NAME} PRIVATE imuclient)
 
-install(TARGETS imu-client RUNTIME DESTINATION bin)
+install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
