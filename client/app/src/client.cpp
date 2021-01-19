@@ -102,7 +102,7 @@ int main(int argc, char const *argv[])
   }
 
   /**
-   * START SERVER
+   * START CLIENT
    */
   std::shared_ptr<IMUClient::IIMUClient> client;
 
