@@ -5,6 +5,7 @@
 #include <argp.h>
 
 #include "argparser.hpp"
+#include "argvalidator.hpp"
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
@@ -64,6 +65,15 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
         arguments->accel_scale = 2;
         arguments->gyro_scale = 250;
         arguments->sample_rate = 50;
+      break;
+
+      case ARGP_KEY_FINI:
+        {
+          if (!ArgValidator::IsValidArgs(*arguments))
+          {
+            argp_error(state, "Invalid Parameters Value");
+          }
+        }
       break;
 
       case ARGP_KEY_ARG:
