@@ -51,3 +51,25 @@ bool ArgValidator::IsValidArgs(const ArgParser::arguments &args)
 
   return (ret == 0) ? true : false;
 }
+
+int ArgValidator::ConvertArgs(const ArgParser::arguments &args,
+                               IMUAbstraction::eAccelScale &accel,
+                               IMUAbstraction::eGyroScale &gyro,
+                               IMUAbstraction::eSampleFreq &freq)
+{
+  auto ret = 0;
+
+  if (ArgValidator::IsValidArgs(args))
+  {
+    accel = mapAccelScale.at(args.accel_scale);
+    gyro = mapGyroScale.at(args.gyro_scale);
+    freq = mapSampleFreq.at(args.sample_rate);
+  }
+  else
+  {
+    ret = -1;
+    LOGERROR("Invalid Arguments Value!", args.accel_scale);
+  }
+
+  return ret;
+}
