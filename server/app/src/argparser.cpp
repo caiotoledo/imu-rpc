@@ -19,7 +19,10 @@ static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"daemon", 'd', 0, 0, "Execute as Daemon", 0},
+  {"daemon", 'd', 0,       0, "Execute as Daemon",                                                        0},
+  {"rate",   'r', "RATE",  0, "Configure Sample Rate in [ms], valid values:\n\t{10,20,50,100,200,500}",   1},
+  {"gyro",   'g', "GYRO",  0, "Configure Gyroscope Scale in [°/s], valid values:\n\t{250,500,1000,2000}", 1},
+  {"accel",  'a', "ACCEL", 0, "Configure Accelerometer Scale in [G], valid values:\n\t{2,4,8,16}",        1},
   { 0 }
 };
 
@@ -31,12 +34,36 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
   ArgParser::arguments *arguments = (ArgParser::arguments *)state->input;
   switch (key)
     {
+      case 'a':
+        {
+          std::stringstream strValue;
+          strValue << arg;
+          strValue >> arguments->accel_scale;
+        }
+      break;
       case 'd':
         arguments->daemon = true;
+      break;
+      case 'g':
+        {
+          std::stringstream strValue;
+          strValue << arg;
+          strValue >> arguments->gyro_scale;
+        }
+      break;
+      case 'r':
+        {
+          std::stringstream strValue;
+          strValue << arg;
+          strValue >> arguments->sample_rate;
+        }
       break;
 
       case ARGP_KEY_INIT:
         arguments->daemon = false;
+        arguments->accel_scale = 2;
+        arguments->gyro_scale = 250;
+        arguments->sample_rate = 50;
       break;
 
       case ARGP_KEY_ARG:

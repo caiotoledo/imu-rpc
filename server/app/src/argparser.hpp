@@ -4,6 +4,9 @@ namespace ArgParser
 {
   struct arguments {
     bool daemon;
+    int accel_scale;
+    int gyro_scale;
+    int sample_rate;
   };
 
   /**
