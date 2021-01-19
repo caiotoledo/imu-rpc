@@ -139,9 +139,9 @@ int main(int argc, char const *argv[])
       std::make_shared<IMUAbstraction::IMUBufferIIO>(
         DEVICE_PATH,
         0,
-        IMUAbstraction::eAccelScale::Accel_2g,
-        IMUAbstraction::eGyroScale::Gyro_250dps,
-        IMUAbstraction::eSampleFreq::Freq_10ms
+        accel_scale,
+        gyro_scale,
+        sample_rate
       );
     LOGDEBUG("Using IMU Industrial IO Buffering");
 #else
@@ -149,16 +149,20 @@ int main(int argc, char const *argv[])
       std::make_shared<IMUAbstraction::IMUIndustrialIO>(
         DEVICE_PATH,
         0,
-        IMUAbstraction::eAccelScale::Accel_2g,
-        IMUAbstraction::eGyroScale::Gyro_250dps,
-        IMUAbstraction::eSampleFreq::Freq_500ms
+        accel_scale,
+        gyro_scale,
+        sample_rate
       );
     LOGDEBUG("Using IMUIndustrialIO");
 #endif
   }
   else
   {
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>();
+    imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>(
+      accel_scale,
+      gyro_scale,
+      sample_rate
+    );
     LOGDEBUG("Using IMUStub");
   }
   imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction);
