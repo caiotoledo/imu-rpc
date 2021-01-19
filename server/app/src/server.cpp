@@ -19,7 +19,7 @@
 
 #include <IMUMathImpl.hpp>
 
-#include "argparser.hpp"
+#include "argvalidator.hpp"
 
 #define DEVICE_PATH   "/sys/bus/iio/devices/"
 
@@ -87,6 +87,25 @@ int main(int argc, char const *argv[])
   {
     LOGERROR("iProcessArgs failed [%d]", retParse);
     return retParse;
+  }
+
+  LOGDEBUG("ReturnParser:\t[%d]", retParse);
+  LOGDEBUG("Arg daemon\t\t[%s]", args.daemon ? "Enable" : "Disable");
+  LOGDEBUG("Arg accel scale\t[%d] G", args.accel_scale);
+  LOGDEBUG("Arg gyro scale\t[%d] °/s", args.gyro_scale);
+  LOGDEBUG("Arg sample rate\t[%d] ms", args.sample_rate);
+
+  /**
+   * PARSE IMU ABSTRACTION ARGS
+   */
+  IMUAbstraction::eAccelScale accel_scale;
+  IMUAbstraction::eGyroScale gyro_scale;
+  IMUAbstraction::eSampleFreq sample_rate;
+  auto retArgs = ArgValidator::ConvertArgs(args, accel_scale, gyro_scale, sample_rate);
+  if (retArgs != 0)
+  {
+    LOGERROR("validate_args failed [%d]", retArgs);
+    return retArgs;
   }
 
   /**
