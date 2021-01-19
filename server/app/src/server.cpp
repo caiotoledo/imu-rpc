@@ -19,7 +19,7 @@
 
 #include <IMUMathImpl.hpp>
 
-#include "argparser.hpp"
+#include "argvalidator.hpp"
 
 #define DEVICE_PATH   "/sys/bus/iio/devices/"
 
@@ -89,6 +89,25 @@ int main(int argc, char const *argv[])
     return retParse;
   }
 
+  LOGDEBUG("ReturnParser:\t[%d]", retParse);
+  LOGDEBUG("Arg daemon\t\t[%s]", args.daemon ? "Enable" : "Disable");
+  LOGDEBUG("Arg accel scale\t[%d] G", args.accel_scale);
+  LOGDEBUG("Arg gyro scale\t[%d] °/s", args.gyro_scale);
+  LOGDEBUG("Arg sample rate\t[%d] ms", args.sample_rate);
+
+  /**
+   * PARSE IMU ABSTRACTION ARGS
+   */
+  IMUAbstraction::eAccelScale accel_scale;
+  IMUAbstraction::eGyroScale gyro_scale;
+  IMUAbstraction::eSampleFreq sample_rate;
+  auto retArgs = ArgValidator::ConvertArgs(args, accel_scale, gyro_scale, sample_rate);
+  if (retArgs != 0)
+  {
+    LOGERROR("validate_args failed [%d]", retArgs);
+    return retArgs;
+  }
+
   /**
    * RUN AS DAEMON?
    */
@@ -120,9 +139,9 @@ int main(int argc, char const *argv[])
       std::make_shared<IMUAbstraction::IMUBufferIIO>(
         DEVICE_PATH,
         0,
-        IMUAbstraction::eAccelScale::Accel_2g,
-        IMUAbstraction::eGyroScale::Gyro_250dps,
-        IMUAbstraction::eSampleFreq::Freq_10ms
+        accel_scale,
+        gyro_scale,
+        sample_rate
       );
     LOGDEBUG("Using IMU Industrial IO Buffering");
 #else
@@ -130,16 +149,20 @@ int main(int argc, char const *argv[])
       std::make_shared<IMUAbstraction::IMUIndustrialIO>(
         DEVICE_PATH,
         0,
-        IMUAbstraction::eAccelScale::Accel_2g,
-        IMUAbstraction::eGyroScale::Gyro_250dps,
-        IMUAbstraction::eSampleFreq::Freq_500ms
+        accel_scale,
+        gyro_scale,
+        sample_rate
       );
     LOGDEBUG("Using IMUIndustrialIO");
 #endif
   }
   else
   {
-    imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>();
+    imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>(
+      accel_scale,
+      gyro_scale,
+      sample_rate
+    );
     LOGDEBUG("Using IMUStub");
   }
   imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction);
