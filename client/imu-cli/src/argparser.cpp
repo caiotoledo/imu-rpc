@@ -17,7 +17,7 @@ const char *argp_program_version = STRING_VERSION;
 /* Contact e-mail */
 const char *argp_program_bug_address = "<caioviniciusdetoledo@gmail.com>";
 /* Documentation */
-static char doc[] = "";
+static char doc[] = "IMU Command Line Interface";
 /* Arguments */
 static char args_doc[] = "";
 
