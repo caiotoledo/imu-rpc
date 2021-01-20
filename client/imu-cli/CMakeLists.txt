@@ -9,7 +9,7 @@ file(GLOB client_src_files "${client_src_dir}/*.cpp")
 
 add_executable(${CLIENT_NAME} ${client_src_files})
 
-# Set Daemon Version
+# Set IMU Command Line Interface Version
 target_compile_definitions(${CLIENT_NAME} PRIVATE VERSION_MAJOR=${IMUCLIENT_VERSION_MAJOR})
 target_compile_definitions(${CLIENT_NAME} PRIVATE VERSION_MINOR=${IMUCLIENT_VERSION_MINOR})
 target_compile_definitions(${CLIENT_NAME} PRIVATE VERSION_PATCH=${IMUCLIENT_VERSION_PATCH})
