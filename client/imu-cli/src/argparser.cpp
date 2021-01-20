@@ -23,10 +23,10 @@ static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"timeout", 't', "TOUT", 0, "Define application runtime",           0},
-  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]", 0},
-  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",    0},
-  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",               0},
+  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]",  0},
+  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",     0},
+  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",                0},
+  {"timeout", 't', "TOUT", 0, "Define application runtime in seconds", 1},
   { 0 }
 };
 
