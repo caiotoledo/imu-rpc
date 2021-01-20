@@ -5,10 +5,15 @@
 
 #include "argparser.hpp"
 
+#define STRINGIFY(x) #x
+#define TOSTRING(x)  STRINGIFY(x)
+
+#define STRING_VERSION (TOSTRING(VERSION_MAJOR) "." TOSTRING(VERSION_MINOR) "." TOSTRING(VERSION_PATCH))
+
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 /* Software Version */
-const char *argp_program_version = "0.0.0";
+const char *argp_program_version = STRING_VERSION;
 /* Contact e-mail */
 const char *argp_program_bug_address = "<caioviniciusdetoledo@gmail.com>";
 /* Documentation */
