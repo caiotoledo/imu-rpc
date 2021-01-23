@@ -17,16 +17,16 @@ const char *argp_program_version = STRING_VERSION;
 /* Contact e-mail */
 const char *argp_program_bug_address = "<caioviniciusdetoledo@gmail.com>";
 /* Documentation */
-static char doc[] = "";
+static char doc[] = "IMU Command Line Interface";
 /* Arguments */
 static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"timeout", 't', "TOUT", 0, "Define application runtime",           0},
-  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]", 0},
-  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",    0},
-  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",               0},
+  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]",  0},
+  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",     0},
+  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",                0},
+  {"timeout", 't', "TOUT", 0, "Define application runtime in seconds", 1},
   { 0 }
 };
 

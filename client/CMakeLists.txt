@@ -1,2 +1,2 @@
-# Add Main Application
-add_subdirectory(app)
+# Add IMU Command Line Interface Application
+add_subdirectory(imu-cli)

@@ -51,13 +51,13 @@ matrix:
         # Simple binaries test
         - imu-daemon --version
         - imu-daemon --help
-        - imu-client --version
-        - imu-client --help
+        - imu-cli --version
+        - imu-cli --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
         # Execute binaries
         - imu-daemon -d -a2 -g250 -r500
-        - imu-client -a -g -e -t 3
+        - imu-cli -a -g -e -t 3
         - killall imu-daemon
         - sleep 1
     - script:
