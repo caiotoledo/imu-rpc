@@ -32,24 +32,24 @@ const std::map<int, IMUAbstraction::eSampleFreq> mapSampleFreq =
 
 bool ArgValidator::IsValidArgs(const ArgParser::arguments &args)
 {
-  auto ret = 0;
+  auto ret = true;
 
   if (mapAccelScale.find(args.accel_scale) == mapAccelScale.end())
   {
-    ret++;
+    ret = false;
   }
 
   if (mapGyroScale.find(args.gyro_scale) == mapGyroScale.end())
   {
-    ret++;
+    ret = false;
   }
 
   if (mapSampleFreq.find(args.sample_rate) == mapSampleFreq.end())
   {
-    ret++;
+    ret = false;
   }
 
-  return (ret == 0) ? true : false;
+  return ret;
 }
 
 int ArgValidator::ConvertArgs(const ArgParser::arguments &args,
