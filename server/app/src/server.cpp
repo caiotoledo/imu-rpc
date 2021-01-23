@@ -121,7 +121,7 @@ int main(int argc, char const *argv[])
   }
   else
   {
-    g_run = false;
+    g_run = 0;
   }
 
   /**
@@ -179,7 +179,7 @@ int main(int argc, char const *argv[])
   {
     if (args.daemon)
     {
-      while (g_run)
+      while (g_run != 0)
       {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
