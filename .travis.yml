@@ -63,9 +63,8 @@ matrix:
         - imu-daemon -d -a2 -g250 -r500
         # Test IMU Command Line Interface
         - imu-cli -a -g -e -t 3
-        # Start IMU TCP Socket as Daemon
-        - imu-socket -d
         # Test IMU TCP Socket
+        - imu-socket -d
         - python3 script/imu-dbus.py -a localhost -p 1111 -t2 -d
         # Stop All Daemons
         - killall imu-socket
