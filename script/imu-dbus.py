@@ -101,7 +101,8 @@ def main():
   sock.Init(ip=ipAddress, port=ipPort)
 
   runTime = sampleTime if sampleTime is not sys.maxsize else 5
-  myplot = imuplot.ImuDataPlot()
+  if mathPlot:
+    myplot = imuplot.ImuDataPlot()
   while ( (time.time() - start_time) < runTime ):
     try:
       # Get data from queue
