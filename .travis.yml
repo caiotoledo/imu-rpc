@@ -26,12 +26,16 @@ before_install:
   - cd ../
   # Install scan-build
   - sudo apt install clang-tools
+  # Install python3 modules dependencies
+  - sudo apt install python3-pip python3-tk
+  - python3 -m pip install -r script/requirements.txt
 
 before_script:
   # Show current versions
   - gcc --version
   - g++ --version
   - cmake --version
+  - python3 --version
 
 matrix:
   include:
