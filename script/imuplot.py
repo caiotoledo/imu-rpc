@@ -50,6 +50,9 @@ class ImuData:
 class ImuDataPlot():
   def __init__(self, imudata=ImuData(accel={}, gyro={}, angle={})):
     self.Data = imudata
+    self.__isInitalized = False
+
+  def Init(self):
     self.__fig, (self.__axAccel, self.__axGyro, self.__axAngle) = plt.subplots(3, 1)
 
     self.__axAccel.set_title('Accelerometer')
@@ -63,6 +66,8 @@ class ImuDataPlot():
     self.__axAngle.set_title('Euler Angle')
     self.__axAngle.set_ylim(-400,400)
     self.__axAngle.set(ylabel='Angle (°)', xlabel='Time (ms)')
+
+    self.__isInitalized = True
 
   def setImuData(self, imudata):
     self.Data = imudata
@@ -97,15 +102,16 @@ class ImuDataPlot():
     ax.grid(b=True)
 
   def showGraph(self, title='', pause_time=0.001):
-    self.__fig.suptitle(title)
-    plotAccel, plotGyro, plotAngle = self.__getArrDataPlot()
+    if self.__isInitalized:
+      self.__fig.suptitle(title)
+      plotAccel, plotGyro, plotAngle = self.__getArrDataPlot()
 
-    self.__plotGraph(self.__axAccel, plotAccel)
-    self.__plotGraph(self.__axGyro, plotGyro)
-    self.__plotGraph(self.__axAngle, plotAngle)
+      self.__plotGraph(self.__axAccel, plotAccel)
+      self.__plotGraph(self.__axGyro, plotGyro)
+      self.__plotGraph(self.__axAngle, plotAngle)
 
-    plt.draw()
-    plt.pause(pause_time)
+      plt.draw()
+      plt.pause(pause_time)
 
   def plotShow(self):
     plt.show()

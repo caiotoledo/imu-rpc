@@ -97,20 +97,23 @@ def main():
   LoggerLevel = 'DEBUG' if debug is True else 'INFO'
   coloredlogs.install(level=LoggerLevel,logger=__Logger)
 
+  # Initialize socket handler module
   sock = sockethandler.SocketHandlerClient(cbRecv=cbSockRecv)
   sock.Init(ip=ipAddress, port=ipPort)
 
-  runTime = sampleTime if sampleTime is not sys.maxsize else 5
+  # Initialize imuplot module
+  myplot = imuplot.ImuDataPlot()
   if mathPlot:
-    myplot = imuplot.ImuDataPlot()
+    myplot.Init()
+
+  runTime = sampleTime if sampleTime is not sys.maxsize else 5
   while ( (time.time() - start_time) < runTime ):
     try:
       # Get data from queue
       imu = imuQueue.get(timeout=runTime/1000)
-      if mathPlot:
-        myplot.appendImuData(imu)
-        if imuQueue.empty():
-          myplot.showGraph("IMU Data")
+      myplot.appendImuData(imu)
+      if imuQueue.empty():
+        myplot.showGraph("IMU Data")
     except queue.Empty:
       # No data available, keep waiting
       pass
@@ -119,8 +122,7 @@ def main():
 
   __Logger.info("Execution time {:.2f} seconds".format(time.time() - start_time))
 
-  if mathPlot:
-    myplot.plotShow()
+  myplot.plotShow()
 
 
 if __name__ == "__main__":
