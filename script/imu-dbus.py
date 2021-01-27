@@ -110,6 +110,9 @@ def main():
   start_time = time.time()
   sock.AddCallbackRecv(cb=cbSockRecv)
   while ((time.time() - start_time) <= sampleTime) or (imuQueue.empty() is not True):
+    # Stop socket connection to avoid data flood
+    if ((time.time() - start_time) > sampleTime):
+      sock.DeInit()
     try:
       # Get data from queue
       imu = imuQueue.get(timeout=sampleTime/1000)
@@ -119,9 +122,6 @@ def main():
     except queue.Empty:
       # No data available, keep waiting
       pass
-    # Stop socket connection to avoid data flood
-    if ((time.time() - start_time) > sampleTime):
-      sock.DeInit()
 
   sock.DeInit()
 
