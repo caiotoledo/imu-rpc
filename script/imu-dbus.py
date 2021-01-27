@@ -86,8 +86,6 @@ def main():
   # Default script runtime
   __defaultTime = 5
 
-  start_time = time.time()
-
   # Parse command line arguments
   args = parser.parse_args()
   # Store variables
@@ -101,7 +99,7 @@ def main():
   coloredlogs.install(level=LoggerLevel,logger=__Logger)
 
   # Initialize socket handler module
-  sock = sockethandler.SocketHandlerClient(cbRecv=cbSockRecv)
+  sock = sockethandler.SocketHandlerClient()
   sock.Init(ip=ipAddress, port=ipPort)
 
   # Initialize imuplot module
@@ -109,6 +107,8 @@ def main():
   if mathPlot:
     myplot.Init()
 
+  start_time = time.time()
+  sock.AddCallbackRecv(cb=cbSockRecv)
   while ((time.time() - start_time) <= sampleTime) or (imuQueue.empty() is not True):
     try:
       # Get data from queue
