@@ -53,15 +53,15 @@ class ImuDataPlot():
     self.__fig, (self.__axAccel, self.__axGyro, self.__axAngle) = plt.subplots(3, 1)
 
     self.__axAccel.set_title('Accelerometer')
-    # self.__axAccel.set_ylim(2500,-2500) # Based on ACCEL_CONFIG Register (limits +-2g)
+    self.__axAccel.set_ylim(-2500,2500) # Based on ACCEL_CONFIG Register (limits +-2g)
     self.__axAccel.set(ylabel='Accel (mg)', xlabel='Time (ms)')
 
     self.__axGyro.set_title('Gyroscope')
-    # self.__axGyro.set_ylim(300,-300) # Based on GYRO_CONFIG Register (limits +-250°/s)
+    self.__axGyro.set_ylim(-300,300) # Based on GYRO_CONFIG Register (limits +-250°/s)
     self.__axGyro.set(ylabel='Gyro (°/s)', xlabel='Time (ms)')
 
     self.__axAngle.set_title('Euler Angle')
-    # self.__axAngle.set_ylim(400,-400)
+    self.__axAngle.set_ylim(-400,400)
     self.__axAngle.set(ylabel='Angle (°)', xlabel='Time (ms)')
 
   def setImuData(self, imudata):
