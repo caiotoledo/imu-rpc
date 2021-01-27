@@ -97,6 +97,9 @@ def main():
   LoggerLevel = 'DEBUG' if debug is True else 'INFO'
   coloredlogs.install(level=LoggerLevel,logger=__Logger)
 
+  # Default script runtime
+  __defaultTime = 5
+
   # Initialize socket handler module
   sock = sockethandler.SocketHandlerClient(cbRecv=cbSockRecv)
   sock.Init(ip=ipAddress, port=ipPort)
@@ -106,7 +109,7 @@ def main():
   if mathPlot:
     myplot.Init()
 
-  runTime = sampleTime if sampleTime is not sys.maxsize else 5
+  runTime = sampleTime if sampleTime is not sys.maxsize else __defaultTime
   while ( (time.time() - start_time) < runTime ):
     try:
       # Get data from queue
