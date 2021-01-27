@@ -17,8 +17,7 @@ class SocketHandlerClient():
     self.__executor = ThreadPoolExecutor(max_workers=cpucount)
     self.__futRecvThread = None
     # Initialize socket
-    self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM | socket.SOCK_NONBLOCK)
-    self.__socket.settimeout(5)
+    self.__socket = None
     # Receive Callback Initialization
     self.__cbRecv = []
     self.__cbRecv.append(cbRecv)
@@ -27,15 +26,18 @@ class SocketHandlerClient():
     ret = 0
     self.__ip = ip
     self.__port = port
-    try:
-      self.__socket.connect((ip, port))
-      self.__socket.settimeout(0)
-      self.__InitRecvThread()
-    except OSError as msg:
-      self.__Logger.critical(msg)
-      self.__socket.close()
-      self.__socket = None
-      ret = -1
+    if self.__socket is None:
+      try:
+        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM | socket.SOCK_NONBLOCK)
+        self.__socket.settimeout(5)
+        self.__socket.connect((ip, port))
+        self.__socket.settimeout(0)
+        self.__InitRecvThread()
+      except OSError as msg:
+        self.__Logger.critical(msg)
+        self.__socket.close()
+        self.__socket = None
+        ret = -1
     return ret
 
   def AddCallbackRecv(self, cb):
@@ -43,8 +45,9 @@ class SocketHandlerClient():
 
   def DeInit(self):
     self.__DeInitRecvThread()
-    self.__socket.close()
-    self.__socket = None
+    if self.__socket is not None:
+      self.__socket.close()
+      self.__socket = None
 
   def __DeInitRecvThread(self):
     self.__bRecvThread = False
