@@ -110,7 +110,7 @@ def main():
     myplot.Init()
 
   runTime = sampleTime if sampleTime is not sys.maxsize else __defaultTime
-  while ( (time.time() - start_time) < runTime ):
+  while ((time.time() - start_time) <= runTime) or (imuQueue.empty() is not True):
     try:
       # Get data from queue
       imu = imuQueue.get(timeout=runTime/1000)
@@ -120,6 +120,9 @@ def main():
     except queue.Empty:
       # No data available, keep waiting
       pass
+    # Stop socket connection to avoid data flood
+    if ((time.time() - start_time) > runTime):
+      sock.DeInit()
 
   sock.DeInit()
 
