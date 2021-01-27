@@ -20,7 +20,7 @@ class SocketHandlerClient():
     self.__socket = None
     # Receive Callback Initialization
     self.__cbRecv = []
-    self.__cbRecv.append(cbRecv)
+    if cbRecv is not None: self.__cbRecv.append(cbRecv)
 
   def Init(self, ip, port):
     ret = 0
