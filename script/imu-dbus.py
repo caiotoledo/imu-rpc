@@ -83,6 +83,9 @@ def cbSockRecv(data):
 
 
 def main():
+  # Default script runtime
+  __defaultTime = 5
+
   start_time = time.time()
 
   # Parse command line arguments
@@ -90,15 +93,12 @@ def main():
   # Store variables
   ipAddress = args.Address
   ipPort = int(args.Port)
-  sampleTime = int(args.SampleTime if args.SampleTime is not None else sys.maxsize)
+  sampleTime = float(args.SampleTime if args.SampleTime is not None else __defaultTime)
   mathPlot = args.MathPlot
   debug = args.Debug
 
   LoggerLevel = 'DEBUG' if debug is True else 'INFO'
   coloredlogs.install(level=LoggerLevel,logger=__Logger)
-
-  # Default script runtime
-  __defaultTime = 5
 
   # Initialize socket handler module
   sock = sockethandler.SocketHandlerClient(cbRecv=cbSockRecv)
@@ -109,11 +109,10 @@ def main():
   if mathPlot:
     myplot.Init()
 
-  runTime = sampleTime if sampleTime is not sys.maxsize else __defaultTime
-  while ((time.time() - start_time) <= runTime) or (imuQueue.empty() is not True):
+  while ((time.time() - start_time) <= sampleTime) or (imuQueue.empty() is not True):
     try:
       # Get data from queue
-      imu = imuQueue.get(timeout=runTime/1000)
+      imu = imuQueue.get(timeout=sampleTime/1000)
       myplot.appendImuData(imu)
       if imuQueue.empty():
         myplot.showGraph("IMU Data")
@@ -121,7 +120,7 @@ def main():
       # No data available, keep waiting
       pass
     # Stop socket connection to avoid data flood
-    if ((time.time() - start_time) > runTime):
+    if ((time.time() - start_time) > sampleTime):
       sock.DeInit()
 
   sock.DeInit()
