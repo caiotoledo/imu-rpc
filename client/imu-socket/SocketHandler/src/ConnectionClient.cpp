@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include <LogInstance.h>
@@ -34,25 +35,25 @@ ConnectionClient::ConnectionClient(int handler) :
         /* Received Data! */
         if(FD_ISSET(ConnHandler,&rfds))
         {
-          std::vector<uint8_t> vecBytes;
+          /* Get queued bytes available for read */
+          int bytes_avail;
+          auto ret = ioctl(ConnHandler, FIONREAD, &bytes_avail);
+          if (ret != 0)
+          {
+            break;
+          }
 
           /* Read from socket */
-          char buf[4096];
-          ssize_t bytes_read = 0;
-          do
+          char buf[bytes_avail];
+          auto bytes_read = recv(ConnHandler, &buf[0], bytes_avail, 0);
+          if (bytes_read < 0)
           {
-            auto len_available_buf = sizeof(buf) - bytes_read;
-            bytes_read += recv(ConnHandler, &buf[0], len_available_buf, 0);
-            if (bytes_read < 0)
-            {
-              LOGWARN("recv failed [%d][%s]", bytes_read, strerror(errno));
-              bytes_read = 0;
-              break;
-            }
-          } while ((bytes_read > 0) && (bytes_read <= (ssize_t)sizeof(buf)));
+            LOGWARN("recv failed [%d][%s]", bytes_read, strerror(errno));
+            break;
+          }
 
           /* Notify via callback */
-          vecBytes.assign(buf, buf+bytes_read);
+          std::vector<uint8_t> vecBytes(buf, buf+bytes_read);
           for (auto &func : vecCbRecv)
           {
             func(vecBytes);
@@ -65,6 +66,7 @@ ConnectionClient::ConnectionClient(int handler) :
         bThreadConnClient = false;
       }
     }
+    this->CloseConnection();
   };
   bThreadConnClient = true;
   thConnClient = std::thread(funcRecv);
