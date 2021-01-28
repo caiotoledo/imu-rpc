@@ -63,7 +63,7 @@ jobs:
           killall imu-daemon
           sleep 1
 
-      - name: Install dependencies Static Analysis
+      - name: Install dependencies for Static Analysis
         run: |
           sudo apt install clang-tools
 
