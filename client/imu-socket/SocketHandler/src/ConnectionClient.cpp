@@ -21,7 +21,6 @@ ConnectionClient::ConnectionClient(int handler) :
     {
       /* Prepare fd_set for select */
       FD_ZERO(&rfds);
-      FD_SET(0, &rfds);
       FD_SET(ConnHandler, &rfds);
 
       /*Setting timeout time*/
