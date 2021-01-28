@@ -58,6 +58,10 @@ ConnectionClient::ConnectionClient(int handler) :
         }
       }
 
+      if (!this->isConnected())
+      {
+        bThreadConnClient = false;
+      }
     }
   };
   bThreadConnClient = true;
