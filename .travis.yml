@@ -26,12 +26,16 @@ before_install:
   - cd ../
   # Install scan-build
   - sudo apt install clang-tools
+  # Install python3 modules dependencies
+  - sudo apt install python3-pip python3-tk
+  - python3 -m pip install -r script/requirements.txt
 
 before_script:
   # Show current versions
   - gcc --version
   - g++ --version
   - cmake --version
+  - python3 --version
 
 matrix:
   include:
@@ -55,9 +59,15 @@ matrix:
         - imu-cli --help
         # Start dbus
         - eval `dbus-launch --sh-syntax`
-        # Execute binaries
+        # Start IMU Daemon
         - imu-daemon -d -a2 -g250 -r500
-        - imu-cli -a -g -e -t 3
+        # Test IMU Command Line Interface
+        - imu-cli -a -g -e -t1
+        # Test IMU TCP Socket
+        - imu-socket -d
+        - python3 script/imu-dbus.py -a localhost -p 1111 -t1 -d
+        # Stop All Daemons
+        - killall imu-socket
         - killall imu-daemon
         - sleep 1
     - script:
