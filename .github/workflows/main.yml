@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4
+          sudo apt install dbus-x11
+          sudo apt install psmisc
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake . && make && sudo make install && sudo ldconfig
+          cd ../
+          sudo apt install python3-pip python3-tk
+          python3 -m pip install -r script/requirements.txt
+
+      - name: Build Project in Release
+        run: |
+          mkdir -p .build_release/ && cd .build_release/
+          cmake -DCMAKE_BUILD_TYPE=Release ../
+          make
+          cd ../
+
+      - name: Build Project in Debug
+        run: |
+          mkdir -p .build_debug/ && cd .build_debug/
+          cmake -DCMAKE_BUILD_TYPE=Debug ../
+          make
+          sudo make install
+          sudo ldconfig
+          cd ../
+
+      - name: Simple Application Test
+        run: |
+          imu-daemon --version
+          imu-daemon --help
+          imu-cli --version
+          imu-cli --help
+          imu-socket --version
+          imu-socket --help
+
+      - name: Test Application
+        run: |
+          eval `dbus-launch --sh-syntax`
+          imu-daemon -d -a2 -g250 -r500
+          imu-socket -d
+          imu-cli -a -g -e -t1
+          python3 script/imu-dbus.py -a localhost -p 1111 -t1 -d
+          killall imu-socket
+          killall imu-daemon
+          sleep 1
+
+      - name: Install dependencies Static Analysis
+        run: |
+          sudo apt install clang-tools
+
+      - name: Run Static Analysis
+        run: |
+          mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
+          scan-build cmake ../
+          scan-build make
