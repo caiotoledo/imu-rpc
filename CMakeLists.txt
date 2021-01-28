@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 set(PROJECT_NAME imu-rpc)
 
+project(${PROJECT_NAME})
+
 # PROJECT VERSION
 set(IMURPC_VERSION_MAJOR 0)
 set(IMURPC_VERSION_MINOR 1)
