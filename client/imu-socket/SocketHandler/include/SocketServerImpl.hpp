@@ -26,7 +26,14 @@ namespace SocketServer
     int serverHandler;
     int port;
 
+    /**
+     * @brief Accept client connections, used in thread loop
+     */
     void AcceptConnection(void);
+
+    /**
+     * @brief Close server socket and connections
+     */
     void CloseServer(void);
 
   public:

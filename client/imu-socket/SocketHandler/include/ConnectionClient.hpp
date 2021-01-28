@@ -18,6 +18,9 @@ namespace SocketServer
 
     std::vector<std::function<void(const std::vector<uint8_t> &)>> vecCbRecv;
 
+    /**
+     * @brief Close socket connection
+     */
     void CloseConnection(void);
 
   public:
@@ -38,6 +41,12 @@ namespace SocketServer
      */
     virtual void AddCallbackRecv(std::function<void(const std::vector<uint8_t> &)> &&cb);
 
+    /**
+     * @brief Check if client is connected
+     *
+     * @return true Connected
+     * @return false Not Connected
+     */
     virtual bool isConnected(void);
 
     ~ConnectionClient();
