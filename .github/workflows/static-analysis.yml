@@ -1,0 +1,25 @@
+name: Static Analysis
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies for Static Analysis
+        run: |
+          sudo apt install clang-tools
+
+      - name: Run Static Analysis
+        run: |
+          mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
+          scan-build --status-bugs cmake ../
+          scan-build --status-bugs make
