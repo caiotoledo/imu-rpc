@@ -39,10 +39,12 @@ ConnectionClient::ConnectionClient(int handler) :
           /* Read from socket */
           char buf[4096];
           ssize_t bytes_read = 0;
-          do {
+          do
+          {
             auto len_available_buf = sizeof(buf) - bytes_read;
             bytes_read += recv(ConnHandler, &buf[0], len_available_buf, 0);
-            if (bytes_read < 0) {
+            if (bytes_read < 0)
+            {
               LOGWARN("recv failed [%d][%s]", bytes_read, strerror(errno));
               bytes_read = 0;
               break;
