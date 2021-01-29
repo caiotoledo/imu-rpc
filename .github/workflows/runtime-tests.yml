@@ -12,6 +12,7 @@ jobs:
   job:
     strategy:
       matrix:
+        buildtype: [Debug, Release]
         samplerate: [10, 100, 500]
         gyroscale: [250, 1000]
         accelscale: [2, 16]
@@ -33,17 +34,10 @@ jobs:
           sudo apt install python3-pip python3-tk
           python3 -m pip install -r script/requirements.txt
 
-      - name: Build Project in Release
+      - name: Build Project
         run: |
-          mkdir -p .build_release/ && cd .build_release/
-          cmake -DCMAKE_BUILD_TYPE=Release ../
-          make
-          cd ../
-
-      - name: Build Project in Debug
-        run: |
-          mkdir -p .build_debug/ && cd .build_debug/
-          cmake -DCMAKE_BUILD_TYPE=Debug ../
+          mkdir -p .build/ && cd .build/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
           make
           sudo make install
           sudo ldconfig
