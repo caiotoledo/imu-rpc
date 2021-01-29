@@ -22,6 +22,13 @@ jobs:
         run: |
           sudo apt install clang-tools
 
+      - name: Install dbus-cxx
+        run: |
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake . && make && sudo make install && sudo ldconfig
+          cd ../
+
       - name: Run Static Analysis
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
