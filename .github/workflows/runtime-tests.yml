@@ -10,6 +10,12 @@ on:
 
 jobs:
   job:
+    strategy:
+      matrix:
+        samplerate: [10, 100, 500]
+        gyroscale: [250, 1000]
+        accelscale: [2, 16]
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -55,8 +61,8 @@ jobs:
       - name: Test Application
         run: |
           eval `dbus-launch --sh-syntax`
-          imu-daemon -d -a2 -g250 -r500
-          imu-socket -d
+          imu-daemon -d -a${{ matrix.accelscale }} -g${{ matrix.gyroscale }} -r${{ matrix.samplerate }}
+          imu-socket -d -p 1111
           imu-cli -a -g -e -t1
           python3 script/imu-dbus.py -a localhost -p 1111 -t1 -d
           killall imu-socket
