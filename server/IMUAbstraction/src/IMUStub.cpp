@@ -1,6 +1,7 @@
 #include <map>
 #include <thread>
 #include <chrono>
+#include <cmath>
 
 #include <cstdlib>
 #include <ctime>
@@ -9,9 +10,14 @@
 
 #include <LogInstance.h>
 
+#define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
+#define GET_CURR_MILLI  (((double)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count())/1000.0)
+
 using namespace IMUAbstraction;
 
 constexpr int MAX_AXIS = 3;
+constexpr auto FREQ_SIN = 0.5;
+constexpr auto AXIS_PHASE_SHIFT = 90.0;
 
 double accel[MAX_AXIS] = {0};
 double gyro[MAX_AXIS] = {0};
@@ -72,6 +78,37 @@ double IMUStub::GetRandomGyro(void)
   return ret;
 }
 
+double IMUStub::SinValue(double amplitude, double freq, double timepoint, double phaseshift)
+{
+  auto phaseshift_rad = DEG_TO_RAD(phaseshift);
+  auto ret = amplitude * sin(2L * M_PIl * freq * timepoint + phaseshift_rad);
+  return ret;
+}
+
+double IMUStub::GetSinAccel(double phaseshift)
+{
+  double amp = GetAccelScale<double>();
+  double freq = FREQ_SIN;
+  double now = GET_CURR_MILLI;
+
+  double ret = this->SinValue(amp, freq, now, phaseshift);
+  ret /= 100.0;
+
+  return ret;
+}
+
+double IMUStub::GetSinGyro(double phaseshift)
+{
+  double amp = GetGyroScale<double>();
+  double freq = FREQ_SIN;
+  double duration = GET_CURR_MILLI;
+
+  double ret = this->SinValue(amp, freq, duration, phaseshift);
+  ret /= 100.0;
+
+  return ret;
+}
+
 eIMUAbstractionError IMUStub::Init(void)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
@@ -95,8 +132,9 @@ eIMUAbstractionError IMUStub::Init(void)
       {
         for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
         {
-          accel[i] = this->GetRandomAccel();
-          gyro[i] = this->GetRandomGyro();
+          double shift = i * AXIS_PHASE_SHIFT;
+          accel[i] = this->GetSinAccel(shift);
+          gyro[i] = this->GetSinGyro(shift+AXIS_PHASE_SHIFT);
         }
 
         for(auto &cb : vecCallback)

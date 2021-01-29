@@ -32,6 +32,10 @@ namespace IMUAbstraction
     double GetRandomAccel(void);
     double GetRandomGyro(void);
 
+    double SinValue(double amplitude, double freq, double timepoint, double phaseshift=0);
+    double GetSinAccel(double phaseshift=0);
+    double GetSinGyro(double phaseshift=0);
+
   public:
     IMUStub(
       eAccelScale accelScale=eAccelScale::Accel_2g,

@@ -7,7 +7,7 @@
 
 using namespace IMUMath;
 
-#define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PI))
+#define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PIl))
 
 IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu) :
   instanceImu(imu)
