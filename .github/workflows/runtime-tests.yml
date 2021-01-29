@@ -1,0 +1,64 @@
+name: Runtime Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    strategy:
+      matrix:
+        buildtype: [Debug, Release]
+        samplerate: [10, 100, 500]
+        gyroscale: [250, 1000]
+        accelscale: [2, 16]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt -qq update
+          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4
+          sudo apt install dbus-x11
+          sudo apt install psmisc
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake . && make && sudo make install && sudo ldconfig
+          cd ../
+          sudo apt install python3-pip python3-tk
+          python3 -m pip install -r script/requirements.txt
+
+      - name: Build Project
+        run: |
+          mkdir -p .build/ && cd .build/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
+          make
+          sudo make install
+          sudo ldconfig
+          cd ../
+
+      - name: Simple Application Test
+        run: |
+          imu-daemon --version
+          imu-daemon --help
+          imu-cli --version
+          imu-cli --help
+          imu-socket --version
+          imu-socket --help
+
+      - name: Test Application
+        run: |
+          eval `dbus-launch --sh-syntax`
+          imu-daemon -d -a${{ matrix.accelscale }} -g${{ matrix.gyroscale }} -r${{ matrix.samplerate }}
+          imu-socket -d -p 1111
+          imu-cli -a -g -e -t1
+          python3 script/imu-dbus.py -a localhost -p 1111 -t1 -d
+          killall imu-socket
+          killall imu-daemon
+          sleep 1
