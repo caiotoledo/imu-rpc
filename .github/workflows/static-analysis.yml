@@ -18,8 +18,16 @@ jobs:
         run: |
           sudo apt install clang-tools
 
-      - name: Run Static Analysis
+      - name: Run Static Analysis Release
         run: |
-          mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
-          scan-build --status-bugs cmake ../
+          mkdir -p .build_static_analyzer_release/ && cd .build_static_analyzer_release/
+          scan-build --status-bugs cmake -DCMAKE_BUILD_TYPE=Release ../
           scan-build --status-bugs make
+          cd ../
+
+      - name: Run Static Analysis Debug
+        run: |
+          mkdir -p .build_static_analyzer_debug/ && cd .build_static_analyzer_debug/
+          scan-build --status-bugs cmake -DCMAKE_BUILD_TYPE=Debug ../
+          scan-build --status-bugs make
+          cd ../
