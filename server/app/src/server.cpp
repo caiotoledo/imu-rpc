@@ -22,6 +22,7 @@
 
 #include "argvalidator.hpp"
 
+/* Path to iio devices */
 #define DEVICE_PATH   "/sys/bus/iio/devices/"
 
 /* Using IMU Industrial IO Buffering */
