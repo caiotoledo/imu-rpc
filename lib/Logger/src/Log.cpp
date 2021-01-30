@@ -34,6 +34,8 @@ void Log::Print(
   const char *fmt, ...
 )
 {
+  std::lock_guard<std::mutex> lck(mtxLog);
+
   char buffer[256];
 
   switch (level)
