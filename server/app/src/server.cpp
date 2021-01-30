@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <atomic>
+#include <fstream>
 
 #include <LogInstance.h>
 
@@ -21,6 +22,7 @@
 
 #include "argvalidator.hpp"
 
+/* Path to iio devices */
 #define DEVICE_PATH   "/sys/bus/iio/devices/"
 
 /* Using IMU Industrial IO Buffering */
@@ -76,6 +78,30 @@ static bool path_isvalid(const char *path) {
   return (stat(path, &st) >= 0);
 }
 
+template <typename T>
+T GetValueInFile(const char *path)
+{
+  T value = {0};
+
+  std::ifstream ifFile(path);
+  if (ifFile.is_open())
+  {
+    std::string strValue;
+    if (std::getline(ifFile, strValue))
+    {
+      std::stringstream sstrValue;
+      sstrValue << strValue;
+      sstrValue >> value;
+    }
+  }
+  else
+  {
+    LOGERROR("Invalid Path!");
+  }
+
+  return value;
+}
+
 int main(int argc, char const *argv[])
 {
   /**
@@ -125,6 +151,30 @@ int main(int argc, char const *argv[])
   }
 
   /**
+   * IS IMU DEVICE AVAILABLE?
+   */
+  auto imu_avail = false;
+  auto DeviceIndex = 0;
+  do
+  {
+    std::stringstream sPath;
+    sPath << DEVICE_PATH;
+    sPath << "iio:device" << DeviceIndex << "/name";
+    if (!path_isvalid(sPath.str().c_str()))
+    {
+      break;
+    }
+
+    auto sNameDev = GetValueInFile<std::string>(sPath.str().c_str());
+    LOGDEBUG("iio device [%s] - name [%s]", sPath.str().c_str(), sNameDev.c_str());
+    imu_avail = (sNameDev.compare("mpu6050") == 0);
+    if (!imu_avail)
+    {
+      DeviceIndex++;
+    }
+  } while (!imu_avail);
+
+  /**
    * START SERVER
    */
   std::shared_ptr<RPCServer::IRPCServer> serverRPC;
@@ -132,13 +182,13 @@ int main(int argc, char const *argv[])
   std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuAbstraction;
   std::shared_ptr<IMUMath::IIMUMath> imuMath;
 
-  if (path_isvalid(DEVICE_PATH) == true)
+  if (imu_avail)
   {
 #ifdef IMU_BUFFER_IIO
     imuAbstraction =
       std::make_shared<IMUAbstraction::IMUBufferIIO>(
         DEVICE_PATH,
-        0,
+        DeviceIndex,
         accel_scale,
         gyro_scale,
         sample_rate
@@ -148,7 +198,7 @@ int main(int argc, char const *argv[])
     imuAbstraction =
       std::make_shared<IMUAbstraction::IMUIndustrialIO>(
         DEVICE_PATH,
-        0,
+        DeviceIndex,
         accel_scale,
         gyro_scale,
         sample_rate
