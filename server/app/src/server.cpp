@@ -17,6 +17,8 @@
 #include <IMUIndustrialIO.hpp>
 #include <IMUBufferIIO.hpp>
 
+#include <ValueGenImpl.hpp>
+
 #include <IMUMathImpl.hpp>
 
 #include "argvalidator.hpp"
@@ -26,7 +28,15 @@
 /* Using IMU Industrial IO Buffering */
 #define IMU_BUFFER_IIO
 
+/* Uses Sin Wave Generator class in IMU Stub */
+#define SINWAVE_GENERATOR
+
 constexpr auto DELAY_CHILD_CREATION = std::chrono::milliseconds(1);
+
+#ifdef SINWAVE_GENERATOR
+constexpr auto FREQ_SIN = 0.5;
+constexpr auto AXIS_PHASE_SHIFT = 90.0;
+#endif
 
 std::atomic<sig_atomic_t> g_run = 1;
 static void signal_handler(int signum)
@@ -131,6 +141,7 @@ int main(int argc, char const *argv[])
   std::shared_ptr<IMUServer::IIMUServer> serverIMU;
   std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuAbstraction;
   std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  std::shared_ptr<IMUAbstraction::IValueGenerator> valueGen;
 
   if (path_isvalid(DEVICE_PATH) == true)
   {
@@ -158,7 +169,15 @@ int main(int argc, char const *argv[])
   }
   else
   {
+#ifdef SINWAVE_GENERATOR
+    valueGen = std::make_shared<IMUAbstraction::SinWaveValueGenerator>(FREQ_SIN, AXIS_PHASE_SHIFT);
+    LOGDEBUG("Using SinWaveValueGenerator SinFrequency[%0.2f Hz] - PhaseShiftAxis[%0.1f°]", FREQ_SIN, AXIS_PHASE_SHIFT);
+#else
+    valueGen = std::make_shared<IMUAbstraction::RandomValueGenerator>();
+    LOGDEBUG("Using RandomValueGenerator");
+#endif
     imuAbstraction = std::make_shared<IMUAbstraction::IMUStub>(
+      valueGen,
       accel_scale,
       gyro_scale,
       sample_rate
