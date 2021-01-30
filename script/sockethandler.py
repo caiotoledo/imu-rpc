@@ -24,8 +24,6 @@ class SocketHandlerClient():
 
   def Init(self, ip, port):
     ret = 0
-    self.__ip = ip
-    self.__port = port
     if self.__socket is None:
       try:
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM | socket.SOCK_NONBLOCK)
