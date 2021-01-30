@@ -1,5 +1,8 @@
 #pragma once
 
+#include <mutex>
+#include <sstream>
+
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
 #define ANSI_COLOR_YELLOW  "\x1b[33m"
@@ -26,13 +29,15 @@ namespace logger
   class Log
   {
   private:
-    void PrintHeader(eLogLevel level);
+    std::mutex mtxLog;
+
+    void PrintHeader(eLogLevel level, std::stringstream &sstr);
 
   public:
     Log() {}
     ~Log() {}
 
-    void Print(eLogLevel level, const char *fmt, ...);
+    void Print(eLogLevel level, const char *filename, const char *func, int linenum, const char *fmt, ...);
   };
 
 } // namespace logger

@@ -22,14 +22,9 @@ using LogSingleton = singleton::SingletonInstancer<logger::Log>;
 /* Macro for access the scheduler instance */
 #define LOG_INSTANCE    (*LogSingleton::GetInstance())
 
-#define LOGHEADER       std::cout << "[" << __FILENAME__ << ":" << __FUNCTION__ << "@" << __LINE__ << "]"
-
 /* Standard Log macro */
 #define LOGMACRO(COLOR, LEVEL, ...)   do {\
-  SET_COUT_##COLOR;\
-  LOGHEADER;\
-  LOG_INSTANCE.Print(logger::LEVEL, __VA_ARGS__);\
-  RESET_COUT_COLOR;\
+  LOG_INSTANCE.Print(logger::LEVEL, __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__);\
 } while(0)
 
 #ifdef LEVEL_DEBUG
