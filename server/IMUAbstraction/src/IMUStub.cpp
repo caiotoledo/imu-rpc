@@ -63,8 +63,13 @@ eIMUAbstractionError IMUStub::Init(void)
     bThreadNotification = true;
     auto func = [this]()
     {
+      /* Sample Frequency in Microseconds */
+      auto sample_freq_us = this->GetSampleFrequency<int>()*1000L;
+
       while (bThreadNotification)
       {
+        auto start = std::chrono::high_resolution_clock::now();
+
         for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
         {
           double val_accel;
@@ -82,8 +87,13 @@ eIMUAbstractionError IMUStub::Init(void)
           cb();
         }
 
-        auto sample_delay = this->GetSampleFrequency<int>();
-        std::this_thread::sleep_for(std::chrono::milliseconds(sample_delay));
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        if (duration.count() <= sample_freq_us)
+        {
+          auto diff = sample_freq_us-duration.count();
+          std::this_thread::sleep_for(std::chrono::microseconds(diff));
+        }
       }
     };
     thNotification = std::thread(func);
