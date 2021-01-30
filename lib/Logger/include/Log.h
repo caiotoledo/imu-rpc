@@ -32,7 +32,7 @@ namespace logger
     Log() {}
     ~Log() {}
 
-    void Print(eLogLevel level, const char *fmt, ...);
+    void Print(eLogLevel level, const char *filename, const char *func, int linenum, const char *fmt, ...);
   };
 
 } // namespace logger

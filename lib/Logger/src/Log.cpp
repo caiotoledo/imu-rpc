@@ -1,7 +1,10 @@
-#include <iostream>
 #include <cstdarg>
 
-#include "../include/Log.h"
+#include <iostream>
+
+#include "Log.h"
+
+#define LOGHEADER(filename, func, line) std::cout << "[" << filename << ":" << func << "@" << line << "]"
 
 using namespace logger;
 
@@ -23,9 +26,32 @@ void Log::PrintHeader(eLogLevel level)
   }
 }
 
-void Log::Print(eLogLevel level, const char *fmt, ...)
+void Log::Print(
+  eLogLevel level,
+  const char *filename,
+  const char *func,
+  int linenum,
+  const char *fmt, ...
+)
 {
   char buffer[256];
+
+  switch (level)
+  {
+  case DEBUG:
+    SET_COUT_GREEN;
+    break;
+  case WARNING:
+    SET_COUT_YELLOW;
+    break;
+  case ERROR:
+    SET_COUT_RED;
+    break;
+  default:
+    return;
+  }
+
+  LOGHEADER(filename, func, linenum);
 
   /* Show Log Header */
   this->PrintHeader(level);
@@ -35,4 +61,6 @@ void Log::Print(eLogLevel level, const char *fmt, ...)
   va_start(args, fmt);
   vsprintf(buffer, fmt, args);
   std::cout << buffer << std::endl;
+
+  RESET_COUT_COLOR;
 }
