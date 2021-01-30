@@ -162,6 +162,9 @@ eIMUError DBusIMUClient::GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleU
 
 void DBusIMUClient::DeInit(void)
 {
+  /* Avoid deadlock by calling callbacks during DeInitialization */
+  vecCallback.clear();
+
   if (this->isInitialized())
   {
     /* Close Dispatcher connection */
