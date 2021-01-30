@@ -53,9 +53,19 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
 
   auto funcSignalHandler = [this](DBus::SignalMessage::const_pointer msg)
   {
+    /* Finish all last futures */
+    vecFutCallback.clear();
+
+    /* Notify callback */
     for(auto &cb : vecCallback)
     {
-      cb();
+      auto fut = std::async(std::launch::async, [&cb]()
+      {
+        cb();
+      });
+
+      /* Store future */
+      vecFutCallback.push_back(std::move(fut));
     }
     return DBus::HANDLED;
   };
@@ -163,6 +173,7 @@ eIMUError DBusIMUClient::GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleU
 void DBusIMUClient::DeInit(void)
 {
   /* Avoid deadlock by calling callbacks during DeInitialization */
+  vecFutCallback.clear();
   vecCallback.clear();
 
   if (this->isInitialized())
