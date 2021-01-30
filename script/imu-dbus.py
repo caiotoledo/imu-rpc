@@ -100,7 +100,10 @@ def main():
 
   # Initialize socket handler module
   sock = sockethandler.SocketHandlerClient()
-  sock.Init(ip=ipAddress, port=ipPort)
+  retSock = sock.Init(ip=ipAddress, port=ipPort)
+  if retSock != 0:
+    __Logger.critical("Connection Failure with [{}:{}]".format(ipAddress, ipPort))
+    sys.exit(retSock)
 
   # Initialize imuplot module
   myplot = imuplot.ImuDataPlot()
