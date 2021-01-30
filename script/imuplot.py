@@ -64,7 +64,6 @@ class ImuDataPlot():
     self.__axGyro.set(ylabel='Gyro (°/s)', xlabel='Time (ms)')
 
     self.__axAngle.set_title('Euler Angle')
-    self.__axAngle.set_ylim(-400,400)
     self.__axAngle.set(ylabel='Angle (°)', xlabel='Time (ms)')
 
     self.__isInitalized = True
