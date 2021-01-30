@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <future>
 
 #include <dbus-cxx-0.12/dbus-cxx.h>
 
@@ -13,6 +14,7 @@ namespace IMUClient
   {
   private:
     std::vector<std::function<void()>> vecCallback;
+    std::vector<std::future<void>> vecFutCallback;
 
     bool isConnected = false;
     DBus::Dispatcher::pointer dispatcher = nullptr;

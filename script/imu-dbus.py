@@ -58,7 +58,8 @@ def cbSockRecv(data):
 
   sData = sData.split(";")
   d = {}
-  for axis in sData[0:3]:
+  timepoint = float(sData[0])/1000
+  for axis in sData[1:4]:
     AxisName =  axis.split(",")[0]
     AxisAccel = float(axis.split(",")[1])
     AxisGyro =  float(axis.split(",")[2])
@@ -73,10 +74,9 @@ def cbSockRecv(data):
   GyroObj =  imuplot.Gyro(d["X"]["Gyro"], d["Y"]["Gyro"], d["Z"]["Gyro"])
   AngleObj = imuplot.AngleEuler(d["X"]["Angle"], d["Y"]["Angle"], d["Z"]["Angle"])
   imu = imuplot.ImuData(accel={}, gyro={}, angle={})
-  now = time.time()
-  imu.addAccel(now, AccelObj)
-  imu.addGyro(now, GyroObj)
-  imu.addAngle(now, AngleObj)
+  imu.addAccel(timepoint, AccelObj)
+  imu.addGyro(timepoint, GyroObj)
+  imu.addAngle(timepoint, AngleObj)
 
   imuQueue.put(imu)
 
