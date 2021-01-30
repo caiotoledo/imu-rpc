@@ -195,5 +195,7 @@ int main(int argc, char const *argv[])
     std::cin.get();
   }
 
+  LOGDEBUG("Closing socket...");
+
   return ((int)ret);
 }
