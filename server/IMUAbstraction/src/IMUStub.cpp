@@ -2,9 +2,6 @@
 #include <thread>
 #include <chrono>
 
-#include <cstdlib>
-#include <ctime>
-
 #include <IMUStub.hpp>
 
 #include <LogInstance.h>
@@ -42,34 +39,9 @@ const std::map<eSampleFreq, int> mapSampleFreq =
   {eSampleFreq::Freq_500ms, 500},
 };
 
-IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq) :
-  accelScale(accelScale), gyroScale(gyroScale), sampleFreq(sampleFreq)
+IMUStub::IMUStub(std::shared_ptr<IMUAbstraction::IValueGenerator> generator, eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq) :
+  instanceGen(generator), accelScale(accelScale), gyroScale(gyroScale), sampleFreq(sampleFreq)
 {
-}
-
-double IMUStub::GetRandomAccel(void)
-{
-  bool signal = ((bool)(rand() % 2));
-
-  auto scale = GetAccelScale<int>();
-  double r = (rand() % scale);
-  double ret = (r/100);
-
-  ret = signal ? ret : (-ret);
-
-  return ret;
-}
-double IMUStub::GetRandomGyro(void)
-{
-  bool signal = ((bool)(rand() % 2));
-
-  auto scale = GetGyroScale<int>();
-  double r = (rand() % scale);
-  double ret = (r/100);
-
-  ret = signal ? ret : (-ret);
-
-  return ret;
 }
 
 eIMUAbstractionError IMUStub::Init(void)
@@ -91,12 +63,23 @@ eIMUAbstractionError IMUStub::Init(void)
     bThreadNotification = true;
     auto func = [this]()
     {
+      /* Sample Frequency in Microseconds */
+      auto sample_freq_us = this->GetSampleFrequency<int>()*1000L;
+
       while (bThreadNotification)
       {
+        auto start = std::chrono::high_resolution_clock::now();
+
         for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
         {
-          accel[i] = this->GetRandomAccel();
-          gyro[i] = this->GetRandomGyro();
+          double val_accel;
+          double val_gyro;
+
+          this->instanceGen->GetRawAccel((DBusTypes::eAxis)i, val_accel, this->GetAccelScale<double>());
+          this->instanceGen->GetRawGyro((DBusTypes::eAxis)i, val_gyro, this->GetGyroScale<double>());
+
+          accel[i] = val_accel/100;
+          gyro[i] = val_gyro/100;
         }
 
         for(auto &cb : vecCallback)
@@ -104,8 +87,13 @@ eIMUAbstractionError IMUStub::Init(void)
           cb();
         }
 
-        auto sample_delay = this->GetSampleFrequency<int>();
-        std::this_thread::sleep_for(std::chrono::milliseconds(sample_delay));
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        if (duration.count() <= sample_freq_us)
+        {
+          auto diff = sample_freq_us-duration.count();
+          std::this_thread::sleep_for(std::chrono::microseconds(diff));
+        }
       }
     };
     thNotification = std::thread(func);
