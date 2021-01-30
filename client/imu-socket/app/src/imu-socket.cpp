@@ -16,6 +16,8 @@ constexpr auto DELAY_CHILD_CREATION = std::chrono::milliseconds(1);
 constexpr int NUM_AXIS = 3;
 constexpr int IMU_PRECISION = 5;
 
+static auto start = std::chrono::high_resolution_clock::now();
+
 std::atomic<sig_atomic_t> g_run = 1;
 static void signal_handler(int signum)
 {
@@ -63,6 +65,10 @@ static int ParseIMUData(std::shared_ptr<IMUClient::IIMUClient> &client, std::str
 {
   auto retParseIMUData = 0;
   std::stringstream sOut;
+
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+  sOut << duration.count() << ";";
 
   for (size_t i = 0; i < NUM_AXIS; i++)
   {
