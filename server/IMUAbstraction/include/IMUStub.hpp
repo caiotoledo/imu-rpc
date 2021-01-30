@@ -6,12 +6,16 @@
 
 #include "IIMUAbstraction.hpp"
 
+#include "IValueGenerator.hpp"
+
 namespace IMUAbstraction
 {
 
   class IMUStub : public IIMUAbstraction
   {
   private:
+    std::shared_ptr<IMUAbstraction::IValueGenerator> instanceGen;
+
     std::atomic<bool> bThreadNotification;
     std::thread thNotification;
     std::vector<std::function<void()>> vecCallback;
@@ -29,15 +33,9 @@ namespace IMUAbstraction
     template <typename T>
     T GetSampleFrequency();
 
-    double GetRandomAccel(void);
-    double GetRandomGyro(void);
-
-    double SinValue(double amplitude, double freq, double timepoint, double phaseshift=0);
-    double GetSinAccel(double phaseshift=0);
-    double GetSinGyro(double phaseshift=0);
-
   public:
     IMUStub(
+      std::shared_ptr<IMUAbstraction::IValueGenerator> generator,
       eAccelScale accelScale=eAccelScale::Accel_2g,
       eGyroScale gyroScale=eGyroScale::Gyro_250dps,
       eSampleFreq sampleFreq=eSampleFreq::Freq_500ms

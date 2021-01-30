@@ -16,8 +16,6 @@
 using namespace IMUAbstraction;
 
 constexpr int MAX_AXIS = 3;
-constexpr auto FREQ_SIN = 0.5;
-constexpr auto AXIS_PHASE_SHIFT = 90.0;
 
 double accel[MAX_AXIS] = {0};
 double gyro[MAX_AXIS] = {0};
@@ -48,65 +46,9 @@ const std::map<eSampleFreq, int> mapSampleFreq =
   {eSampleFreq::Freq_500ms, 500},
 };
 
-IMUStub::IMUStub(eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq) :
-  accelScale(accelScale), gyroScale(gyroScale), sampleFreq(sampleFreq)
+IMUStub::IMUStub(std::shared_ptr<IMUAbstraction::IValueGenerator> generator, eAccelScale accelScale, eGyroScale gyroScale, eSampleFreq sampleFreq) :
+  instanceGen(generator), accelScale(accelScale), gyroScale(gyroScale), sampleFreq(sampleFreq)
 {
-}
-
-double IMUStub::GetRandomAccel(void)
-{
-  bool signal = ((bool)(rand() % 2));
-
-  auto scale = GetAccelScale<int>();
-  double r = (rand() % scale);
-  double ret = (r/100);
-
-  ret = signal ? ret : (-ret);
-
-  return ret;
-}
-double IMUStub::GetRandomGyro(void)
-{
-  bool signal = ((bool)(rand() % 2));
-
-  auto scale = GetGyroScale<int>();
-  double r = (rand() % scale);
-  double ret = (r/100);
-
-  ret = signal ? ret : (-ret);
-
-  return ret;
-}
-
-double IMUStub::SinValue(double amplitude, double freq, double timepoint, double phaseshift)
-{
-  auto phaseshift_rad = DEG_TO_RAD(phaseshift);
-  auto ret = amplitude * sin(2L * M_PIl * freq * timepoint + phaseshift_rad);
-  return ret;
-}
-
-double IMUStub::GetSinAccel(double phaseshift)
-{
-  double amp = GetAccelScale<double>();
-  double freq = FREQ_SIN;
-  double now = GET_CURR_MILLI;
-
-  double ret = this->SinValue(amp, freq, now, phaseshift);
-  ret /= 100.0;
-
-  return ret;
-}
-
-double IMUStub::GetSinGyro(double phaseshift)
-{
-  double amp = GetGyroScale<double>();
-  double freq = FREQ_SIN;
-  double duration = GET_CURR_MILLI;
-
-  double ret = this->SinValue(amp, freq, duration, phaseshift);
-  ret /= 100.0;
-
-  return ret;
 }
 
 eIMUAbstractionError IMUStub::Init(void)
@@ -132,9 +74,14 @@ eIMUAbstractionError IMUStub::Init(void)
       {
         for (size_t i = 0; i < (sizeof(accel)/sizeof(accel[0])); i++)
         {
-          double shift = i * AXIS_PHASE_SHIFT;
-          accel[i] = this->GetSinAccel(shift);
-          gyro[i] = this->GetSinGyro(shift+AXIS_PHASE_SHIFT);
+          double val_accel;
+          double val_gyro;
+
+          this->instanceGen->GetRawAccel((DBusTypes::eAxis)i, val_accel, this->GetAccelScale<double>());
+          this->instanceGen->GetRawGyro((DBusTypes::eAxis)i, val_gyro, this->GetGyroScale<double>());
+
+          accel[i] = val_accel/100;
+          gyro[i] = val_gyro/100;
         }
 
         for(auto &cb : vecCallback)
