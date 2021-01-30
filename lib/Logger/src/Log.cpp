@@ -4,22 +4,22 @@
 
 #include "Log.h"
 
-#define LOGHEADER(filename, func, line) std::cout << "[" << filename << ":" << func << "@" << line << "]"
+#define LOGHEADER(filename, func, line) "[" << filename << ":" << func << "@" << line << "]"
 
 using namespace logger;
 
-void Log::PrintHeader(eLogLevel level)
+void Log::PrintHeader(eLogLevel level, std::stringstream &sstr)
 {
   switch (level)
   {
   case DEBUG:
-    std::cout << "[DEBUG] ";
+    sstr << "[DEBUG] ";
     break;
   case WARNING:
-    std::cout << "[WARNING] ";
+    sstr << "[WARNING] ";
     break;
   case ERROR:
-    std::cout << "[ERROR] ";
+    sstr << "[ERROR] ";
     break;
   default:
     return;
@@ -36,33 +36,36 @@ void Log::Print(
 {
   std::lock_guard<std::mutex> lck(mtxLog);
 
+  std::stringstream sLog;
   char buffer[256];
 
   switch (level)
   {
   case DEBUG:
-    SET_COUT_GREEN;
+    sLog << ANSI_COLOR_GREEN;
     break;
   case WARNING:
-    SET_COUT_YELLOW;
+    sLog << ANSI_COLOR_YELLOW;
     break;
   case ERROR:
-    SET_COUT_RED;
+    sLog << ANSI_COLOR_RED;
     break;
   default:
     return;
   }
 
-  LOGHEADER(filename, func, linenum);
+  sLog << LOGHEADER(filename, func, linenum);
 
   /* Show Log Header */
-  this->PrintHeader(level);
+  this->PrintHeader(level, sLog);
 
   /* Print Log Data */
   va_list args;
   va_start(args, fmt);
   vsprintf(buffer, fmt, args);
-  std::cout << buffer << std::endl;
+  sLog << buffer;
 
-  RESET_COUT_COLOR;
+  sLog << ANSI_COLOR_RESET;
+
+  std::cout << sLog.str() << std::endl;
 }

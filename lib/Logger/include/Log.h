@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <sstream>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
 #define ANSI_COLOR_GREEN   "\x1b[32m"
@@ -30,7 +31,7 @@ namespace logger
   private:
     std::mutex mtxLog;
 
-    void PrintHeader(eLogLevel level);
+    void PrintHeader(eLogLevel level, std::stringstream &sstr);
 
   public:
     Log() {}
