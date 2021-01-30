@@ -189,6 +189,9 @@ eIMUAbstractionError IMUStub::GetRawGyro(DBusTypes::eAxis axis, double &val)
 
 void IMUStub::DeInit(void)
 {
+  /* Avoid deadlock by calling callbacks during DeInitialization */
+  vecCallback.clear();
+
   if (thNotification.joinable())
   {
     bThreadNotification = false;

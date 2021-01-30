@@ -359,6 +359,9 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(DBusTypes::eAxis axis, double &
 
 void IMUIndustrialIO::DeInit(void)
 {
+  /* Avoid deadlock by calling callbacks during DeInitialization */
+  vecCallback.clear();
+
   if (thSampleValues.joinable())
   {
     bThreadSampleValues = false;
