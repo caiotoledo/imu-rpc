@@ -18,24 +18,15 @@ jobs:
         accelscale: [2, 16]
 
     runs-on: ubuntu-latest
+    container:
+      image: caiotoledo/dbuscxx:0.12.0
     steps:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |
-          sudo apt -qq update
-          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4
-          sudo apt install dbus-x11
-          sudo apt install psmisc
-          sudo apt install python3-pip python3-tk
+          sudo apt -qq update -qq
           python3 -m pip install -r script/requirements.txt
-
-      - name: Install dbus-cxx
-        run: |
-          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
-          cd dbus-cxx
-          cmake . && make -j$(nproc) && sudo make install && sudo ldconfig
-          cd ../
 
       - name: Build Project
         run: |
