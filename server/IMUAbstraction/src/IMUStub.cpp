@@ -1,17 +1,10 @@
 #include <map>
 #include <thread>
 #include <chrono>
-#include <cmath>
-
-#include <cstdlib>
-#include <ctime>
 
 #include <IMUStub.hpp>
 
 #include <LogInstance.h>
-
-#define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
-#define GET_CURR_MILLI  (((double)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count())/1000.0)
 
 using namespace IMUAbstraction;
 
