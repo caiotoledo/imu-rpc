@@ -41,12 +41,12 @@ static pid_t daemonize(void)
   pid_t pid = fork();
   if (pid < 0)
   {
-    std::cout << "Daemon creation failed [" << strerror(errno) << "]" << std::endl;
+    LOG("Daemon creation failed [%s]", strerror(errno));
     exit(pid);
   }
   else if (pid > 0)
   {
-    std::cout << "Daemon created with PID " << pid << std::endl;
+    LOG("Daemon created with PID %d", pid);
     std::this_thread::sleep_for(DELAY_CHILD_CREATION);
     exit(0);
   }
