@@ -27,7 +27,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt -qq update -qq
           python3 -m pip install -r script/requirements.txt
 
       - name: Build Project
