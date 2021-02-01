@@ -46,6 +46,8 @@ jobs:
           imu-cli --help
           imu-socket --version
           imu-socket --help
+          python3 script/imu-dbus.py --version
+          python3 script/imu-dbus.py --help
 
       - name: Test Application
         run: |
