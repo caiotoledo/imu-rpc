@@ -11,11 +11,6 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-#define SET_COUT_RED        std::cout << ANSI_COLOR_RED
-#define SET_COUT_GREEN      std::cout << ANSI_COLOR_GREEN
-#define SET_COUT_YELLOW     std::cout << ANSI_COLOR_YELLOW
-#define RESET_COUT_COLOR    std::cout << ANSI_COLOR_RESET
-
 namespace logger
 {
 
