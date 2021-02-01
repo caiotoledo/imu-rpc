@@ -29,8 +29,8 @@ namespace logger
     void PrintHeader(eLogLevel level, std::stringstream &sstr);
 
   public:
-    Log() {}
-    ~Log() {}
+    Log() = default;
+    ~Log() = default;
 
     void Print(eLogLevel level, const char *filename, const char *func, int linenum, const char *fmt, ...);
   };
