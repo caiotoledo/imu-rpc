@@ -9,7 +9,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  job:
+  build:
+    strategy:
+      matrix:
+        buildtype: [Debug, Release]
+
+    runs-on: ubuntu-latest
+    name: Build Project ${{ matrix.buildtype }}
+    container:
+      image: caiotoledo/dbuscxx:0.12.0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create artifact folder
+        run: |
+          mkdir -p .install_${{ matrix.buildtype }}
+
+      - name: Build Project
+        run: |
+          mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DCMAKE_INSTALL_PREFIX=../.install_${{ matrix.buildtype }}/ ../
+          make -j$(nproc)
+          sudo make install
+          cd ../
+
+      - uses: actions/upload-artifact@master
+        with:
+          name: binaries-${{ matrix.buildtype }}
+          path: .install_${{ matrix.buildtype }}
+
+  test:
+    needs: build
     strategy:
       matrix:
         buildtype: [Debug, Release]
@@ -25,18 +56,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/download-artifact@master
+        with:
+          name: binaries-${{ matrix.buildtype }}
+          path: .install_${{ matrix.buildtype }}
+
+      - name: Install binaries from artifact
+        run: |
+          find .install_${{ matrix.buildtype }}/ -type f | xargs -I{} chmod +x "{}"
+          cp -rv .install_${{ matrix.buildtype }}/* /usr/
+          sudo ldconfig
+
       - name: Install dependencies
         run: |
           python3 -m pip install -r script/requirements.txt
-
-      - name: Build Project
-        run: |
-          mkdir -p .build/ && cd .build/
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
-          make -j$(nproc)
-          sudo make install
-          sudo ldconfig
-          cd ../
 
       - name: Simple Application Test
         run: |
