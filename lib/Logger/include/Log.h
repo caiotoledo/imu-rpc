@@ -18,7 +18,8 @@ namespace logger
   {
     DEBUG,
     WARNING,
-    ERROR
+    ERROR,
+    ALWAYS,
   } eLogLevel;
 
   class Log

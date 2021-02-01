@@ -44,3 +44,5 @@ using LogSingleton = singleton::SingletonInstancer<logger::Log>;
 #else
 #define LOGERROR(...)
 #endif
+
+#define LOG(...)        LOGMACRO(ALWAYS, __VA_ARGS__)

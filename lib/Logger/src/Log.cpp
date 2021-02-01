@@ -12,17 +12,20 @@ void Log::PrintHeader(eLogLevel level, std::stringstream &sstr)
 {
   switch (level)
   {
-  case DEBUG:
+  case eLogLevel::DEBUG:
     sstr << "[DEBUG] ";
     break;
-  case WARNING:
+  case eLogLevel::WARNING:
     sstr << "[WARNING] ";
     break;
-  case ERROR:
+  case eLogLevel::ERROR:
     sstr << "[ERROR] ";
     break;
+  case eLogLevel::ALWAYS:
+    sstr << " ";
+    break;
   default:
-    return;
+    break;
   }
 }
 
@@ -41,14 +44,16 @@ void Log::Print(
 
   switch (level)
   {
-  case DEBUG:
+  case eLogLevel::DEBUG:
     sLog << ANSI_COLOR_GREEN;
     break;
-  case WARNING:
+  case eLogLevel::WARNING:
     sLog << ANSI_COLOR_YELLOW;
     break;
-  case ERROR:
+  case eLogLevel::ERROR:
     sLog << ANSI_COLOR_RED;
+    break;
+  case eLogLevel::ALWAYS:
     break;
   default:
     return;
