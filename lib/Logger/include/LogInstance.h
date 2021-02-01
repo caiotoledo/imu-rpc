@@ -20,7 +20,7 @@
 using LogSingleton = singleton::SingletonInstancer<logger::Log>;
 
 /* Macro for access the scheduler instance */
-#define LOG_INSTANCE    (*LogSingleton::GetInstance())
+#define LOG_INSTANCE    (*LogSingleton::GetInstance(logger::eLogType::STD_OUT_STREAM))
 
 /* Standard Log macro */
 #define LOGMACRO(LEVEL, ...)   do {\
