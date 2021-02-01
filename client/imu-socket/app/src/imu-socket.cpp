@@ -133,6 +133,12 @@ int main(int argc, char const *argv[])
   LOGDEBUG("Arg port\t[%d]", args.port);
 
   /**
+   * CONFIGURE LOGGER
+   */
+  auto logType = args.daemon ? logger::LogType::SYSLOG : logger::LogType::STD_OUT_STREAM;
+  LOG_INSTANCE.Init(logType);
+
+  /**
    * RUN AS DAEMON?
    */
   if (args.daemon)

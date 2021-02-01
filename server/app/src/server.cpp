@@ -132,6 +132,12 @@ int main(int argc, char const *argv[])
   LOGDEBUG("Arg sample rate\t[%d] ms", args.sample_rate);
 
   /**
+   * CONFIGURE LOGGER
+   */
+  auto logType = args.daemon ? logger::LogType::SYSLOG : logger::LogType::STD_OUT_STREAM;
+  LOG_INSTANCE.Init(logType);
+
+  /**
    * PARSE IMU ABSTRACTION ARGS
    */
   IMUAbstraction::eAccelScale accel_scale;
