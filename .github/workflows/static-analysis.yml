@@ -15,6 +15,7 @@ jobs:
         buildtype: [Debug, Release]
 
     runs-on: ubuntu-latest
+    name: Static Analysis ${{ matrix.buildtype }} mode
     steps:
       - uses: actions/checkout@v2
 
