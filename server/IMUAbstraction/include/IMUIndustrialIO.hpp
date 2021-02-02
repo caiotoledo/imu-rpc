@@ -9,8 +9,6 @@
 namespace IMUAbstraction
 {
 
-  constexpr int NUM_AXIS = 3;
-
   typedef struct imupathdata_s
   {
     std::string DeviceBufferPath;

@@ -6,6 +6,7 @@
 
 namespace IMUAbstraction
 {
+  constexpr int NUM_AXIS = 3;
 
   enum class eIMUAbstractionError {
     eRET_OK,
