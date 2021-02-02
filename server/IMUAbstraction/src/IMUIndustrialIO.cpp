@@ -218,6 +218,11 @@ eIMUAbstractionError IMUIndustrialIO::SetValueInFile(const char *path, T val)
   return ret;
 }
 
+int IMUIndustrialIO::GetSampleFrequency(void)
+{
+  return mapSampleFreq.at(sampleFreq_ms);
+}
+
 eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
@@ -236,6 +241,10 @@ eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
       {
         LOGERROR("Failed Sampling Frequency [Desired %d ms] [Current %d ms]", value, freqInFile);
         ret = eIMUAbstractionError::eRET_ERROR;
+      }
+      else
+      {
+        sampleFreq_ms = freq;
       }
     }
   }

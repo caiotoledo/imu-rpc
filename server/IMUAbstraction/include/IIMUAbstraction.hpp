@@ -62,6 +62,13 @@ namespace IMUAbstraction
     virtual eIMUAbstractionError SetSampleFrequency(eSampleFreq freq) = 0;
 
     /**
+     * @brief Get Sample rate in ms
+     *
+     * @return int Sample period value in ms
+     */
+    virtual int GetSampleFrequency(void) = 0;
+
+    /**
      * @brief Get raw accelerometer data
      *
      * @param axis IMU Axis
