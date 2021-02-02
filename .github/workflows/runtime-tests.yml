@@ -38,6 +38,7 @@ jobs:
         with:
           name: binaries-${{ matrix.buildtype }}
           path: .install_${{ matrix.buildtype }}
+          retention-days: 1
 
   test:
     needs: build
