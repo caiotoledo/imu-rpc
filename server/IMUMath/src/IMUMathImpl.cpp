@@ -9,15 +9,39 @@ using namespace IMUMath;
 
 #define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PIl))
 
+/* Constant used in Complementary Filter */
+constexpr double ALPHA = 0.7143;
+
 IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu) :
-  instanceImu(imu)
+  instanceImu(imu),
+  bComplFilterThread(false)
 {
 }
 
 eIMUMathError IMUMathImpl::Init(void)
 {
   /* TODO: Create table to convert from eIMUAbstractionError to eIMUMathError */
-  return static_cast<eIMUMathError>(this->instanceImu->Init());
+  auto ret = static_cast<eIMUMathError>(this->instanceImu->Init());
+
+  if (ret == eIMUMathError::eRET_OK)
+  {
+    auto funcComplFilter = [this]()
+    {
+      while (bComplFilterThread)
+      {
+        auto samplerate_ms = this->instanceImu->GetSampleFrequency();
+
+        this->UpdateComplFilterAngle(samplerate_ms);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(samplerate_ms));
+      }
+    };
+
+    bComplFilterThread = true;
+    thComplFilter = std::thread(funcComplFilter);
+  }
+
+  return ret;
 }
 
 eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit)
@@ -77,8 +101,53 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
   return ret;
 }
 
+void IMUMathImpl::UpdateComplFilterAngle(int samplerate_ms)
+{
+  for (size_t axis_index = 0; axis_index < IMUAbstraction::NUM_AXIS; axis_index++)
+  {
+    double gyro;
+    double angle_measure;
+    auto axis = static_cast<DBusTypes::eAxis>(axis_index);
+
+    /* Get Raw Euler Angle */
+    auto retMath = this->GetEulerAngle(angle_measure, axis, DBusTypes::eAngleUnit::eDegrees);
+    if (retMath != eIMUMathError::eRET_OK)
+    {
+      LOGWARN("GetEulerAngle failed [%d]", retMath);
+      continue;
+    }
+    /* Get Gyro Value */
+    auto retImu = this->instanceImu->GetRawGyro(axis, gyro);
+    if (retImu != IMUAbstraction::eIMUAbstractionError::eRET_OK)
+    {
+      LOGWARN("GetRawGyro failed [%d]", retImu);
+      continue;
+    }
+
+    /* Calculate Complamentary Filter Angle */
+    double samplerate_sec = (samplerate_ms/1000L);
+    angle_compl_filter[axis_index] =  (angle_compl_filter[axis_index] + (gyro*samplerate_sec))*ALPHA;
+    angle_compl_filter[axis_index] += (1-ALPHA)*(angle_measure);
+  }
+}
+
+eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit)
+{
+  auto axis_index = static_cast<int>(axis);
+
+  value = angle_compl_filter[axis_index];
+
+  return eIMUMathError::eRET_OK;
+}
+
 void IMUMathImpl::DeInit(void)
 {
+  if (thComplFilter.joinable())
+  {
+    bComplFilterThread = false;
+    thComplFilter.join();
+  }
+
   this->instanceImu->DeInit();
 }
 
