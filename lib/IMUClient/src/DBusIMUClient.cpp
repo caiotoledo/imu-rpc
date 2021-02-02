@@ -170,6 +170,34 @@ eIMUError DBusIMUClient::GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleU
   return ret;
 }
 
+eIMUError DBusIMUClient::GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val)
+{
+  auto ret = eIMUError::eRET_OK;
+
+  /* Check Connection */
+  if (!this->isInitialized())
+  {
+    return eIMUError::eRET_ERROR;
+  }
+
+  /* Initialize Method Proxies */
+  auto GetEulerAngle_proxy
+    = *(this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETCOMPLFILTERANGLE));
+
+  /* Execute Method Requests */
+  try
+  {
+    val = GetEulerAngle_proxy((int)axis, (int)unit);
+  }
+  catch(std::shared_ptr<DBus::Error> e)
+  {
+    LOGERROR("%s", e->what());
+    ret = eIMUError::eRET_ERROR;
+  }
+
+  return ret;
+}
+
 void DBusIMUClient::DeInit(void)
 {
   /* Avoid deadlock by calling callbacks during DeInitialization */

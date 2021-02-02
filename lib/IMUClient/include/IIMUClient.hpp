@@ -58,6 +58,16 @@ namespace IMUClient
     virtual eIMUError GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val) = 0;
 
     /**
+     * @brief Get Euler Angle with Complementary Filter of an axis
+     *
+     * @param axis Desired axis (X = Roll, Y = Pitch, Z = Yaw)
+     * @param unit Desired angle unit
+     * @param value Angle Value
+     * @return eIMUMathError Returns #eRET_OK when successful, ref #eIMUMathError
+     */
+    virtual eIMUError GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val) = 0;
+
+    /**
      * @brief DeInitialize RPC Client
      */
     virtual void DeInit(void) = 0;
