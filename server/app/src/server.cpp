@@ -63,12 +63,12 @@ static pid_t daemonize(void)
   pid_t pid = fork();
   if (pid < 0)
   {
-    std::cout << "Daemon creation failed [" << strerror(errno) << "]" << std::endl;
+    LOG("Daemon creation failed [%s]", strerror(errno));
     exit(pid);
   }
   else if (pid > 0)
   {
-    std::cout << "Daemon created with PID " << pid << std::endl;
+    LOG("Daemon created with PID %d", pid);
     std::this_thread::sleep_for(DELAY_CHILD_CREATION);
     exit(0);
   }
@@ -130,6 +130,12 @@ int main(int argc, char const *argv[])
   LOGDEBUG("Arg accel scale\t[%d] G", args.accel_scale);
   LOGDEBUG("Arg gyro scale\t[%d] °/s", args.gyro_scale);
   LOGDEBUG("Arg sample rate\t[%d] ms", args.sample_rate);
+
+  /**
+   * CONFIGURE LOGGER
+   */
+  auto logType = args.daemon ? logger::LogType::SYSLOG : logger::LogType::STD_OUT_STREAM;
+  LOG_INSTANCE.Init(logType);
 
   /**
    * PARSE IMU ABSTRACTION ARGS

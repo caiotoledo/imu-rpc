@@ -1,6 +1,9 @@
+#include <syslog.h>
+
 #include <cstdarg>
 
 #include <iostream>
+#include <map>
 
 #include "Log.h"
 
@@ -8,18 +11,70 @@
 
 using namespace logger;
 
+const std::map<eLogLevel, int> mapSyslogLevel =
+{
+  { eLogLevel::ERROR, LOG_ERR },
+  { eLogLevel::WARNING, LOG_WARNING },
+  { eLogLevel::DEBUG, LOG_DEBUG },
+  { eLogLevel::ALWAYS, LOG_INFO },
+};
+
+Log::Log(eLogType type)
+{
+  Init(type);
+}
+
+void Log::Init(eLogType type)
+{
+  /* Close previous syslog if needed */
+  if ((type == eLogType::SYSLOG) && (eType == eLogType::STD_OUT_STREAM))
+  {
+    closelog();
+  }
+
+  if ((eType != type) && (eType == eLogType::SYSLOG))
+  {
+    openlog(NULL, (LOG_CONS | LOG_PID | LOG_NDELAY), LOG_LOCAL0);
+  }
+
+  eType = type;
+}
+
 void Log::PrintHeader(eLogLevel level, std::stringstream &sstr)
 {
   switch (level)
   {
-  case DEBUG:
+  case eLogLevel::DEBUG:
     sstr << "[DEBUG] ";
     break;
-  case WARNING:
+  case eLogLevel::WARNING:
     sstr << "[WARNING] ";
     break;
-  case ERROR:
+  case eLogLevel::ERROR:
     sstr << "[ERROR] ";
+    break;
+  case eLogLevel::ALWAYS:
+    sstr << " ";
+    break;
+  default:
+    break;
+  }
+}
+
+void Log::PrintColorLevel(eLogLevel level, std::stringstream &sstr)
+{
+  switch (level)
+  {
+  case eLogLevel::DEBUG:
+    sstr << ANSI_COLOR_GREEN;
+    break;
+  case eLogLevel::WARNING:
+    sstr << ANSI_COLOR_YELLOW;
+    break;
+  case eLogLevel::ERROR:
+    sstr << ANSI_COLOR_RED;
+    break;
+  case eLogLevel::ALWAYS:
     break;
   default:
     return;
@@ -39,19 +94,9 @@ void Log::Print(
   std::stringstream sLog;
   char buffer[256];
 
-  switch (level)
+  if (eType == eLogType::STD_OUT_STREAM)
   {
-  case DEBUG:
-    sLog << ANSI_COLOR_GREEN;
-    break;
-  case WARNING:
-    sLog << ANSI_COLOR_YELLOW;
-    break;
-  case ERROR:
-    sLog << ANSI_COLOR_RED;
-    break;
-  default:
-    return;
+    this->PrintColorLevel(level, sLog);
   }
 
   sLog << LOGHEADER(filename, func, linenum);
@@ -65,7 +110,31 @@ void Log::Print(
   vsprintf(buffer, fmt, args);
   sLog << buffer;
 
-  sLog << ANSI_COLOR_RESET;
+  if (eType == eLogType::STD_OUT_STREAM)
+  {
+    sLog << ANSI_COLOR_RESET;
+  }
 
-  std::cout << sLog.str() << std::endl;
+  switch (eType)
+  {
+  case eLogType::STD_OUT_STREAM:
+    std::cout << sLog.str() << std::endl;
+    break;
+  case eLogType::SYSLOG:
+    if (mapSyslogLevel.find(level) != mapSyslogLevel.end())
+    {
+      syslog(mapSyslogLevel.at(level), "%s", sLog.str().c_str());
+    }
+    break;
+  default:
+    break;
+  }
+}
+
+Log::~Log()
+{
+  if (eType == eLogType::SYSLOG)
+  {
+    closelog();
+  }
 }

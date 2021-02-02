@@ -13,13 +13,14 @@ private:
 public:
   ~SingletonInstancer() { }
 
-  static std::shared_ptr<T> GetInstance()
+  template<typename... Args>
+  static std::shared_ptr<T> GetInstance(Args... args)
   {
     static std::shared_ptr<T> instance = NULL;
     /* Check if the instance wasn't initialize yet */
     if (!instance)
     {
-      instance = std::make_shared<T>();
+      instance = std::make_shared<T>(args...);
     }
     return instance;
   }

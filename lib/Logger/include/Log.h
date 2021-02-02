@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <string>
 #include <sstream>
 
 #define ANSI_COLOR_RED     "\x1b[31m"
@@ -11,19 +12,21 @@
 #define ANSI_COLOR_CYAN    "\x1b[36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
-#define SET_COUT_RED        std::cout << ANSI_COLOR_RED
-#define SET_COUT_GREEN      std::cout << ANSI_COLOR_GREEN
-#define SET_COUT_YELLOW     std::cout << ANSI_COLOR_YELLOW
-#define RESET_COUT_COLOR    std::cout << ANSI_COLOR_RESET
-
 namespace logger
 {
+
+  typedef enum LogType
+  {
+    STD_OUT_STREAM, /* Standard Output Stream */
+    SYSLOG,         /* Syslog */
+  } eLogType;
 
   typedef enum LogLevel
   {
     DEBUG,
     WARNING,
-    ERROR
+    ERROR,
+    ALWAYS,
   } eLogLevel;
 
   class Log
@@ -31,13 +34,18 @@ namespace logger
   private:
     std::mutex mtxLog;
 
+    eLogType eType;
+
     void PrintHeader(eLogLevel level, std::stringstream &sstr);
+    void PrintColorLevel(eLogLevel level, std::stringstream &sstr);
 
   public:
-    Log() {}
-    ~Log() {}
+    Log(eLogType type=eLogType::STD_OUT_STREAM);
 
+    void Init(eLogType type);
     void Print(eLogLevel level, const char *filename, const char *func, int linenum, const char *fmt, ...);
+
+    ~Log();
   };
 
 } // namespace logger

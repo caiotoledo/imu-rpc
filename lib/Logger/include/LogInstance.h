@@ -20,27 +20,29 @@
 using LogSingleton = singleton::SingletonInstancer<logger::Log>;
 
 /* Macro for access the scheduler instance */
-#define LOG_INSTANCE    (*LogSingleton::GetInstance())
+#define LOG_INSTANCE    (*LogSingleton::GetInstance(logger::eLogType::STD_OUT_STREAM))
 
 /* Standard Log macro */
-#define LOGMACRO(COLOR, LEVEL, ...)   do {\
+#define LOGMACRO(LEVEL, ...)   do {\
   LOG_INSTANCE.Print(logger::LEVEL, __FILENAME__, __FUNCTION__, __LINE__, __VA_ARGS__);\
 } while(0)
 
 #ifdef LEVEL_DEBUG
-#define LOGDEBUG(...)   LOGMACRO(GREEN, DEBUG, __VA_ARGS__)
+#define LOGDEBUG(...)   LOGMACRO(DEBUG, __VA_ARGS__)
 #else
 #define LOGDEBUG(...)
 #endif
 
 #ifdef LEVEL_WARNING
-#define LOGWARN(...)    LOGMACRO(YELLOW, WARNING, __VA_ARGS__)
+#define LOGWARN(...)    LOGMACRO(WARNING, __VA_ARGS__)
 #else
 #define LOGWARN(...)
 #endif
 
 #ifdef LEVEL_ERROR
-#define LOGERROR(...)   LOGMACRO(RED, ERROR, __VA_ARGS__)
+#define LOGERROR(...)   LOGMACRO(ERROR, __VA_ARGS__)
 #else
 #define LOGERROR(...)
 #endif
+
+#define LOG(...)        LOGMACRO(ALWAYS, __VA_ARGS__)
