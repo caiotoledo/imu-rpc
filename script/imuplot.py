@@ -24,12 +24,16 @@ class AngleEuler(Generic3DPoint):
   def __init__(self, x, y, z):
     super().__init__(x,y,z)
 
+class ComplAngle(Generic3DPoint):
+  def __init__(self, x, y, z):
+    super().__init__(x,y,z)
 
 class ImuData:
-  def __init__(self, accel, gyro, angle):
+  def __init__(self, accel, gyro, angle, angleComplFilter):
     self.ArrAccel = accel
     self.ArrGyro = gyro
     self.ArrAngle = angle
+    self.ArrComplFilterAngle = angleComplFilter
 
   def addAccel(self, t, accel):
     self.ArrAccel[t] = accel
@@ -40,20 +44,24 @@ class ImuData:
   def addAngle(self, t, angle):
     self.ArrAngle[t] = angle
 
+  def addComplFilterAngle(self, t, angle):
+    self.ArrComplFilterAngle[t] = angle
+
   def __add__(self, other):
     accel = {**self.ArrAccel, **other.ArrAccel}
     gyro = {**self.ArrGyro, **other.ArrGyro}
     angle = {**self.ArrAngle, **other.ArrAngle}
-    return ImuData(accel, gyro, angle)
+    angleComplFilter = {**self.ArrComplFilterAngle, **other.ArrComplFilterAngle}
+    return ImuData(accel, gyro, angle, angleComplFilter)
 
 
 class ImuDataPlot():
-  def __init__(self, imudata=ImuData(accel={}, gyro={}, angle={})):
+  def __init__(self, imudata=ImuData(accel={}, gyro={}, angle={}, angleComplFilter={})):
     self.Data = imudata
     self.__isInitalized = False
 
   def Init(self):
-    self.__fig, (self.__axAccel, self.__axGyro, self.__axAngle) = plt.subplots(3, 1)
+    self.__fig, (self.__axAccel, self.__axGyro, self.__axAngle, self.__axComplAngle) = plt.subplots(4, 1)
 
     self.__axAccel.set_title('Accelerometer')
     self.__axAccel.set_ylim(-2500,2500) # Based on ACCEL_CONFIG Register (limits +-2g)
@@ -65,6 +73,9 @@ class ImuDataPlot():
 
     self.__axAngle.set_title('Euler Angle')
     self.__axAngle.set(ylabel='Angle (°)', xlabel='Time (ms)')
+
+    self.__axComplAngle.set_title('Angle Complementary Filter')
+    self.__axComplAngle.set(ylabel='Angle (°)', xlabel='Time (ms)')
 
     self.__isInitalized = True
 
@@ -87,8 +98,9 @@ class ImuDataPlot():
     imuAccel = __parseData(self.Data.ArrAccel)
     imuGyro =  __parseData(self.Data.ArrGyro)
     imuAngle = __parseData(self.Data.ArrAngle)
+    imuComplAngle = __parseData(self.Data.ArrComplFilterAngle)
 
-    return imuAccel, imuGyro, imuAngle
+    return imuAccel, imuGyro, imuAngle, imuComplAngle
 
   def __plotGraph(self, ax, plotData):
     # Normalize time data (Always start from 0 seconds)
@@ -103,11 +115,12 @@ class ImuDataPlot():
   def showGraph(self, title='', pause_time=0.001):
     if self.__isInitalized:
       self.__fig.suptitle(title)
-      plotAccel, plotGyro, plotAngle = self.__getArrDataPlot()
+      plotAccel, plotGyro, plotAngle, plotComplAngle = self.__getArrDataPlot()
 
       self.__plotGraph(self.__axAccel, plotAccel)
       self.__plotGraph(self.__axGyro, plotGyro)
       self.__plotGraph(self.__axAngle, plotAngle)
+      self.__plotGraph(self.__axComplAngle, plotComplAngle)
 
       plt.draw()
       plt.pause(pause_time)
