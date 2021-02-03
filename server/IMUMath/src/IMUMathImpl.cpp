@@ -95,6 +95,7 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
     valueAngle = calcAngleRad(-valAccel[1], -valAccel[0]); /* atan2(-Y,-X) */
     break;
   default:
+    ret = eIMUMathError::eRET_ERROR;
     break;
   }
 
@@ -105,8 +106,10 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
     value = RAD_TO_DEG(valueAngle);
     break;
   case DBusTypes::eAngleUnit::eRadians:
-  default:
     value = valueAngle;
+    break;
+  default:
+    ret = eIMUMathError::eRET_ERROR;
     break;
   }
 
@@ -145,9 +148,23 @@ void IMUMathImpl::UpdateComplFilterAngle(int samplerate_ms)
 
 eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit)
 {
-  auto axis_index = static_cast<int>(axis);
+  auto ret = eIMUMathError::eRET_OK;
+  double valueAngle = 0;
 
-  auto valueAngle = angle_compl_filter[axis_index];
+  switch (axis)
+  {
+  case DBusTypes::eAxis::X:
+  case DBusTypes::eAxis::Y:
+  case DBusTypes::eAxis::Z:
+  {
+    auto axis_index = static_cast<int>(axis);
+    valueAngle = angle_compl_filter[axis_index];
+  }
+    break;
+  default:
+    ret = eIMUMathError::eRET_ERROR;
+    break;
+  }
 
   /* Convert Angle unit */
   switch (unit)
@@ -156,12 +173,14 @@ eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis a
     value = valueAngle;
     break;
   case DBusTypes::eAngleUnit::eRadians:
-  default:
     value = DEG_TO_RAD(valueAngle);
+    break;
+  default:
+    ret = eIMUMathError::eRET_ERROR;
     break;
   }
 
-  return eIMUMathError::eRET_OK;
+  return ret;
 }
 
 void IMUMathImpl::DeInit(void)
