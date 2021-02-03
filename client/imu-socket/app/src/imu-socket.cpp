@@ -76,6 +76,7 @@ static int ParseIMUData(std::shared_ptr<IMUClient::IIMUClient> &client, std::str
     double valAccel = 0;
     double valGyro = 0;
     double valAngle = 0;
+    double valComplAngle = 0;
 
     /* Sample data from client */
     auto ret = client->GetRawAccel((DBusTypes::eAxis)i, valAccel);
@@ -96,6 +97,12 @@ static int ParseIMUData(std::shared_ptr<IMUClient::IIMUClient> &client, std::str
       retParseIMUData = -1;
       break;
     }
+    ret = client->GetComplFilterAngle((DBusTypes::eAxis)i, DBusTypes::eAngleUnit::eDegrees, valComplAngle);
+    if (ret != IMUClient::eIMUError::eRET_OK)
+    {
+      retParseIMUData = -1;
+      break;
+    }
 
     /* Show Axis data */
     std::stringstream sAccel;
@@ -104,11 +111,14 @@ static int ParseIMUData(std::shared_ptr<IMUClient::IIMUClient> &client, std::str
     sGyro << std::fixed << std::setprecision(IMU_PRECISION) << valGyro;
     std::stringstream sAngle;
     sAngle << std::fixed << std::setprecision(IMU_PRECISION) << valAngle;
+    std::stringstream sComplAngle;
+    sComplAngle << std::fixed << std::setprecision(IMU_PRECISION) << valComplAngle;
 
     sOut << mapAxis.at(i).c_str() << ",";
     sOut << sAccel.str() << ",";
     sOut << sGyro.str() << ",";
-    sOut << sAngle.str() << ";";
+    sOut << sAngle.str() << ",";
+    sOut << sComplAngle.str() << ";";
   }
 
   data.assign(sOut.str());
