@@ -23,10 +23,11 @@ static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"accel",   'a', 0,      0, "Sample Raw Accelerometer Values [mG]",  0},
-  {"gyro",    'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",     0},
-  {"euler",   'e', 0,      0, "Sample Euler Angle [°]",                0},
-  {"timeout", 't', "TOUT", 0, "Define application runtime in seconds", 1},
+  {"accel",       'a', 0,      0, "Sample Raw Accelerometer Values [mG]",         0},
+  {"gyro",        'g', 0,      0, "Sample Raw Gyroscope Values [°/s]",            0},
+  {"euler",       'e', 0,      0, "Sample Euler Angle [°]",                       0},
+  {"compl_angle", 'c', 0,      0, "Sample Complementary Filter Euler Angle [°]",  0},
+  {"timeout",     't', "TOUT", 0, "Define application runtime in seconds",        1},
   { 0 }
 };
 
@@ -40,6 +41,9 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
     {
       case 'a':
         arguments->accel = true;
+      break;
+      case 'c':
+        arguments->compl_filter_angle = true;
       break;
       case 'g':
         arguments->gyro = true;
@@ -59,6 +63,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
         arguments->accel = false;
         arguments->gyro = false;
         arguments->euler = false;
+        arguments->compl_filter_angle = false;
         arguments->timeout = -1;
       break;
 
