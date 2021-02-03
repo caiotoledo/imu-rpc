@@ -26,6 +26,16 @@ eIMUMathError IMUMathImpl::Init(void)
 
   if (ret == eIMUMathError::eRET_OK)
   {
+    /* Initialize Complementary Filter Angle with Raw Euler Angle */
+    for (size_t axis_index = 0; axis_index < IMUAbstraction::NUM_AXIS; axis_index++)
+    {
+      double angle_value;
+      auto axis = static_cast<DBusTypes::eAxis>(axis_index);
+      this->GetEulerAngle(angle_value, axis, DBusTypes::eAngleUnit::eDegrees);
+      angle_compl_filter[axis_index] = angle_value;
+    }
+
+    /* Define lambda function for Complementary Filter Calculation */
     auto funcComplFilter = [this]()
     {
       while (bComplFilterThread)
