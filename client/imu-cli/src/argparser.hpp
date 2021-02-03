@@ -7,6 +7,7 @@ namespace ArgParser
     bool accel;
     bool gyro;
     bool euler;
+    bool compl_filter_angle;
   };
 
   /**

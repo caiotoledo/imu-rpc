@@ -25,6 +25,7 @@ namespace RPCServer
     virtual eRPCError setGetRawAccelCallback(std::function<double(int)> &&cb) override;
     virtual eRPCError setGetRawGyroCallback(std::function<double(int)> &&cb) override;
     virtual eRPCError setGetEulerAngleCallback(std::function<double(int, int)> &&cb) override;
+    virtual eRPCError setGetComplFilterAngleCallback(std::function<double(int, int)> &&cb) override;
     virtual void DeInit(void) override;
 
     virtual ~DBusCxxServer();

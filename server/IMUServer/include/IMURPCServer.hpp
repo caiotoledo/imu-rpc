@@ -21,6 +21,7 @@ namespace IMUServer
     eIMUServerError InitGetRawAccel(void);
     eIMUServerError InitGetRawGyro(void);
     eIMUServerError InitGetEulerAngle(void);
+    eIMUServerError InitGetComplFilterAngle(void);
 
   public:
     IMURPCServer(

@@ -64,19 +64,23 @@ def cbSockRecv(data):
     AxisAccel = float(axis.split(",")[1])
     AxisGyro =  float(axis.split(",")[2])
     AxisAngle = float(axis.split(",")[3])
+    AxisComplAngle = float(axis.split(",")[4])
     d[AxisName] = {
       "Accel" : AxisAccel,
       "Gyro" : AxisGyro,
       "Angle" : AxisAngle,
+      "ComplAngle" : AxisComplAngle,
     }
 
   AccelObj = imuplot.Accel(d["X"]["Accel"], d["Y"]["Accel"], d["Z"]["Accel"])
   GyroObj =  imuplot.Gyro(d["X"]["Gyro"], d["Y"]["Gyro"], d["Z"]["Gyro"])
   AngleObj = imuplot.AngleEuler(d["X"]["Angle"], d["Y"]["Angle"], d["Z"]["Angle"])
-  imu = imuplot.ImuData(accel={}, gyro={}, angle={})
+  ComplAngleObj = imuplot.ComplAngle(d["X"]["ComplAngle"], d["Y"]["ComplAngle"], d["Z"]["ComplAngle"])
+  imu = imuplot.ImuData(accel={}, gyro={}, angle={}, angleComplFilter={})
   imu.addAccel(timepoint, AccelObj)
   imu.addGyro(timepoint, GyroObj)
   imu.addAngle(timepoint, AngleObj)
+  imu.addComplFilterAngle(timepoint, ComplAngleObj)
 
   imuQueue.put(imu)
 

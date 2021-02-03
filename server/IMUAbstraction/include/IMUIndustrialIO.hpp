@@ -9,8 +9,6 @@
 namespace IMUAbstraction
 {
 
-  constexpr int NUM_AXIS = 3;
-
   typedef struct imupathdata_s
   {
     std::string DeviceBufferPath;
@@ -49,6 +47,8 @@ namespace IMUAbstraction
 
     std::atomic<bool> bThreadSampleValues;
     std::thread thSampleValues;
+
+    eSampleFreq sampleFreq_ms;
 
     /**
      * @brief Get value from first line of a File
@@ -99,6 +99,7 @@ namespace IMUAbstraction
     eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(DBusTypes::eAxis axis, double &val) override;
     eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
+    int GetSampleFrequency(void) override;
     void DeInit(void) override;
 
     virtual ~IMUIndustrialIO();

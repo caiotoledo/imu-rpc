@@ -31,6 +31,7 @@ namespace IMUClient
     virtual eIMUError GetRawAccel(DBusTypes::eAxis axis, double &val) override;
     virtual eIMUError GetRawGyro(DBusTypes::eAxis axis, double &val) override;
     virtual eIMUError GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val) override;
+    virtual eIMUError GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::eAngleUnit unit, double &val) override;
     virtual void DeInit(void) override;
 
     virtual ~DBusIMUClient();

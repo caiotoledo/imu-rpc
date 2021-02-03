@@ -48,6 +48,7 @@ namespace IMUAbstraction
     eIMUAbstractionError SetAccelScale(eAccelScale scale) override;
     eIMUAbstractionError GetRawGyro(DBusTypes::eAxis axis, double &val) override;
     eIMUAbstractionError SetGyroScale(eGyroScale scale) override;
+    int GetSampleFrequency(void) override;
     void DeInit(void) override;
 
     virtual ~IMUStub();

@@ -149,6 +149,10 @@ T IMUStub::GetSampleFrequency()
 {
   return static_cast<T>(mapSampleFreq.at(this->sampleFreq));
 }
+int IMUStub::GetSampleFrequency(void)
+{
+  return static_cast<int>(mapSampleFreq.at(this->sampleFreq));
+}
 
 eIMUAbstractionError IMUStub::GetRawAccel(DBusTypes::eAxis axis, double &val)
 {

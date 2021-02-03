@@ -98,14 +98,31 @@ eIMUServerError IMURPCServer::InitGetEulerAngle(void)
   return ret;
 }
 
+eIMUServerError IMURPCServer::InitGetComplFilterAngle(void)
+{
+  auto ret = eIMUServerError::eRET_OK;
+
+  auto func = [this](int axis, int unit)
+  {
+    double val = 0;
+    instanceMath->GetComplFilterAngle(val, (DBusTypes::eAxis)axis, (DBusTypes::eAngleUnit)unit);
+    return val;
+  };
+  auto retServer = instanceServer->setGetComplFilterAngleCallback(func);
+  ret = (retServer == RPCServer::eRPCError::eRET_OK) ? eIMUServerError::eRET_OK : eIMUServerError::eRET_ERROR;
+
+  return ret;
+}
+
 eIMUServerError IMURPCServer::InitServer()
 {
   auto ret = eIMUServerError::eRET_OK;
 
-  auto retAccel = static_cast<int>(this->InitGetRawAccel());
-  auto retGyro =  static_cast<int>(this->InitGetRawGyro());
-  auto retAngle = static_cast<int>(this->InitGetEulerAngle());
-  auto retInit = retAccel + retGyro + retAngle;
+  auto retAccel =       static_cast<int>(this->InitGetRawAccel());
+  auto retGyro =        static_cast<int>(this->InitGetRawGyro());
+  auto retEulerAngle =  static_cast<int>(this->InitGetEulerAngle());
+  auto retComplAngle =  static_cast<int>(this->InitGetComplFilterAngle());
+  auto retInit = retAccel + retGyro + retEulerAngle + retComplAngle;
 
   if (retInit != 0)
   {

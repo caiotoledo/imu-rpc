@@ -54,6 +54,14 @@ namespace RPCServer
     virtual eRPCError setGetEulerAngleCallback(std::function<double(int, int)> &&cb) = 0;
 
     /**
+     * @brief Register GetComplFilterAngle Callback
+     *
+     * @param cb Callback to be called
+     * @return eRPCError Returns #eRET_OK when successful, ref #eRPCError
+     */
+    virtual eRPCError setGetComplFilterAngleCallback(std::function<double(int, int)> &&cb) = 0;
+
+    /**
      * @brief DeInitialize Request Handler
      */
     virtual void DeInit(void) = 0;
