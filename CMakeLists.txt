@@ -35,6 +35,31 @@ find_package(PkgConfig REQUIRED)
 # Add DBus CXX Wrapper
 pkg_check_modules(DBUSCXX dbus-cxx-1.0 REQUIRED)
 
+enable_testing()
+# Macro for Google Test
+macro(package_gtest TESTNAME)
+    cmake_parse_arguments(
+        INPUT_ARG
+        ""
+        ""
+        "SRC;INCLUDE;LIB"
+        ${ARGN}
+    )
+    # Execute only for host compilation
+    if(NOT CMAKE_CROSSCOMPILING)
+        find_package(GTest REQUIRED)
+        set(TEST_PROGRAM test_${TESTNAME})
+        message(STATUS "Adding google test: ${TESTNAME}")
+        add_executable(${TEST_PROGRAM} ${INPUT_ARG_SRC})
+        target_include_directories(${TEST_PROGRAM} PRIVATE ${GTEST_INCLUDE_DIRS} ${INPUT_ARG_INCLUDE})
+        target_link_libraries(${TEST_PROGRAM} PRIVATE ${INPUT_ARG_LIB} ${GTEST_LIBRARIES} gtest_main gmock gmock_main pthread)
+        # Add test to be run in ctest
+        add_test(NAME ${TESTNAME}
+            COMMAND ${TEST_PROGRAM}
+            WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    endif()
+endmacro(package_gtest)
+
 # SERVER APPLICATION
 add_subdirectory(server)
 
