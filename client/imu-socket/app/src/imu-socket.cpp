@@ -138,7 +138,7 @@ int main(int argc, char const *argv[])
     return retParse;
   }
 
-  LOGDEBUG("ReturnParser: %d", retParse);
+  LOGDEBUG("ReturnParser:\t[%d]", retParse);
   LOGDEBUG("Arg daemon\t[%s]", args.daemon ? "Enable" : "Disable");
   LOGDEBUG("Arg port\t[%d]", args.port);
 
