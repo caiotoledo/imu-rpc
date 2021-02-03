@@ -12,7 +12,7 @@ import imuplot
 __Logger = logging.getLogger('imu-dbus')
 
 # Version variable:
-__version__ = "v0.0.0"
+__version__ = "v0.1.0"
 
 # Arguments parser:
 parser = argparse.ArgumentParser(description='Script to interact with imu-dbus server')
