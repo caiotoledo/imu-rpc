@@ -8,6 +8,7 @@
 using namespace IMUMath;
 
 #define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PIl))
+#define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
 
 /* Constant used in Complementary Filter */
 constexpr double ALPHA = 0.7143;
@@ -95,6 +96,7 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
     break;
   case DBusTypes::eAngleUnit::eRadians:
   default:
+    value = valueAngle;
     break;
   }
 
@@ -135,7 +137,19 @@ eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis a
 {
   auto axis_index = static_cast<int>(axis);
 
-  value = angle_compl_filter[axis_index];
+  auto valueAngle = angle_compl_filter[axis_index];
+
+  /* Convert Angle unit */
+  switch (unit)
+  {
+  case DBusTypes::eAngleUnit::eDegrees:
+    value = valueAngle;
+    break;
+  case DBusTypes::eAngleUnit::eRadians:
+  default:
+    value = DEG_TO_RAD(valueAngle);
+    break;
+  }
 
   return eIMUMathError::eRET_OK;
 }
