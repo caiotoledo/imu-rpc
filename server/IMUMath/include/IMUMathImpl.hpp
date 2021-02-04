@@ -19,10 +19,7 @@ namespace IMUMath
 
     double angle_compl_filter[IMUAbstraction::NUM_AXIS];
 
-    std::thread thComplFilter;
-    std::atomic<bool> bComplFilterThread;
-
-    void UpdateComplFilterAngle(int samplerate_ms);
+    void UpdateComplFilterAngle(double samplerate_ms);
 
   public:
     IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu);
