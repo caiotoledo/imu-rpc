@@ -10,6 +10,10 @@
 
 using ::testing::_;
 using ::testing::Return;
+using ::testing::Invoke;
+using ::testing::SetArgReferee;
+using ::testing::DoAll;
+using ::testing::AnyNumber;
 
 constexpr auto SAMPLERATE = 5; /* ms */
 
@@ -31,8 +35,13 @@ TEST(imumathimpl, imumath_init)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(testing::AnyNumber())
-    .WillRepeatedly(testing::SetArgReferee<1>(0));
+    .Times(AnyNumber())
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
 
   EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
     .Times(1);
@@ -86,21 +95,21 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(testing::AnyNumber());
+    .Times(AnyNumber());
 
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(testing::AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_ERROR));
+    .Times(AnyNumber())
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(testing::AnyNumber())
+    .Times(AnyNumber())
     .WillRepeatedly(Return(SAMPLERATE));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
 
   ON_CALL(*imuMock, GetRawAccel(_,_))
-    .WillByDefault(testing::Invoke(funcGetRawAccel));
+    .WillByDefault(Invoke(funcGetRawAccel));
 
   /* Test Init IMUMath */
   auto retInit = imuMath->Init();
