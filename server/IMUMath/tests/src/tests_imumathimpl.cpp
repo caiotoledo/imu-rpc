@@ -34,6 +34,9 @@ TEST(imumathimpl, imumath_init)
     .Times(testing::AnyNumber())
     .WillRepeatedly(testing::SetArgReferee<1>(0));
 
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
 
@@ -78,6 +81,9 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   EXPECT_CALL(*imuMock, Init())
     .Times(1)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
     .Times(testing::AnyNumber());
