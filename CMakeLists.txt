@@ -35,7 +35,7 @@ find_package(PkgConfig REQUIRED)
 # Add DBus CXX Wrapper
 pkg_check_modules(DBUSCXX dbus-cxx-1.0 REQUIRED)
 
-enable_testing()
+include (CTest)
 # Macro for Google Test
 macro(package_gtest TESTNAME)
   cmake_parse_arguments(
