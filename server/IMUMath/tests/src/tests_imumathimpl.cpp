@@ -21,6 +21,12 @@ TEST(imumathimpl, imumath_init)
     .Times(1)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(testing::AnyNumber());
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
   auto ret = imuMath->Init();
 
   EXPECT_EQ(ret, IMUMath::eIMUMathError::eRET_OK);
