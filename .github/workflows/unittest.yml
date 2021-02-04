@@ -26,10 +26,14 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Run Unit Test
+      - name: Build Project ${{ matrix.buildtype }} mode
         run: |
-          mkdir -p .build/ && cd .build/
+          mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
           make -j$(nproc)
+
+      - name: Run Unit Test
+        run: |
+          cd .build_${{ matrix.buildtype }}/
           ctest --verbose -T memcheck
           exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ')
