@@ -31,7 +31,8 @@ TEST(imumathimpl, imumath_init)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(testing::AnyNumber());
+    .Times(testing::AnyNumber())
+    .WillRepeatedly(testing::SetArgReferee<1>(0));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
