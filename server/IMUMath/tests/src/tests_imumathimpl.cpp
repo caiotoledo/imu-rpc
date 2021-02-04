@@ -1,3 +1,4 @@
+#include <limits>
 #include <memory>
 
 #include <gtest/gtest.h>
@@ -99,7 +100,8 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
   /* Test Euler Angle */
-  double eulerAngle[IMUAbstraction::NUM_AXIS] = {0};
+  auto nan = std::numeric_limits<double>::quiet_NaN();
+  double eulerAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
   for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
   {
     auto axis = static_cast<DBusTypes::eAxis>(i);
