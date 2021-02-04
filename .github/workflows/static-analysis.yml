@@ -30,8 +30,10 @@ jobs:
           cmake . && make -j$(nproc) && sudo make install && sudo ldconfig
           cd ../
 
-      - name: Run Static Analysis
+      - name: Build Project
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
           scan-build --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
-          scan-build --status-bugs make -j$(nproc)
+
+      - name: Run Static Analysis
+        run: scan-build --status-bugs make -j$(nproc)
