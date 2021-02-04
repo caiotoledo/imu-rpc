@@ -16,22 +16,16 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Static Analysis ${{ matrix.buildtype }} mode
+    container:
+      image: caiotoledo/imu-rpc:latest
+
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install dependencies for Static Analysis
-        run: |
-          sudo apt install clang-tools
-
-      - name: Install dbus-cxx
-        run: |
-          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
-          cd dbus-cxx
-          cmake . && make -j$(nproc) && sudo make install && sudo ldconfig
-          cd ../
-
-      - name: Run Static Analysis
+      - name: Build Project
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
           scan-build --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
-          scan-build --status-bugs make -j$(nproc)
+
+      - name: Run Static Analysis
+        run: scan-build --status-bugs make -j$(nproc)

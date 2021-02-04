@@ -1,0 +1,39 @@
+name: Unittesting
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        buildtype: [Debug, Release]
+
+    runs-on: ubuntu-latest
+    name: Unit test ${{ matrix.buildtype }} mode
+    container:
+      image: caiotoledo/imu-rpc:latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apt install valgrind -y
+
+      - uses: actions/checkout@v2
+
+      - name: Build Project ${{ matrix.buildtype }} mode
+        run: |
+          mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
+          make -j$(nproc)
+
+      - name: Run Unit Test
+        run: |
+          cd .build_${{ matrix.buildtype }}/
+          ctest --verbose -T memcheck
+          exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ')

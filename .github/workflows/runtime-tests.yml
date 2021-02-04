@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Test Application ${{ matrix.buildtype }} - SampleRate ${{ matrix.samplerate }} ms - AccelScale ${{ matrix.accelscale }} mG - GyroScale ${{ matrix.gyroscale }} °/s
     container:
-      image: caiotoledo/dbuscxx:0.12.0
+      image: caiotoledo/imu-rpc:latest
 
     env:
       IP: localhost
