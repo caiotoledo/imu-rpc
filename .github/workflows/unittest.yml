@@ -17,18 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Unit test ${{ matrix.buildtype }} mode
     container:
-      image: caiotoledo/dbuscxx:0.12.0
+      image: caiotoledo/imu-rpc:latest
 
     steps:
-      - name: Install googletest
-        run: |
-          git clone --branch release-1.8.1 https://github.com/google/googletest.git
-          cd googletest
-          cmake -DBUILD_SHARED_LIBS=ON .
-          make -j$(nproc)
-          sudo make install
-          sudo ldconfig
-
       - uses: actions/checkout@v2
 
       - name: Run Unit Test
