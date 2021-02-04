@@ -20,6 +20,10 @@ jobs:
       image: caiotoledo/imu-rpc:latest
 
     steps:
+      - name: Install dependencies
+        run: |
+          apt install valgrind -y
+
       - uses: actions/checkout@v2
 
       - name: Run Unit Test
@@ -27,4 +31,5 @@ jobs:
           mkdir -p .build/ && cd .build/
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
           make -j$(nproc)
-          make test
+          ctest --verbose -T memcheck
+          exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ')
