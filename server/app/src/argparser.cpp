@@ -25,10 +25,10 @@ static char args_doc[] = "";
 
 /* Option Arguments */
 static struct argp_option options[] = {
-  {"daemon", 'd', 0,       0, "Execute as Daemon",                                                        0},
-  {"rate",   'r', "RATE",  0, "Configure Sample Rate in [ms], valid values:\n\t{10,20,50,100,200,500}",   1},
-  {"gyro",   'g', "GYRO",  0, "Configure Gyroscope Scale in [°/s], valid values:\n\t{250,500,1000,2000}", 1},
-  {"accel",  'a', "ACCEL", 0, "Configure Accelerometer Scale in [G], valid values:\n\t{2,4,8,16}",        1},
+  {"daemon", 'd', 0,       0, "Execute as Daemon",                                                                              0},
+  {"rate",   'r', "RATE",  0, "Configure Sample Rate in [ms],\n\tvalid values: {10,20,50,100,200,500}\n\tdefault value: 50",    1},
+  {"gyro",   'g', "GYRO",  0, "Configure Gyroscope Scale in [°/s],\n\tvalid values: {250,500,1000,2000}\n\tdefault value: 250", 1},
+  {"accel",  'a', "ACCEL", 0, "Configure Accelerometer Scale in [G],\n\tvalid values: {2,4,8,16}\n\tdefault value: 2",          1},
   { 0 }
 };
 
