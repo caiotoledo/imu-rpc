@@ -14,6 +14,9 @@
 
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
+/* Default value for Alpha Constant */
+constexpr double DEFAULT_ALPHA = 0.7143;
+
 /* Software Version */
 const char *argp_program_version = STRING_VERSION;
 /* Contact e-mail */
@@ -29,6 +32,7 @@ static struct argp_option options[] = {
   {"rate",   'r', "RATE",  0, "Configure Sample Rate in [ms],\n\tvalid values: {10,20,50,100,200,500}\n\tdefault value: 50",    1},
   {"gyro",   'g', "GYRO",  0, "Configure Gyroscope Scale in [°/s],\n\tvalid values: {250,500,1000,2000}\n\tdefault value: 250", 1},
   {"accel",  'a', "ACCEL", 0, "Configure Accelerometer Scale in [G],\n\tvalid values: {2,4,8,16}\n\tdefault value: 2",          1},
+  {"alpha",  'c', "ALPHA", 0, "Alpha constant for Complementary Filter, valid values:\n\t{0~1}\n\tdefault value: 0.7143",       1},
   { 0 }
 };
 
@@ -45,6 +49,13 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
           std::stringstream strValue;
           strValue << arg;
           strValue >> arguments->accel_scale;
+        }
+      break;
+      case 'c':
+        {
+          std::stringstream strValue;
+          strValue << arg;
+          strValue >> arguments->const_alpha;
         }
       break;
       case 'd':
@@ -70,6 +81,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
         arguments->accel_scale = 2;
         arguments->gyro_scale = 250;
         arguments->sample_rate = 50;
+        arguments->const_alpha = DEFAULT_ALPHA;
       break;
 
       case ARGP_KEY_FINI:

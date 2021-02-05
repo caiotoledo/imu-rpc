@@ -4,6 +4,7 @@ namespace ArgParser
 {
   struct arguments {
     bool daemon;
+    double const_alpha;
     int accel_scale;
     int gyro_scale;
     int sample_rate;
