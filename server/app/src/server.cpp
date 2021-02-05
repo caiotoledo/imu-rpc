@@ -129,6 +129,7 @@ int main(int argc, char const *argv[])
   LOGDEBUG("Arg daemon\t\t[%s]", args.daemon ? "Enable" : "Disable");
   LOGDEBUG("Arg accel scale\t[%d] G", args.accel_scale);
   LOGDEBUG("Arg gyro scale\t[%d] °/s", args.gyro_scale);
+  LOGDEBUG("Arg alpha constant\t[%0.5f]", args.const_alpha);
   LOGDEBUG("Arg sample rate\t[%d] ms", args.sample_rate);
 
   /**
@@ -240,7 +241,7 @@ int main(int argc, char const *argv[])
     );
     LOGDEBUG("Using IMUStub");
   }
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction);
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction, args.const_alpha);
   serverRPC = std::make_shared<RPCServer::DBusCxxServer>();
   serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction, imuMath);
 

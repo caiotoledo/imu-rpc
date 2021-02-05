@@ -30,6 +30,12 @@ const std::map<int, IMUAbstraction::eSampleFreq> mapSampleFreq =
   {500, IMUAbstraction::eSampleFreq::Freq_500ms},
 };
 
+/**
+ * Complementary Filter constant allow values between 0 and 1 onyl
+ */
+constexpr auto MAX_CONST_ALPHA = 1.0;
+constexpr auto MIN_CONST_ALPHA = 0.0;
+
 bool ArgValidator::IsValidArgs(const ArgParser::arguments &args)
 {
   auto ret = true;
@@ -45,6 +51,11 @@ bool ArgValidator::IsValidArgs(const ArgParser::arguments &args)
   }
 
   if (mapSampleFreq.find(args.sample_rate) == mapSampleFreq.end())
+  {
+    ret = false;
+  }
+
+  if ((args.const_alpha < MIN_CONST_ALPHA) && (args.const_alpha > MAX_CONST_ALPHA))
   {
     ret = false;
   }

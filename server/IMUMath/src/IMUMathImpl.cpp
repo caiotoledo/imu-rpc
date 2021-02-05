@@ -10,12 +10,9 @@ using namespace IMUMath;
 #define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PIl))
 #define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
 
-/* Constant used in Complementary Filter */
-constexpr double ALPHA = 0.7143;
-
-IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu) :
+IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu, double alpha) :
   instanceImu(imu),
-  bComplFilterThread(false)
+  const_alpha(alpha)
 {
 }
 
@@ -38,18 +35,22 @@ eIMUMathError IMUMathImpl::Init(void)
     /* Define lambda function for Complementary Filter Calculation */
     auto funcComplFilter = [this]()
     {
-      while (bComplFilterThread)
+      /* Calculate sample rate based on callback call */
+      static auto last_exec = std::chrono::high_resolution_clock::now();
+      auto now = std::chrono::high_resolution_clock::now();
+      auto diff = std::chrono::duration_cast<std::chrono::microseconds>(now - last_exec);
+      double samplerate_ms = (diff.count()/1000.0);
+
+      if (samplerate_ms > 0)
       {
-        auto samplerate_ms = this->instanceImu->GetSampleFrequency();
-
+        /* Calculate Complementary Filter */
         this->UpdateComplFilterAngle(samplerate_ms);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(samplerate_ms));
       }
-    };
 
-    bComplFilterThread = true;
-    thComplFilter = std::thread(funcComplFilter);
+      /* Update last executiion time */
+      last_exec = std::chrono::high_resolution_clock::now();
+    };
+    this->instanceImu->AddUpdateDataCallback(funcComplFilter);
   }
 
   return ret;
@@ -116,7 +117,7 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
   return ret;
 }
 
-void IMUMathImpl::UpdateComplFilterAngle(int samplerate_ms)
+void IMUMathImpl::UpdateComplFilterAngle(double samplerate_ms)
 {
   for (size_t axis_index = 0; axis_index < IMUAbstraction::NUM_AXIS; axis_index++)
   {
@@ -141,8 +142,8 @@ void IMUMathImpl::UpdateComplFilterAngle(int samplerate_ms)
 
     /* Calculate Complamentary Filter Angle */
     double samplerate_sec = (samplerate_ms/1000L);
-    angle_compl_filter[axis_index] =  (angle_compl_filter[axis_index] + (gyro*samplerate_sec))*ALPHA;
-    angle_compl_filter[axis_index] += (1-ALPHA)*(angle_measure);
+    angle_compl_filter[axis_index] =  (angle_compl_filter[axis_index] + (gyro*samplerate_sec))*const_alpha;
+    angle_compl_filter[axis_index] += (1-const_alpha)*(angle_measure);
   }
 }
 
@@ -185,12 +186,6 @@ eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis a
 
 void IMUMathImpl::DeInit(void)
 {
-  if (thComplFilter.joinable())
-  {
-    bComplFilterThread = false;
-    thComplFilter.join();
-  }
-
   this->instanceImu->DeInit();
 }
 
