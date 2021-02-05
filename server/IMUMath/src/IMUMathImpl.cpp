@@ -10,11 +10,9 @@ using namespace IMUMath;
 #define RAD_TO_DEG(x)   (((double)x)*((double)180.0/M_PIl))
 #define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
 
-/* Constant used in Complementary Filter */
-constexpr double ALPHA = 0.7143;
-
-IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu) :
-  instanceImu(imu)
+IMUMathImpl::IMUMathImpl(std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu, double alpha) :
+  instanceImu(imu),
+  const_alpha(alpha)
 {
 }
 
@@ -144,8 +142,8 @@ void IMUMathImpl::UpdateComplFilterAngle(double samplerate_ms)
 
     /* Calculate Complamentary Filter Angle */
     double samplerate_sec = (samplerate_ms/1000L);
-    angle_compl_filter[axis_index] =  (angle_compl_filter[axis_index] + (gyro*samplerate_sec))*ALPHA;
-    angle_compl_filter[axis_index] += (1-ALPHA)*(angle_measure);
+    angle_compl_filter[axis_index] =  (angle_compl_filter[axis_index] + (gyro*samplerate_sec))*const_alpha;
+    angle_compl_filter[axis_index] += (1-const_alpha)*(angle_measure);
   }
 }
 

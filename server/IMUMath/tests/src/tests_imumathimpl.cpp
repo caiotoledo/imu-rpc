@@ -16,6 +16,8 @@ using ::testing::DoAll;
 using ::testing::AnyNumber;
 
 constexpr auto SAMPLERATE = 5; /* ms */
+/* Constant used in Complementary Filter */
+constexpr double ALPHA = 0.7143;
 
 inline double round( double val )
 {
@@ -28,7 +30,7 @@ TEST(imumathimpl, imumath_init)
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
 
   std::shared_ptr<IMUMath::IIMUMath> imuMath;
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock);
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
 
   EXPECT_CALL(*imuMock, Init())
     .Times(1)
@@ -65,7 +67,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
 
   std::shared_ptr<IMUMath::IIMUMath> imuMath;
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock);
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
 
   /* Prepare local variables */
   double accel[] = {

@@ -240,7 +240,7 @@ int main(int argc, char const *argv[])
     );
     LOGDEBUG("Using IMUStub");
   }
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction);
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction, 0.7143);
   serverRPC = std::make_shared<RPCServer::DBusCxxServer>();
   serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction, imuMath);
 
