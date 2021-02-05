@@ -11,16 +11,6 @@ instanceServer(server),
 instanceImu(imu),
 instanceMath(math)
 {
-  auto cbIMU = [this]()
-  {
-    auto ret = instanceServer->NotifyDataUpdate();
-    if (ret != RPCServer::eRPCError::eRET_OK)
-    {
-      LOGWARN("Updated Data Notification Failed [%d]", ((int)ret));
-    }
-  };
-
-  imu->AddUpdateDataCallback(cbIMU);
 }
 
 eIMUServerError IMURPCServer::StartServer(void)
@@ -40,6 +30,16 @@ eIMUServerError IMURPCServer::StartServer(void)
   }
   else
   {
+    auto cbIMU = [this]()
+    {
+      auto ret = instanceServer->NotifyDataUpdate();
+      if (ret != RPCServer::eRPCError::eRET_OK)
+      {
+        LOGWARN("Updated Data Notification Failed [%d]", ((int)ret));
+      }
+    };
+    instanceImu->AddUpdateDataCallback(cbIMU);
+
     ret = this->InitServer();
   }
 
