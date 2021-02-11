@@ -9,16 +9,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  job:
+  build:
     strategy:
       matrix:
         buildtype: [Debug, Release]
-        samplerate: [10, 100, 500]
-        gyroscale: [250, 1000]
-        accelscale: [2, 16]
 
     runs-on: ubuntu-latest
-    name: Test Application ${{ matrix.buildtype }} - SampleRate ${{ matrix.samplerate }} ms - AccelScale ${{ matrix.accelscale }} mG - GyroScale ${{ matrix.gyroscale }} °/s
+    name: Build Project ${{ matrix.buildtype }}
     container:
       image: caiotoledo/imu-rpc:latest
 
@@ -30,18 +27,55 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Create artifact folder
         run: |
-          python3 -m pip install -r script/requirements.txt
+          mkdir -p .install_${{ matrix.buildtype }}
 
       - name: Build Project
         run: |
-          mkdir -p .build/ && cd .build/
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
+          mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DCMAKE_INSTALL_PREFIX=../.install_${{ matrix.buildtype }}/ ../
           make -j$(nproc)
           sudo make install
-          sudo ldconfig
           cd ../
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: binaries-${{ matrix.buildtype }}
+          path: .install_${{ matrix.buildtype }}
+          retention-days: 1
+
+  test:
+    needs: build
+    strategy:
+      matrix:
+        buildtype: [Debug, Release]
+        samplerate: [10,20,50,100,200,500]
+        gyroscale: [250,500,1000,2000]
+        accelscale: [2,4,8,16]
+
+    runs-on: ubuntu-latest
+    name: Test Application ${{ matrix.buildtype }} - SampleRate ${{ matrix.samplerate }} ms - AccelScale ${{ matrix.accelscale }} mG - GyroScale ${{ matrix.gyroscale }} °/s
+    container:
+      image: caiotoledo/dbuscxx:0.12.0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: binaries-${{ matrix.buildtype }}
+          path: .install_${{ matrix.buildtype }}
+
+      - name: Install binaries from artifact
+        run: |
+          find .install_${{ matrix.buildtype }}/ -type f | xargs -I{} chmod +x "{}"
+          cp -rv .install_${{ matrix.buildtype }}/* /usr/
+          sudo ldconfig
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r script/requirements.txt
 
       - name: Simple Application Test
         run: |
