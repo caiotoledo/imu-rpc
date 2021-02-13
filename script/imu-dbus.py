@@ -4,9 +4,11 @@ import argparse
 import logging
 import coloredlogs
 import queue
+import math
 
 import sockethandler
 import imuplot
+import imucube
 
 # Initialize Logger
 __Logger = logging.getLogger('imu-dbus')
@@ -52,6 +54,7 @@ parser.add_argument('--version',
 
 
 imuQueue = queue.Queue()
+imuRawQueue = queue.Queue()
 def cbSockRecv(data):
   sData = data.decode("utf-8")
   __Logger.debug(sData)
@@ -82,8 +85,15 @@ def cbSockRecv(data):
   imu.addAngle(timepoint, AngleObj)
   imu.addComplFilterAngle(timepoint, ComplAngleObj)
 
+  imuRawQueue.put(d)
   imuQueue.put(imu)
 
+
+def UpdateCube(cube,newX=0,newY=0,newZ=0):
+  newAngles = [newX, newY, newZ]
+  newAngles = [math.radians(val) for val in newAngles]
+  # Update Cube Angles
+  cube.Rotate(X=newAngles[0], Y=newAngles[1], Z=newAngles[2])
 
 
 def main():
@@ -111,8 +121,10 @@ def main():
 
   # Initialize imuplot module
   myplot = imuplot.ImuDataPlot()
+  cubePlot = imucube.LineCubePlot(delta=100)
   if mathPlot:
     myplot.Init()
+    cubePlot.Init()
 
   start_time = time.time()
   sock.AddCallbackRecv(cb=cbSockRecv)
@@ -123,9 +135,14 @@ def main():
     try:
       # Get data from queue
       imu = imuQueue.get(timeout=sampleTime/1000)
+      rawData = imuRawQueue.get(timeout=sampleTime/1000)
       myplot.appendImuData(imu)
+      typeAngle = "Angle"
+      # typeAngle = "ComplAngle"
+      UpdateCube(cube=cubePlot, newX=rawData["X"][typeAngle], newY=rawData["Y"][typeAngle], newZ=rawData["Z"][typeAngle])
       if imuQueue.empty():
         myplot.showGraph("IMU Data")
+        cubePlot.Draw()
     except queue.Empty:
       # No data available, keep waiting
       pass
