@@ -14,7 +14,7 @@
 namespace SocketServer
 {
 
-  class SocketServerImpl : public ISocketServer
+  class SocketServerTCP : public ISocketServer
   {
   private:
     std::mutex mtxMapConnClient;
@@ -37,13 +37,13 @@ namespace SocketServer
     void CloseServer(void);
 
   public:
-    SocketServerImpl(int port);
+    SocketServerTCP(int port);
 
     virtual int Init(void) override;
     virtual int SendToClients(const std::vector<uint8_t> &vec) override;
     virtual void DeInit(void) override;
 
-    ~SocketServerImpl();
+    ~SocketServerTCP();
   };
 
 } // namespace SocketServer

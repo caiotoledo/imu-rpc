@@ -8,7 +8,7 @@
 
 #include <LogInstance.h>
 #include <DBusIMUClient.hpp>
-#include <SocketServerImpl.hpp>
+#include <SocketServerTCP.hpp>
 
 #include "argparser.hpp"
 
@@ -180,7 +180,7 @@ int main(int argc, char const *argv[])
    * START SERVER TCP
    */
   std::shared_ptr<SocketServer::ISocketServer> server;
-  server = std::make_shared<SocketServer::SocketServerImpl>(args.port);
+  server = std::make_shared<SocketServer::SocketServerTCP>(args.port);
   auto retServer = server->Init();
   if (retServer != 0)
   {

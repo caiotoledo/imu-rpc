@@ -6,20 +6,20 @@
 
 #include <LogInstance.h>
 
-#include <SocketServerImpl.hpp>
+#include <SocketServerTCP.hpp>
 
 using namespace SocketServer;
 
 constexpr auto QUEUE_LISTEN = 20;
 
-SocketServerImpl::SocketServerImpl(int port) :
+SocketServerTCP::SocketServerTCP(int port) :
   bThreadServer(false),
   serverHandler(-1),
   port(port)
 {
 }
 
-int SocketServerImpl::Init(void)
+int SocketServerTCP::Init(void)
 {
   auto ret = 0;
 
@@ -71,7 +71,7 @@ int SocketServerImpl::Init(void)
   return ret;
 }
 
-void SocketServerImpl::AcceptConnection(void)
+void SocketServerTCP::AcceptConnection(void)
 {
   struct sockaddr_in client_addr;
   socklen_t length = sizeof(client_addr);
@@ -85,7 +85,7 @@ void SocketServerImpl::AcceptConnection(void)
   }
 }
 
-int SocketServerImpl::SendToClients(const std::vector<uint8_t> &vec)
+int SocketServerTCP::SendToClients(const std::vector<uint8_t> &vec)
 {
   std::lock_guard<std::mutex> lck(mtxMapConnClient);
   int ret = 0;
@@ -113,7 +113,7 @@ int SocketServerImpl::SendToClients(const std::vector<uint8_t> &vec)
   return ret;
 }
 
-void SocketServerImpl::CloseServer(void)
+void SocketServerTCP::CloseServer(void)
 {
   /* Stop all data transfers */
   shutdown(serverHandler, SHUT_RDWR);
@@ -137,7 +137,7 @@ void SocketServerImpl::CloseServer(void)
   serverHandler = -1;
 }
 
-void SocketServerImpl::DeInit(void)
+void SocketServerTCP::DeInit(void)
 {
   /* Close Server */
   this->CloseServer();
@@ -153,7 +153,7 @@ void SocketServerImpl::DeInit(void)
   }
 }
 
-SocketServerImpl::~SocketServerImpl()
+SocketServerTCP::~SocketServerTCP()
 {
   this->DeInit();
 }
