@@ -9,6 +9,7 @@
 #include <LogInstance.h>
 #include <DBusIMUClient.hpp>
 #include <SocketServerTCP.hpp>
+#include <SocketServerUDP.hpp>
 
 #include "argparser.hpp"
 
@@ -140,6 +141,7 @@ int main(int argc, char const *argv[])
 
   LOGDEBUG("ReturnParser:\t[%d]", retParse);
   LOGDEBUG("Arg daemon\t[%s]", args.daemon ? "Enable" : "Disable");
+  LOGDEBUG("Arg udp\t[%s]", args.udp ? "Enable" : "Disable");
   LOGDEBUG("Arg port\t[%d]", args.port);
 
   /**
@@ -177,10 +179,17 @@ int main(int argc, char const *argv[])
   }
 
   /**
-   * START SERVER TCP
+   * START SOCKET SERVER
    */
   std::shared_ptr<SocketServer::ISocketServer> server;
-  server = std::make_shared<SocketServer::SocketServerTCP>(args.port);
+  if (args.udp)
+  {
+    server = std::make_shared<SocketServer::SocketServerUDP>(args.port);
+  }
+  else
+  {
+    server = std::make_shared<SocketServer::SocketServerTCP>(args.port);
+  }
   auto retServer = server->Init();
   if (retServer != 0)
   {

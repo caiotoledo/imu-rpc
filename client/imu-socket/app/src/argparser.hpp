@@ -5,6 +5,7 @@ namespace ArgParser
   struct arguments {
     bool daemon;
     int port;
+    bool udp;
   };
 
   /**
