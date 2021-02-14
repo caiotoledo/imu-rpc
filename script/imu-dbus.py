@@ -28,6 +28,13 @@ parser.add_argument("--Port",
                     help="TCP IP Port",
                     metavar="PORT",
                     required=True)
+parser.add_argument("--SocketType",
+                    "-s",
+                    dest="SocketType",
+                    help="Define Socket type, valid values: {\"UDP\",\"TCP\"}",
+                    metavar="SOCKTYPE",
+                    choices=['UDP', 'TCP'],
+                    required=True)
 parser.add_argument("--SampleTime",
                     "-t",
                     dest="SampleTime",
@@ -98,12 +105,13 @@ def main():
   sampleTime = float(args.SampleTime if args.SampleTime is not None else __defaultTime)
   mathPlot = args.MathPlot
   debug = args.Debug
+  useUDP = True if 'UDP' in args.SocketType else False
 
   LoggerLevel = 'DEBUG' if debug is True else 'INFO'
   coloredlogs.install(level=LoggerLevel,logger=__Logger)
 
   # Initialize socket handler module
-  sock = sockethandler.SocketHandlerClient()
+  sock = sockethandler.SocketHandlerClient(udp=useUDP)
   retSock = sock.Init(ip=ipAddress, port=ipPort)
   if retSock != 0:
     __Logger.critical("Connection Failure with [{}:{}]".format(ipAddress, ipPort))
