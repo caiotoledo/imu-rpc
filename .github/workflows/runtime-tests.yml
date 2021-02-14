@@ -62,6 +62,9 @@ jobs:
           imu-socket -d -p $PORT -ut
           imu-cli -a -c -g -e -t$TEST_TIME
           python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d
+
+      - name: Stop Daemons
+        run: |
           killall imu-socket
           killall imu-daemon
           sleep 1
