@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <DBusTypes.hpp>
 
 namespace IMUClient
@@ -75,4 +77,4 @@ namespace IMUClient
     virtual ~IIMUClient() = default;
   };
 
-} // namespace RPCClient
+} // namespace IMUClient

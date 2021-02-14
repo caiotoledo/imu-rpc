@@ -8,7 +8,8 @@
 
 #include <LogInstance.h>
 #include <DBusIMUClient.hpp>
-#include <SocketServerImpl.hpp>
+#include <SocketServerTCP.hpp>
+#include <SocketServerUDP.hpp>
 
 #include "argparser.hpp"
 
@@ -140,6 +141,8 @@ int main(int argc, char const *argv[])
 
   LOGDEBUG("ReturnParser:\t[%d]", retParse);
   LOGDEBUG("Arg daemon\t[%s]", args.daemon ? "Enable" : "Disable");
+  LOGDEBUG("Arg udp\t[%s]", args.udp ? "Enable" : "Disable");
+  LOGDEBUG("Arg tcp\t[%s]", args.tcp ? "Enable" : "Disable");
   LOGDEBUG("Arg port\t[%d]", args.port);
 
   /**
@@ -177,20 +180,35 @@ int main(int argc, char const *argv[])
   }
 
   /**
-   * START SERVER TCP
+   * START SOCKET UDP/TCP SERVER
    */
-  std::shared_ptr<SocketServer::ISocketServer> server;
-  server = std::make_shared<SocketServer::SocketServerImpl>(args.port);
-  auto retServer = server->Init();
-  if (retServer != 0)
+  std::shared_ptr<SocketServer::ISocketServer> serverUDP = nullptr;
+  std::shared_ptr<SocketServer::ISocketServer> serverTCP = nullptr;
+  if (args.udp)
   {
-    return retServer;
+    serverUDP = std::make_shared<SocketServer::SocketServerUDP>(args.port);
+    auto retServer = serverUDP->Init();
+    if (retServer != 0)
+    {
+      LOGERROR("Socket UDP Server Failed [%d]", retServer);
+      return retServer;
+    }
+  }
+  if (args.tcp)
+  {
+    serverTCP = std::make_shared<SocketServer::SocketServerTCP>(args.port);
+    auto retServer = serverTCP->Init();
+    if (retServer != 0)
+    {
+      LOGERROR("Socket TCP Server Failed [%d]", retServer);
+      return retServer;
+    }
   }
 
   /**
    * CONFIG IMU CLIENT CALLBACK
    */
-  auto func = [&server, &client]()
+  auto func = [&serverUDP, &serverTCP, &client]()
   {
     /* Sample Data from IMU */
     std::string sData;
@@ -198,7 +216,14 @@ int main(int argc, char const *argv[])
 
     /* Send Data to Clients */
     std::vector<uint8_t> vData(sData.begin(), sData.end());
-    server->SendToClients(vData);
+    if (serverUDP != nullptr)
+    {
+      serverUDP->SendToClients(vData);
+    }
+    if (serverTCP != nullptr)
+    {
+      serverTCP->SendToClients(vData);
+    }
   };
   client->AddUpdateDataCallback(func);
 

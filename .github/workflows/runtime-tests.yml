@@ -16,6 +16,7 @@ jobs:
         samplerate: [10, 100, 500]
         gyroscale: [250, 1000]
         accelscale: [2, 16]
+        sockettype: [TCP, UDP]
 
     runs-on: ubuntu-latest
     name: Test Application ${{ matrix.buildtype }} - SampleRate ${{ matrix.samplerate }} ms - AccelScale ${{ matrix.accelscale }} mG - GyroScale ${{ matrix.gyroscale }} °/s
@@ -58,9 +59,12 @@ jobs:
         run: |
           eval `dbus-launch --sh-syntax`
           imu-daemon -d -a${{ matrix.accelscale }} -g${{ matrix.gyroscale }} -r${{ matrix.samplerate }}
-          imu-socket -d -p $PORT
+          imu-socket -d -p $PORT -ut
           imu-cli -a -c -g -e -t$TEST_TIME
-          python3 script/imu-dbus.py -a $IP -p $PORT -t$TEST_TIME -d
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d
+
+      - name: Stop Daemons
+        run: |
           killall imu-socket
           killall imu-daemon
           sleep 1

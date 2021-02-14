@@ -7,18 +7,18 @@
 #include <memory>
 #include <thread>
 
-#include "ConnectionClient.hpp"
+#include "ConnectionTCPClient.hpp"
 
 #include "ISocketServer.hpp"
 
 namespace SocketServer
 {
 
-  class SocketServerImpl : public ISocketServer
+  class SocketServerTCP : public ISocketServer
   {
   private:
     std::mutex mtxMapConnClient;
-    std::map<int, std::shared_ptr<ConnectionClient>> mapConnClient;
+    std::map<int, std::shared_ptr<ConnectionTCPClient>> mapConnClient;
 
     std::thread thServer;
     std::atomic<bool> bThreadServer;
@@ -37,13 +37,13 @@ namespace SocketServer
     void CloseServer(void);
 
   public:
-    SocketServerImpl(int port);
+    SocketServerTCP(int port);
 
     virtual int Init(void) override;
     virtual int SendToClients(const std::vector<uint8_t> &vec) override;
     virtual void DeInit(void) override;
 
-    ~SocketServerImpl();
+    ~SocketServerTCP();
   };
 
 } // namespace SocketServer

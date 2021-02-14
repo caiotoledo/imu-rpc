@@ -5,11 +5,11 @@
 
 #include <LogInstance.h>
 
-#include "ConnectionClient.hpp"
+#include "ConnectionTCPClient.hpp"
 
 using namespace SocketServer;
 
-ConnectionClient::ConnectionClient(int handler) :
+ConnectionTCPClient::ConnectionTCPClient(int handler) :
   ConnHandler(handler)
 {
   auto funcRecv = [this]()
@@ -71,7 +71,7 @@ ConnectionClient::ConnectionClient(int handler) :
   thConnClient = std::thread(funcRecv);
 }
 
-bool ConnectionClient::isConnected(void)
+bool ConnectionTCPClient::isConnected(void)
 {
   int error_code;
   socklen_t error_code_size = sizeof(error_code);
@@ -81,7 +81,7 @@ bool ConnectionClient::isConnected(void)
   return (error_code == 0);
 }
 
-int ConnectionClient::Send(const std::vector<uint8_t> &vec)
+int ConnectionTCPClient::Send(const std::vector<uint8_t> &vec)
 {
   auto ret = 0;
 
@@ -100,19 +100,19 @@ int ConnectionClient::Send(const std::vector<uint8_t> &vec)
   return ret;
 }
 
-void ConnectionClient::AddCallbackRecv(std::function<void(const std::vector<uint8_t> &)> &&cb)
+void ConnectionTCPClient::AddCallbackRecv(std::function<void(const std::vector<uint8_t> &)> &&cb)
 {
   vecCbRecv.push_back(cb);
 }
 
-void ConnectionClient::CloseConnection(void)
+void ConnectionTCPClient::CloseConnection(void)
 {
   shutdown(ConnHandler, SHUT_RDWR);
 
   close(ConnHandler);
 }
 
-ConnectionClient::~ConnectionClient()
+ConnectionTCPClient::~ConnectionTCPClient()
 {
   if (thConnClient.joinable())
   {
