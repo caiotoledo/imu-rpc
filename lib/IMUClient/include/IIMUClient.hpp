@@ -75,4 +75,4 @@ namespace IMUClient
     virtual ~IIMUClient() = default;
   };
 
-} // namespace RPCClient
+} // namespace IMUClient
