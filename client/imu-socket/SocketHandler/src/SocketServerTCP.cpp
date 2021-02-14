@@ -80,7 +80,7 @@ void SocketServerTCP::AcceptConnection(void)
   if( conn >= 0 )
   {
     std::lock_guard<std::mutex> lck(mtxMapConnClient);
-    auto connClient = std::make_shared<ConnectionClient>(conn);
+    auto connClient = std::make_shared<ConnectionTCPClient>(conn);
     mapConnClient[conn] = connClient;
   }
 }

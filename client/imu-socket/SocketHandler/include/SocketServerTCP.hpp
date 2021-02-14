@@ -7,7 +7,7 @@
 #include <memory>
 #include <thread>
 
-#include "ConnectionClient.hpp"
+#include "ConnectionTCPClient.hpp"
 
 #include "ISocketServer.hpp"
 
@@ -18,7 +18,7 @@ namespace SocketServer
   {
   private:
     std::mutex mtxMapConnClient;
-    std::map<int, std::shared_ptr<ConnectionClient>> mapConnClient;
+    std::map<int, std::shared_ptr<ConnectionTCPClient>> mapConnClient;
 
     std::thread thServer;
     std::atomic<bool> bThreadServer;

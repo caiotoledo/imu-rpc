@@ -8,7 +8,7 @@
 namespace SocketServer
 {
 
-  class ConnectionClient
+  class ConnectionTCPClient
   {
   private:
     std::thread thConnClient;
@@ -24,7 +24,7 @@ namespace SocketServer
     void CloseConnection(void);
 
   public:
-    ConnectionClient(int handler);
+    ConnectionTCPClient(int handler);
 
     /**
      * @brief Send data to the client
@@ -49,7 +49,7 @@ namespace SocketServer
      */
     virtual bool isConnected(void);
 
-    ~ConnectionClient();
+    ~ConnectionTCPClient();
   };
 
 } // namespace SocketServer
