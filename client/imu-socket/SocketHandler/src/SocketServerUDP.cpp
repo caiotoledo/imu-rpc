@@ -73,6 +73,11 @@ void SocketServerUDP::RecvDataUDP(void)
 
   memset(&cliaddr, 0, sizeof(cliaddr));
 
+  if (serverHandler < 0)
+  {
+    return;
+  }
+
   auto n = recvfrom(serverHandler,
                     buf, sizeof(buf),
                     MSG_WAITALL,
