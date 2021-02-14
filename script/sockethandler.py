@@ -1,7 +1,6 @@
 import logging
 import coloredlogs
 import multiprocessing
-import threading
 from concurrent.futures import ThreadPoolExecutor
 import socket
 
