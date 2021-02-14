@@ -25,6 +25,7 @@ static char args_doc[] = "";
 static struct argp_option options[] = {
   {"daemon", 'd', 0,      0, "Execute as Daemon", 0},
   {"udp",    'u', 0,      0, "Use UDP Socket",    0},
+  {"tcp",    't', 0,      0, "Use TCP Socket",    0},
   {"port",   'p', "PORT", 0, "Socket Port",       0},
   { 0 }
 };
@@ -43,6 +44,9 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
       case 'u':
         arguments->udp = true;
       break;
+      case 't':
+        arguments->tcp = true;
+      break;
       case 'p':
         {
           std::stringstream strValue;
@@ -54,6 +58,7 @@ static error_t parse_opt (int key, char *arg, struct argp_state *state)
       case ARGP_KEY_INIT:
         arguments->daemon = false;
         arguments->udp = false;
+        arguments->tcp = false;
         arguments->port = 1111;
       break;
 

@@ -6,6 +6,7 @@ namespace ArgParser
     bool daemon;
     int port;
     bool udp;
+    bool tcp;
   };
 
   /**
