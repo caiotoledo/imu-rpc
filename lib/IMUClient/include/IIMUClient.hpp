@@ -1,5 +1,7 @@
 #pragma once
 
+#include <functional>
+
 #include <DBusTypes.hpp>
 
 namespace IMUClient
