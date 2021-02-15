@@ -119,6 +119,12 @@ int SocketServerUDP::SendToClients(const std::vector<uint8_t> &vec)
 
 void SocketServerUDP::CloseServer(void)
 {
+  /* Check valid socket */
+  if (serverHandler == -1)
+  {
+    return;
+  }
+
   std::lock_guard<std::mutex> lck(mtxVecClientAddr);
 
   /* Stop all data transfers */
