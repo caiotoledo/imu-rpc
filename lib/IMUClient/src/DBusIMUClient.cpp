@@ -53,6 +53,8 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
 
   auto funcSignalHandler = [this](DBus::SignalMessage::const_pointer msg)
   {
+    std::lock_guard<std::mutex> lck(mtxSignalHandler);
+
     /* Finish all last futures */
     for (auto &fut : vecFutCallback)
     {
@@ -78,7 +80,7 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
   {
     auto signal
       = connection->create_signal_proxy(DBusTypes::DBUS_PATH, DBusTypes::DBUS_NAME, DBusTypes::DBUS_SIGNAL_DATAUPDATE);
-    signal->signal_dbus_incoming().connect(funcSignalHandler);
+    signalHandler = signal->signal_dbus_incoming().connect(funcSignalHandler);
 
     ret = eIMUError::eRET_OK;
   }
@@ -204,7 +206,11 @@ eIMUError DBusIMUClient::GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::e
 
 void DBusIMUClient::DeInit(void)
 {
+  /* Disconnect DBus Signal */
+  signalHandler.disconnect();
+
   /* Avoid deadlock by calling callbacks during DeInitialization */
+  std::lock_guard<std::mutex> lck(mtxSignalHandler);
   for (auto &fut : vecFutCallback)
   {
     fut.get();
@@ -212,6 +218,7 @@ void DBusIMUClient::DeInit(void)
   vecFutCallback.clear();
   vecCallback.clear();
 
+  /* Disconnect DBus */
   if (this->isInitialized())
   {
     /* Close Dispatcher connection */
