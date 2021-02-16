@@ -209,7 +209,7 @@ int main(int argc, char const *argv[])
   /**
    * START SOCKET SERVER THREAD
    */
-  SafeQueue<std::vector<uint8_t>> qIMUData;
+  Queue::SafeQueue<std::vector<uint8_t>> qIMUData;
   auto bFuncSocketServer = true;
   auto funcSocketServer = [&bFuncSocketServer, &qIMUData, &serverUDP, &serverTCP]()
   {

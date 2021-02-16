@@ -5,51 +5,55 @@
 #include <queue>
 #include <mutex>
 
-template <typename T>
-class SafeQueue
+namespace Queue
 {
-private:
-  std::queue<T> qData;
-  std::mutex mData;
-  std::condition_variable cvData;
 
-public:
-  SafeQueue() :
-    qData(),
-    mData(),
-    cvData()
-  {}
-
-  void enqueue(T data)
+  template <typename T>
+  class SafeQueue
   {
-    std::lock_guard<std::mutex> lck(mData);
-    qData.push(data);
-    cvData.notify_one();
-  }
+  private:
+    std::queue<T> qData;
+    std::mutex mData;
+    std::condition_variable cvData;
 
-  bool dequeue(T &data, int timeout)
-  {
-    auto ret = true;
+  public:
+    SafeQueue() :
+      qData(),
+      mData(),
+      cvData()
+    {}
 
-    std::unique_lock<std::mutex> lock(mData);
-    if (timeout >= 0)
+    void enqueue(T data)
     {
-      ret = cvData.wait_for(lock, std::chrono::milliseconds(timeout), [&]{ return !qData.empty(); } );
-    }
-    else
-    {
-      cvData.wait(lock, [&]{ return !qData.empty(); });
-    }
-
-    if (ret)
-    {
-      data = qData.front();
-      qData.pop();
+      std::lock_guard<std::mutex> lck(mData);
+      qData.push(data);
+      cvData.notify_one();
     }
 
-    return ret;
-  }
+    bool dequeue(T &data, int timeout)
+    {
+      auto ret = true;
 
-  ~SafeQueue() = default;
-};
+      std::unique_lock<std::mutex> lock(mData);
+      if (timeout >= 0)
+      {
+        ret = cvData.wait_for(lock, std::chrono::milliseconds(timeout), [&]{ return !qData.empty(); } );
+      }
+      else
+      {
+        cvData.wait(lock, [&]{ return !qData.empty(); });
+      }
 
+      if (ret)
+      {
+        data = qData.front();
+        qData.pop();
+      }
+
+      return ret;
+    }
+
+    ~SafeQueue() = default;
+  };
+
+} // namespace Queue
