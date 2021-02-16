@@ -1,0 +1,23 @@
+name: Coverage
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    name: Coverage Report
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          verbose: true
