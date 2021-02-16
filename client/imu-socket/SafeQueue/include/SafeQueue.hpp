@@ -23,6 +23,11 @@ namespace Queue
       cvData()
     {}
 
+    /**
+     * @brief Push new data to queue
+     *
+     * @param data Data variable
+     */
     void enqueue(T data)
     {
       std::lock_guard<std::mutex> lck(mData);
@@ -30,11 +35,21 @@ namespace Queue
       cvData.notify_one();
     }
 
+    /**
+     * @brief Pop data from queue
+     *
+     * @param data Variable to store data
+     * @param timeout Wait time in case of queue empty in ms (If timeout < 0, then waits forever)
+     * @return true Successful retrieve data
+     * @return false Timeout
+     */
     bool dequeue(T &data, int timeout)
     {
       auto ret = true;
 
       std::unique_lock<std::mutex> lock(mData);
+
+      /* Wait for data available in queue */
       if (timeout >= 0)
       {
         ret = cvData.wait_for(lock, std::chrono::milliseconds(timeout), [&]{ return !qData.empty(); } );
@@ -46,6 +61,7 @@ namespace Queue
 
       if (ret)
       {
+        /* Retrieve data from queue */
         data = qData.front();
         qData.pop();
       }

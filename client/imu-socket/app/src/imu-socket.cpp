@@ -265,6 +265,9 @@ int main(int argc, char const *argv[])
     std::cin.get();
   }
 
+  /**
+   * CLASSES SAFE DEINITIALIZATION ORDER
+   */
   LOGDEBUG("Closing client...");
   client->DeInit();
 
