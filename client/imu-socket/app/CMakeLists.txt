@@ -24,5 +24,7 @@ target_link_libraries(${CLIENT_NAME} PRIVATE imuclient)
 
 # Link with SocketHandler
 target_link_libraries(${CLIENT_NAME} PRIVATE sockethandler)
+# Link with SafeQueue
+target_link_libraries(${CLIENT_NAME} PRIVATE safequeue)
 
 install(TARGETS ${CLIENT_NAME} RUNTIME DESTINATION bin)
