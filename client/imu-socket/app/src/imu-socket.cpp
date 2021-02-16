@@ -11,6 +11,7 @@
 #include <SocketServerTCP.hpp>
 #include <SocketServerUDP.hpp>
 
+#include "SafeQueue.hpp"
 #include "argparser.hpp"
 
 constexpr auto DELAY_CHILD_CREATION = std::chrono::milliseconds(1);
@@ -180,7 +181,7 @@ int main(int argc, char const *argv[])
   }
 
   /**
-   * START SOCKET UDP/TCP SERVER
+   * START SOCKET UDP/TCP SERVER CLASS
    */
   std::shared_ptr<SocketServer::ISocketServer> serverUDP = nullptr;
   std::shared_ptr<SocketServer::ISocketServer> serverTCP = nullptr;
@@ -206,9 +207,37 @@ int main(int argc, char const *argv[])
   }
 
   /**
+   * START SOCKET SERVER THREAD
+   */
+  SafeQueue<std::vector<uint8_t>> qIMUData;
+  auto bFuncSocketServer = true;
+  auto funcSocketServer = [&bFuncSocketServer, &qIMUData, &serverUDP, &serverTCP]()
+  {
+    while (bFuncSocketServer)
+    {
+      std::vector<uint8_t> vData;
+      /* Pop from Queue, timeout of 50 ms */
+      auto ret = qIMUData.dequeue(vData, 50);
+      if (ret)
+      {
+        if (serverUDP != nullptr)
+        {
+          serverUDP->SendToClients(vData);
+        }
+        if (serverTCP != nullptr)
+        {
+          serverTCP->SendToClients(vData);
+        }
+      }
+    }
+  };
+  bFuncSocketServer = true;
+  auto thFuncSocketServer = std::thread(funcSocketServer);
+
+  /**
    * CONFIG IMU CLIENT CALLBACK
    */
-  auto func = [&serverUDP, &serverTCP, &client]()
+  auto func = [&client, &qIMUData]()
   {
     /* Sample Data from IMU */
     std::string sData;
@@ -216,14 +245,8 @@ int main(int argc, char const *argv[])
 
     /* Send Data to Clients */
     std::vector<uint8_t> vData(sData.begin(), sData.end());
-    if (serverUDP != nullptr)
-    {
-      serverUDP->SendToClients(vData);
-    }
-    if (serverTCP != nullptr)
-    {
-      serverTCP->SendToClients(vData);
-    }
+    /* Store in Queue */
+    qIMUData.enqueue(vData);
   };
   client->AddUpdateDataCallback(func);
 
@@ -244,6 +267,13 @@ int main(int argc, char const *argv[])
 
   LOGDEBUG("Closing client...");
   client->DeInit();
+
+  LOGDEBUG("Closing socket thread...");
+  bFuncSocketServer = false;
+  if (thFuncSocketServer.joinable())
+  {
+    thFuncSocketServer.join();
+  }
 
   LOGDEBUG("Closing socket...");
   if (serverUDP != nullptr)
