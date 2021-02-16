@@ -242,7 +242,20 @@ int main(int argc, char const *argv[])
     std::cin.get();
   }
 
+  LOGDEBUG("Closing client...");
+  client->DeInit();
+
   LOGDEBUG("Closing socket...");
+  if (serverUDP != nullptr)
+  {
+    serverUDP.reset();
+    serverUDP = nullptr;
+  }
+  if (serverTCP != nullptr)
+  {
+    serverTCP.reset();
+    serverTCP = nullptr;
+  }
 
   return ((int)ret);
 }
