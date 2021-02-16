@@ -54,6 +54,10 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
   auto funcSignalHandler = [this](DBus::SignalMessage::const_pointer msg)
   {
     /* Finish all last futures */
+    for (auto &fut : vecFutCallback)
+    {
+      fut.get();
+    }
     vecFutCallback.clear();
 
     /* Notify callback */
@@ -201,6 +205,10 @@ eIMUError DBusIMUClient::GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::e
 void DBusIMUClient::DeInit(void)
 {
   /* Avoid deadlock by calling callbacks during DeInitialization */
+  for (auto &fut : vecFutCallback)
+  {
+    fut.get();
+  }
   vecFutCallback.clear();
   vecCallback.clear();
 
