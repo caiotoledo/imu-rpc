@@ -1,0 +1,25 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    name: Generate Documentation
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt install doxygen -y
+
+      - uses: actions/checkout@v2
+
+      - name: Generate Documentation
+        run: |
+          doxygen ./doc/.doxygen
