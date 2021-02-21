@@ -1,0 +1,68 @@
+name: Stability Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    strategy:
+      matrix:
+        buildtype: [Debug, Release]
+        sockettype: [TCP, UDP]
+        samplerate: [10, 20]
+        gyroscale: [250]
+        accelscale: [2]
+
+    runs-on: ubuntu-latest
+    name: Stability Test ${{ matrix.buildtype }} mode - SampleRate ${{ matrix.samplerate }} ms
+    container:
+      image: caiotoledo/imu-rpc:latest
+
+    env:
+      IP: localhost
+      PORT: 1111
+      TEST_TIME: 10
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r script/requirements.txt
+
+      - name: Build Project
+        run: |
+          mkdir -p .build/ && cd .build/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
+          make -j$(nproc)
+          sudo make install
+          sudo ldconfig
+          cd ../
+
+      - name: Initialize Daemons
+        run: |
+          eval `dbus-launch --sh-syntax`
+          imu-daemon -d -a${{ matrix.accelscale }} -g${{ matrix.gyroscale }} -r${{ matrix.samplerate }}
+          imu-socket -d -p $PORT -ut
+
+      - name: Stress scripts
+        run: |
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          python3 script/imu-dbus.py -a $IP -p $PORT -s ${{ matrix.sockettype }} -t$TEST_TIME -d &
+          sleep 2
+
+      - name: Stop Daemons
+        run: |
+          killall imu-socket
+          killall imu-daemon
+          sleep 1

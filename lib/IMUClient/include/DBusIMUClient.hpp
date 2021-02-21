@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 #include <future>
 
 #include <dbus-cxx-0.12/dbus-cxx.h>
@@ -13,6 +14,8 @@ namespace IMUClient
   class DBusIMUClient : public IIMUClient
   {
   private:
+    std::mutex mtxSignalHandler;
+    sigc::connection signalHandler;
     std::vector<std::function<void()>> vecCallback;
     std::vector<std::future<void>> vecFutCallback;
 

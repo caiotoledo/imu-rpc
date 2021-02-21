@@ -115,6 +115,12 @@ int SocketServerTCP::SendToClients(const std::vector<uint8_t> &vec)
 
 void SocketServerTCP::CloseServer(void)
 {
+  /* Check valid socket */
+  if (serverHandler == -1)
+  {
+    return;
+  }
+
   /* Stop all data transfers */
   shutdown(serverHandler, SHUT_RDWR);
 
