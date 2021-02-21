@@ -216,7 +216,7 @@ int main(int argc, char const *argv[])
     while (bFuncSocketServer)
     {
       std::vector<uint8_t> vData;
-      /* Pop from Queue, timeout of 50 ms */
+      /* Pop from SafeQueue, wait timeout of 50 ms */
       auto ret = qIMUData.dequeue(vData, 50);
       if (ret)
       {
@@ -245,7 +245,7 @@ int main(int argc, char const *argv[])
 
     /* Send Data to Clients */
     std::vector<uint8_t> vData(sData.begin(), sData.end());
-    /* Store in Queue */
+    /* Store in SafeQueue */
     qIMUData.enqueue(vData);
   };
   client->AddUpdateDataCallback(func);
