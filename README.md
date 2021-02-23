@@ -5,6 +5,8 @@
 [![Static Analysis](https://github.com/caiotoledo/imu-rpc/workflows/Static%20Analysis/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
 [![Unit Test](https://github.com/caiotoledo/imu-rpc/workflows/Unittesting/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
 
+[![codecov.io](https://codecov.io/github/caiotoledo/imu-rpc/coverage.svg?branch=master)](https://codecov.io/github/caiotoledo/imu-rpc?branch=master)
+
 [![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE)
 
 Server and Client IMU application using RPC communication.

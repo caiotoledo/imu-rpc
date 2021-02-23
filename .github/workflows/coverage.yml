@@ -1,0 +1,58 @@
+name: Coverage Report
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        buildtype: [Debug]
+
+    runs-on: ubuntu-latest
+    name: Coverage Report ${{ matrix.buildtype }} mode
+    container:
+      image: caiotoledo/imu-rpc:latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apt install valgrind -y
+          apt install gcovr lcov curl -y
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build Project ${{ matrix.buildtype }} mode
+        run: |
+          mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
+          make -j$(nproc)
+
+      - name: Run Unit Test
+        run: |
+          cd .build_${{ matrix.buildtype }}/
+          ctest --verbose -T memcheck
+          exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ')
+          cd ../
+
+      - name: Generate Coverage Report
+        run: |
+          mkdir -p .coverage_${{ matrix.buildtype }}/
+          lcov --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --list .coverage_${{ matrix.buildtype }}/coverage.info
+
+      - uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          files: .coverage_${{ matrix.buildtype }}/coverage.info
+          path_to_write_report: .coverage_${{ matrix.buildtype }}/coverage_report.txt
+          verbose: true
+          fail_ci_if_error: true
