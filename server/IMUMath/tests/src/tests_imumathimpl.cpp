@@ -59,7 +59,7 @@ TEST(imumathimpl, imumath_init)
 /**
  * TESTING EULER ANGLE
  */
-class GetEulerAngleTestsParameterized : public ::testing::TestWithParam<std::tuple<double,double,double,double,double,double>> {};
+class GetEulerAngleTestsParameterized : public ::testing::TestWithParam<std::tuple<double,double,double,double,double,double, DBusTypes::eAngleUnit>> {};
 
 TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
 {
@@ -80,6 +80,8 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
     std::get<4>(GetParam()),
     std::get<5>(GetParam()),
   };
+
+  auto angleUnit = std::get<6>(GetParam());
 
   auto funcGetRawAccel = [accel](DBusTypes::eAxis axis, double &val)
   {
@@ -123,7 +125,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
   {
     auto axis = static_cast<DBusTypes::eAxis>(i);
-    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, DBusTypes::eAngleUnit::eDegrees);
+    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, angleUnit);
     EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_OK);
   }
   EXPECT_EQ(round(eulerAngle[0]), angle[0]);
@@ -135,11 +137,12 @@ INSTANTIATE_TEST_CASE_P(
     GetEulerAngleTests,
     GetEulerAngleTestsParameterized,
     ::testing::Values(
-      /* AccelX, AccelY, AccelZ, AngleX, AngleY, AngleZ */
-      std::make_tuple(0,0,0,0,0,0),
-      std::make_tuple(500,500,500,45,45,45),
-      std::make_tuple(0,500,500,45,0,90),
-      std::make_tuple(0,0,-1000,180,180,0),
-      std::make_tuple(-1000,0,0,0,270,180)
+      /* AccelX, AccelY, AccelZ, AngleX, AngleY, AngleZ, eAngleUnit */
+      std::make_tuple(0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(500,500,500,45,45,45, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,500,500,45,0,90, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,-1000,180,180,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(-1000,0,0,0,270,180, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
