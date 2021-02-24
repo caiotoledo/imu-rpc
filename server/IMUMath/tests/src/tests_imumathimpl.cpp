@@ -146,3 +146,49 @@ INSTANTIATE_TEST_CASE_P(
       std::make_tuple(0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
+
+TEST(imumathimpl, GetEulerAngleAbstractionError)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AnyNumber())
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_ERROR));
+
+  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
+    .Times(AnyNumber())
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, GetSampleFrequency())
+    .Times(AnyNumber())
+    .WillRepeatedly(Return(SAMPLERATE));
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  /* Test Euler Angle */
+  auto nan = std::numeric_limits<double>::quiet_NaN();
+  double eulerAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
+  for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
+  {
+    auto axis = static_cast<DBusTypes::eAxis>(i);
+    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, DBusTypes::eAngleUnit::eDegrees);
+    EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
+  }
+}
