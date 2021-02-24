@@ -11,7 +11,7 @@ var searchData=
   ['imu_2dcli_2ecpp_150',['imu-cli.cpp',['../imu-cli_8cpp.html',1,'']]],
   ['imu_2ddbus_151',['imu-dbus',['../namespaceimu-dbus.html',1,'']]],
   ['imu_2ddbus_2epy_152',['imu-dbus.py',['../imu-dbus_8py.html',1,'']]],
-  ['imu_2drpc_153',['imu-rpc',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['imu_2drpc_153',['imu-rpc',['../index.html',1,'']]],
   ['imu_2dsocket_2ecpp_154',['imu-socket.cpp',['../imu-socket_8cpp.html',1,'']]],
   ['imu_5fbuffer_5fiio_155',['IMU_BUFFER_IIO',['../server_8cpp.html#afe84959fc658323d65596634a2d4c8c6',1,'server.cpp']]],
   ['imu_5fdata_156',['imu_data',['../class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#afe11270352a78622207f88732553d770',1,'IMUAbstraction::IMUIndustrialIO']]],

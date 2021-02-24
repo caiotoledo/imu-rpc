@@ -238,6 +238,7 @@ var NAVTREEINDEX1 =
 "imu-socket_8cpp.html#abf9e6b7e6f15df4b525a2e7705ba3089":[3,0,0,1,0,0,2,0],
 "imu-socket_8cpp.html#ace8af91f9d55161ee01a4cf1aa4bed9b":[3,0,0,1,0,0,2,1],
 "imuplot_8py.html":[3,0,2,1],
+"index.html":[0],
 "index.html":[],
 "lib_2_logger_2include_2_log_instance_8h.html":[3,0,1,2,0,1],
 "lib_2_logger_2include_2_log_instance_8h.html#a2dc2d04eb65917762fb0ad5ff7dd0910":[3,0,1,2,0,1,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "lib_2_logger_2include_2_log_instance_8h.html#a6d6a0801c598baa8dd4aba610bc33723":[3,0,1,2,0,1,5],
 "lib_2_logger_2include_2_log_instance_8h.html#a872406e00e8325f8c35a2816d29f8b73":[3,0,1,2,0,1,2],
 "lib_2_logger_2include_2_log_instance_8h.html#aed176380146a1b919d5b1ed14c067464":[3,0,1,2,0,1,7],
-"lib_2_logger_2include_2_log_instance_8h_source.html":[3,0,1,2,0,1],
-"md__r_e_a_d_m_e.html":[0]
+"lib_2_logger_2include_2_log_instance_8h_source.html":[3,0,1,2,0,1]
 };
