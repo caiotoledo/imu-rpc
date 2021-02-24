@@ -7,6 +7,6 @@
 
 [![codecov.io](https://codecov.io/github/caiotoledo/imu-rpc/coverage.svg?branch=master)](https://codecov.io/github/caiotoledo/imu-rpc?branch=master)
 
-[![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE.md)
 
 Server and Client IMU application using RPC communication.
