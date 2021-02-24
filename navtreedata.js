@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "IMU RPC Communication", "index.html", [
     [ "imu-rpc", "index.html", null ],
+    [ "LICENSE", "md__l_i_c_e_n_s_e.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -64,7 +65,7 @@ var NAVTREEINDEX =
 [
 "_connection_t_c_p_client_8cpp.html",
 "class_i_m_u_client_1_1_i_i_m_u_client.html#aac5f3f6e25602724c6f42a53e6cfa66a",
-"namespace_arg_parser.html"
+"md__l_i_c_e_n_s_e.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
