@@ -1,0 +1,7 @@
+<map id="imuplot.Generic3DPoint" name="imuplot.Generic3DPoint">
+<area shape="rect" id="node1" title=" " alt="" coords="193,5,352,32"/>
+<area shape="rect" id="node2" href="$classimuplot_1_1_accel.html" title=" " alt="" coords="5,80,105,107"/>
+<area shape="rect" id="node3" href="$classimuplot_1_1_angle_euler.html" title=" " alt="" coords="129,80,259,107"/>
+<area shape="rect" id="node4" href="$classimuplot_1_1_compl_angle.html" title=" " alt="" coords="283,80,420,107"/>
+<area shape="rect" id="node5" href="$classimuplot_1_1_gyro.html" title=" " alt="" coords="444,80,539,107"/>
+</map>
