@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['license_674',['LICENSE',['../md__l_i_c_e_n_s_e.html',1,'']]]
+  ['server_20and_20client_20imu_20based_20on_20rpc_20communication_674',['Server and Client IMU based on RPC Communication',['../index.html',1,'']]]
 ];

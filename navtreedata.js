@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "IMU RPC Communication", "index.html", [
-    [ "imu-rpc", "index.html", null ],
+    [ "Server and Client IMU based on RPC Communication", "index.html", null ],
     [ "LICENSE", "md__l_i_c_e_n_s_e.html", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
