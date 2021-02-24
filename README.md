@@ -1,4 +1,4 @@
-# imu-rpc
+# Server and Client IMU based on RPC Communication
 
 [![Runtime Tests](https://github.com/caiotoledo/imu-rpc/workflows/Runtime%20Tests/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
 [![Stability Tests](https://github.com/caiotoledo/imu-rpc/workflows/Stability%20Tests/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
