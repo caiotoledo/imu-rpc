@@ -9,4 +9,5 @@
 
 [![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE.md)
 
-Server and Client IMU application using RPC communication.
+# Documentation:
+https://caiotoledo.github.io/imu-rpc/
