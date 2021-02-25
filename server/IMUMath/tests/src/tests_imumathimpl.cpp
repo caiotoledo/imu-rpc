@@ -201,7 +201,7 @@ TEST(imumathimpl, GetEulerAngleAbstractionError)
   }
 }
 
-TEST(imumathimpl, GetEulerAngleInvalidAxis)
+TEST(imumathimpl, GetEulerAngleInvalidParameters)
 {
   /* Construct objects */
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
@@ -249,55 +249,11 @@ TEST(imumathimpl, GetEulerAngleInvalidAxis)
   /* Expected Error for the invalid axis */
   auto retEuler = imuMath->GetEulerAngle(eulerAngle, axis, DBusTypes::eAngleUnit::eDegrees);
   EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
-}
 
-TEST(imumathimpl, GetEulerAngleInvalidAngleUnit)
-{
-  /* Construct objects */
-  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
-
-  std::shared_ptr<IMUMath::IIMUMath> imuMath;
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
-
-  /* Prepare mock env */
-  EXPECT_CALL(*imuMock, Init())
-    .Times(1)
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
-
-  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
-    .Times(1);
-
-  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(
-      DoAll(
-        SetArgReferee<1>(0),
-        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
-      )
-    );
-
-  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
-
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
-
-  EXPECT_CALL(*imuMock, DeInit())
-    .Times(1);
-
-  /* Test Init IMUMath */
-  auto retInit = imuMath->Init();
-  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
-
-  /* Test Euler Angle */
-  auto nan = std::numeric_limits<double>::quiet_NaN();
-  double eulerAngle = nan;
   /* Use Invalid Angle Unit */
   auto angleUnit = static_cast<DBusTypes::eAngleUnit>(100);
   /* Expected Error for the invalid angle unit */
-  auto retEuler = imuMath->GetEulerAngle(eulerAngle, DBusTypes::eAxis::X, angleUnit);
+  retEuler = imuMath->GetEulerAngle(eulerAngle, DBusTypes::eAxis::X, angleUnit);
   EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
 }
 
