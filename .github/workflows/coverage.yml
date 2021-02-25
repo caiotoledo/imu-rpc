@@ -47,6 +47,7 @@ jobs:
           mkdir -p .coverage_${{ matrix.buildtype }}/
           lcov --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
           lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '*tests/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
           lcov --list .coverage_${{ matrix.buildtype }}/coverage.info
 
       - uses: codecov/codecov-action@v1
