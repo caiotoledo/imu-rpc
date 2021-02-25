@@ -22,10 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build Project
+      - name: Run Static Analysis
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
           scan-build-10 --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
-
-      - name: Run Static Analysis
-        run: scan-build-10 --status-bugs make -j$(nproc)
+          scan-build-10 --status-bugs make -j$(nproc)
