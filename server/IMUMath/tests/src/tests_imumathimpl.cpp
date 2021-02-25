@@ -294,10 +294,10 @@ TEST(imumathimpl, GetEulerAngleInvalidAngleUnit)
   /* Test Euler Angle */
   auto nan = std::numeric_limits<double>::quiet_NaN();
   double eulerAngle = nan;
-  auto axis = static_cast<DBusTypes::eAxis>(0);
+  /* Use Invalid Angle Unit */
   auto angleUnit = static_cast<DBusTypes::eAngleUnit>(100);
   /* Expected Error for the invalid angle unit */
-  auto retEuler = imuMath->GetEulerAngle(eulerAngle, axis, angleUnit);
+  auto retEuler = imuMath->GetEulerAngle(eulerAngle, DBusTypes::eAxis::X, angleUnit);
   EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
 }
 
@@ -411,18 +411,18 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
   /* Wait complementary filter initialization */
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-  /* Test Euler Angle */
+  /* Test Complementary Filter Angle */
   auto nan = std::numeric_limits<double>::quiet_NaN();
-  double eulerAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
+  double complFilterAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
   for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
   {
     auto axis = static_cast<DBusTypes::eAxis>(i);
-    auto retEuler = imuMath->GetComplFilterAngle(eulerAngle[i], axis, angleUnit);
-    EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_OK);
+    auto retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle[i], axis, angleUnit);
+    EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_OK);
   }
-  EXPECT_EQ(round(eulerAngle[0]), angle[0]);
-  EXPECT_EQ(round(eulerAngle[1]), angle[1]);
-  EXPECT_EQ(round(eulerAngle[2]), angle[2]);
+  EXPECT_EQ(round(complFilterAngle[0]), angle[0]);
+  EXPECT_EQ(round(complFilterAngle[1]), angle[1]);
+  EXPECT_EQ(round(complFilterAngle[2]), angle[2]);
 
   /* Finish callback manager thread */
   if (thCallbackManager.joinable())
