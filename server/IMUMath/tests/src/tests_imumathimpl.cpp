@@ -242,8 +242,7 @@ TEST(imumathimpl, GetEulerAngleInvalidParameters)
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
   /* Test Euler Angle */
-  auto nan = std::numeric_limits<double>::quiet_NaN();
-  double eulerAngle = nan;
+  double eulerAngle;
   /* Set invalid Axis */
   auto axis = static_cast<DBusTypes::eAxis>(100);
   /* Expected Error for the invalid axis */
