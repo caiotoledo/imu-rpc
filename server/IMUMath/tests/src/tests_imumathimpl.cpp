@@ -113,10 +113,6 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
     .Times(AnyNumber())
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
-
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
 
@@ -179,10 +175,6 @@ TEST(imumathimpl, GetEulerAngleAbstractionError)
     .Times(AnyNumber())
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
-
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
 
@@ -229,10 +221,6 @@ TEST(imumathimpl, GetEulerAngleInvalidParameters)
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
     .Times(AnyNumber())
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
-
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
@@ -342,10 +330,6 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
 
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
     .Times(AnyNumber());
-
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
