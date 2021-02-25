@@ -368,3 +368,92 @@ INSTANTIATE_TEST_CASE_P(
       std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
+
+TEST(imumathimpl, ComplFilterAngleInvalidParameters)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare local variables */
+  std::thread thCallbackManager;
+  auto bCallbackManager = false;
+  auto funcAddUpdateDataCallback = [&thCallbackManager, &bCallbackManager](std::function<void()> cb)
+  {
+    if (!thCallbackManager.joinable())
+    {
+      bCallbackManager = true;
+      thCallbackManager = std::thread(
+        [cb, &bCallbackManager]()
+        {
+          while (bCallbackManager)
+          {
+            cb();
+            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+          }
+        }
+      );
+    }
+  };
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  ON_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .WillByDefault(Invoke(funcAddUpdateDataCallback));
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+
+  /* Test Complementary Filter Angle */
+  double complFilterAngle;
+  /* Set Invalid Axis */
+  auto invalidAxis = static_cast<DBusTypes::eAxis>(100);
+  /* Set Invalid Angle Unit */
+  auto invalidAngleUnit = static_cast<DBusTypes::eAngleUnit>(100);
+
+  /* Expected Error for the invalid axis */
+  auto retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, invalidAxis, DBusTypes::eAngleUnit::eDegrees);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_ERROR);
+  /* Expected Error for the invalid angle unit */
+  retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, DBusTypes::eAxis::X, invalidAngleUnit);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_ERROR);
+
+  /* Finish callback manager thread */
+  if (thCallbackManager.joinable())
+  {
+    bCallbackManager = false;
+    thCallbackManager.join();
+  }
+}
