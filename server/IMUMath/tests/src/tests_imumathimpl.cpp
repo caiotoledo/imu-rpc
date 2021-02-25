@@ -59,7 +59,15 @@ TEST(imumathimpl, imumath_init)
 /**
  * TESTING EULER ANGLE
  */
-class GetEulerAngleTestsParameterized : public ::testing::TestWithParam<std::tuple<double,double,double,double,double,double, DBusTypes::eAngleUnit>> {};
+class GetEulerAngleTestsParameterized : public
+  ::testing::TestWithParam<
+    std::tuple<
+      double,double,double, /* Accel */
+      double,double,double, /* Angle */
+      DBusTypes::eAngleUnit
+      >
+    >
+  {};
 
 TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
 {
