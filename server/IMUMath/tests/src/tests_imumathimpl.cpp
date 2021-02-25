@@ -348,7 +348,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
   /* Wait complementary filter initialization */
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::this_thread::sleep_for(std::chrono::milliseconds(2*SAMPLERATE));
 
   /* Test Complementary Filter Angle */
   auto nan = std::numeric_limits<double>::quiet_NaN();
