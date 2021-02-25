@@ -25,7 +25,7 @@ inline double round( double val )
   return floor(val + 0.5);
 }
 
-TEST(imumathimpl, imumath_init)
+TEST(IMUMathImpl, imumath_init)
 {
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
 
@@ -147,7 +147,7 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-TEST(imumathimpl, GetEulerAngleAbstractionError)
+TEST(IMUMathImpl, GetEulerAngleAbstractionError)
 {
   /* Construct objects */
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
@@ -185,7 +185,7 @@ TEST(imumathimpl, GetEulerAngleAbstractionError)
   }
 }
 
-TEST(imumathimpl, GetEulerAngleInvalidParameters)
+TEST(IMUMathImpl, GetEulerAngleInvalidParameters)
 {
   /* Construct objects */
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
@@ -376,7 +376,7 @@ INSTANTIATE_TEST_CASE_P(
     )
 );
 
-TEST(imumathimpl, ComplFilterAngleInvalidParameters)
+TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
 {
   /* Construct objects */
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
