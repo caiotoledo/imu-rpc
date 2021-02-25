@@ -70,12 +70,12 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
 
   /* Prepare local variables */
-  double accel[] = {
+  const double accel[] = {
     std::get<0>(GetParam()),
     std::get<1>(GetParam()),
     std::get<2>(GetParam()),
   };
-  double angle[] = {
+  const double angle[] = {
     std::get<3>(GetParam()),
     std::get<4>(GetParam()),
     std::get<5>(GetParam()),
@@ -83,7 +83,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
 
   auto angleUnit = std::get<6>(GetParam());
 
-  auto funcGetRawAccel = [accel](DBusTypes::eAxis axis, double &val)
+  auto funcGetRawAccel = [&accel](DBusTypes::eAxis axis, double &val)
   {
     auto axis_index = static_cast<int>(axis);
     val = accel[axis_index];
