@@ -223,13 +223,13 @@ TEST(imumathimpl, GetEulerAngleInvalidParameters)
   auto axis = static_cast<DBusTypes::eAxis>(100);
   /* Expected Error for the invalid axis */
   auto retEuler = imuMath->GetEulerAngle(eulerAngle, axis, DBusTypes::eAngleUnit::eDegrees);
-  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
+  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
 
   /* Use Invalid Angle Unit */
   auto angleUnit = static_cast<DBusTypes::eAngleUnit>(100);
   /* Expected Error for the invalid angle unit */
   retEuler = imuMath->GetEulerAngle(eulerAngle, DBusTypes::eAxis::X, angleUnit);
-  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
+  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
 }
 
 /**
@@ -445,10 +445,10 @@ TEST(imumathimpl, ComplFilterAngleInvalidParameters)
 
   /* Expected Error for the invalid axis */
   auto retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, invalidAxis, DBusTypes::eAngleUnit::eDegrees);
-  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_ERROR);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
   /* Expected Error for the invalid angle unit */
   retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, DBusTypes::eAxis::X, invalidAngleUnit);
-  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_ERROR);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
 
   /* Finish callback manager thread */
   if (thCallbackManager.joinable())

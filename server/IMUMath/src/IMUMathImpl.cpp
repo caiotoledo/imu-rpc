@@ -96,7 +96,7 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
     valueAngle = calcAngleRad(-valAccel[1], -valAccel[0]); /* atan2(-Y,-X) */
     break;
   default:
-    ret = eIMUMathError::eRET_ERROR;
+    ret = eIMUMathError::eRET_INVALID_PARAMETER;
     break;
   }
 
@@ -110,7 +110,7 @@ eIMUMathError IMUMathImpl::GetEulerAngle(double &value, DBusTypes::eAxis axis, c
     value = valueAngle;
     break;
   default:
-    ret = eIMUMathError::eRET_ERROR;
+    ret = eIMUMathError::eRET_INVALID_PARAMETER;
     break;
   }
 
@@ -163,7 +163,7 @@ eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis a
   }
     break;
   default:
-    ret = eIMUMathError::eRET_ERROR;
+    ret = eIMUMathError::eRET_INVALID_PARAMETER;
     break;
   }
 
@@ -177,7 +177,7 @@ eIMUMathError IMUMathImpl::GetComplFilterAngle(double &value, DBusTypes::eAxis a
     value = DEG_TO_RAD(valueAngle);
     break;
   default:
-    ret = eIMUMathError::eRET_ERROR;
+    ret = eIMUMathError::eRET_INVALID_PARAMETER;
     break;
   }
 
