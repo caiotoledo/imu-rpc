@@ -28,8 +28,8 @@ eIMUMathError IMUMathImpl::Init(void)
     {
       double angle_value;
       auto axis = static_cast<DBusTypes::eAxis>(axis_index);
-      this->GetEulerAngle(angle_value, axis, DBusTypes::eAngleUnit::eDegrees);
-      angle_compl_filter[axis_index] = angle_value;
+      auto ret = this->GetEulerAngle(angle_value, axis, DBusTypes::eAngleUnit::eDegrees);
+      angle_compl_filter[axis_index] = (ret == IMUMath::eIMUMathError::eRET_OK) ? angle_value : 0;
     }
 
     /* Define lambda function for Complementary Filter Calculation */
