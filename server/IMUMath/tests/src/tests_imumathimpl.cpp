@@ -259,7 +259,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     std::get<1>(GetParam()),
     std::get<2>(GetParam()),
   };
-  const double gyro[] = {
+  double gyro[] = {
     std::get<3>(GetParam()),
     std::get<4>(GetParam()),
     std::get<5>(GetParam()),
@@ -281,6 +281,11 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
   auto funcGetRawGyro = [&gyro](DBusTypes::eAxis axis, double &val)
   {
     auto axis_index = static_cast<int>(axis);
+    if (gyro[axis_index] > 0)
+    {
+      gyro[axis_index] -= 10;
+      gyro[axis_index] = (gyro[axis_index] < 0) ? 0 : gyro[axis_index];
+    }
     val = gyro[axis_index];
     return IMUAbstraction::eIMUAbstractionError::eRET_OK;
   };
@@ -335,8 +340,8 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
   auto retInit = imuMath->Init();
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
-  /* Wait complementary filter initialization */
-  std::this_thread::sleep_for(std::chrono::milliseconds(2*SAMPLERATE));
+  /* Wait complementary filter initialization and filter stabilization */
+  std::this_thread::sleep_for(std::chrono::milliseconds(10*SAMPLERATE));
 
   /* Test Complementary Filter Angle */
   auto nan = std::numeric_limits<double>::quiet_NaN();
@@ -365,6 +370,8 @@ INSTANTIATE_TEST_CASE_P(
     ::testing::Values(
       /* AccelX, AccelY, AccelZ, GyroX, GyroY, GyroZ, AngleX, AngleY, AngleZ, eAngleUnit */
       std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(500,500,500,45,45,45,45,45,45, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(-1000,0,0,45,45,45,0,270,180, DBusTypes::eAngleUnit::eDegrees),
       std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
