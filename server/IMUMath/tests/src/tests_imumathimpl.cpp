@@ -13,7 +13,7 @@ using ::testing::Return;
 using ::testing::Invoke;
 using ::testing::SetArgReferee;
 using ::testing::DoAll;
-using ::testing::AnyNumber;
+using ::testing::AtLeast;
 
 constexpr auto SAMPLERATE = 5; /* ms */
 /* Constant used in Complementary Filter */
@@ -37,7 +37,7 @@ TEST(imumathimpl, imumath_init)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber())
+    .Times(AtLeast(1))
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
@@ -107,11 +107,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber());
-
-  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+    .Times(AtLeast(1));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
@@ -168,12 +164,8 @@ TEST(imumathimpl, GetEulerAngleAbstractionError)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber())
+    .Times(AtLeast(1))
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_ERROR));
-
-  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
@@ -210,17 +202,13 @@ TEST(imumathimpl, GetEulerAngleInvalidParameters)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber())
+    .Times(AtLeast(1))
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
         Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
       )
     );
-
-  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
@@ -326,10 +314,10 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber());
+    .Times(AtLeast(1));
 
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber());
+    .Times(AtLeast(1));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
