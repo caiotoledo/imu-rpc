@@ -1,0 +1,27 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  job:
+    runs-on: ubuntu-latest
+    name: Generate Documentation
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Generate Doxygen Documentation
+      uses: mattnotmitt/doxygen-action@v1.2.3
+      with:
+        doxyfile-path: "./doc/.doxygen"
+        working-directory: "."
+    
+    - name: Deploy Documentation
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./.doc/html/

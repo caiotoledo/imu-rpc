@@ -1,4 +1,4 @@
-# imu-rpc
+# Server and Client IMU based on RPC Communication
 
 [![Runtime Tests](https://github.com/caiotoledo/imu-rpc/workflows/Runtime%20Tests/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
 [![Stability Tests](https://github.com/caiotoledo/imu-rpc/workflows/Stability%20Tests/badge.svg)](https://github.com/caiotoledo/imu-rpc/actions)
@@ -7,6 +7,7 @@
 
 [![codecov.io](https://codecov.io/github/caiotoledo/imu-rpc/coverage.svg?branch=master)](https://codecov.io/github/caiotoledo/imu-rpc?branch=master)
 
-[![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE.md)
 
-Server and Client IMU application using RPC communication.
+# Documentation:
+https://caiotoledo.github.io/imu-rpc/
