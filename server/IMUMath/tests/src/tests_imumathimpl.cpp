@@ -437,6 +437,7 @@ INSTANTIATE_TEST_CASE_P(
     ComplFilterAngleTestsParameterized,
     ::testing::Values(
       /* AccelX, AccelY, AccelZ, GyroX, GyroY, GyroZ, AngleX, AngleY, AngleZ, eAngleUnit */
-      std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees)
+      std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
