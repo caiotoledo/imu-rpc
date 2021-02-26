@@ -13,7 +13,7 @@ using ::testing::_;
 using ::testing::Return;
 using ::testing::AtLeast;
 
-TEST(IMURPCServer, StartServer)
+TEST(IMURPCServer, StartServer_RET_OK)
 {
   /* Construct objects */
   auto rpcMock = std::make_shared<RPCServer::MockRPCServer>();
@@ -63,4 +63,37 @@ TEST(IMURPCServer, StartServer)
 
   /* Check Results */
   EXPECT_EQ(ret, IMUServer::eIMUServerError::eRET_OK);
+}
+
+TEST(IMURPCServer, StartServer_RET_ERROR)
+{
+  /* Construct objects */
+  auto rpcMock = std::make_shared<RPCServer::MockRPCServer>();
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+  auto mathMock = std::make_shared<IMUMath::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUServer::IIMUServer> imuServer;
+  imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, mathMock);
+
+  /* Prepare mock env */
+  EXPECT_CALL(*rpcMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_ERROR));
+
+  EXPECT_CALL(*rpcMock, DeInit())
+    .Times(AtLeast(1));
+
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_ERROR));
+
+  EXPECT_CALL(*mathMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUMath::eIMUMathError::eRET_ERROR));
+
+  /* Perform test */
+  auto ret = imuServer->StartServer();
+
+  /* Check Results */
+  EXPECT_EQ(ret, IMUServer::eIMUServerError::eRET_ERROR);
 }
