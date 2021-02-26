@@ -48,6 +48,22 @@ TEST(IMURPCServer, StartServer_RET_OK)
     return RPCServer::eRPCError::eRET_OK;
   };
 
+  auto ExpectedEulerAngleValue = 3;
+  double eulerAngleValue = 0;
+  auto funcGetEulerAngleCallback = [&eulerAngleValue](std::function<double(int, int)> cb)
+  {
+    eulerAngleValue = cb(/* Axis */0, /* Unit */0);
+    return RPCServer::eRPCError::eRET_OK;
+  };
+
+  auto ExpectedComplFilterAngleValue = 4;
+  double complFilterAngleValue = 0;
+  auto funcGetComplFilterAngleCallback = [&complFilterAngleValue](std::function<double(int, int)> cb)
+  {
+    complFilterAngleValue = cb(/* Axis */0, /* Unit */0);
+    return RPCServer::eRPCError::eRET_OK;
+  };
+
   /* Prepare mock env */
   EXPECT_CALL(*rpcMock, Init())
     .Times(1)
@@ -60,12 +76,10 @@ TEST(IMURPCServer, StartServer_RET_OK)
     .Times(1);
 
   EXPECT_CALL(*rpcMock, setGetEulerAngleCallback_rv(_))
-    .Times(1)
-    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
+    .Times(1);
 
   EXPECT_CALL(*rpcMock, setGetComplFilterAngleCallback_rv(_))
-    .Times(1)
-    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
+    .Times(1);
 
   EXPECT_CALL(*rpcMock, NotifyDataUpdate())
     .Times(1)
@@ -103,11 +117,35 @@ TEST(IMURPCServer, StartServer_RET_OK)
     .Times(1)
     .WillRepeatedly(Return(IMUMath::eIMUMathError::eRET_OK));
 
+  EXPECT_CALL(*mathMock, GetEulerAngle(_,_,_))
+    .Times(1)
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<0>(ExpectedEulerAngleValue),
+        Return(IMUMath::eIMUMathError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*mathMock, GetComplFilterAngle(_,_,_))
+    .Times(1)
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<0>(ExpectedComplFilterAngleValue),
+        Return(IMUMath::eIMUMathError::eRET_OK)
+      )
+    );
+
   ON_CALL(*rpcMock, setGetRawAccelCallback_rv(_))
     .WillByDefault(Invoke(funcGetRawAccelCallback));
 
   ON_CALL(*rpcMock, setGetRawGyroCallback_rv(_))
     .WillByDefault(Invoke(funcGetRawGyroCallback));
+
+  ON_CALL(*rpcMock, setGetEulerAngleCallback_rv(_))
+    .WillByDefault(Invoke(funcGetEulerAngleCallback));
+
+  ON_CALL(*rpcMock, setGetComplFilterAngleCallback_rv(_))
+    .WillByDefault(Invoke(funcGetComplFilterAngleCallback));
 
   ON_CALL(*imuMock, AddUpdateDataCallback_rv(_))
     .WillByDefault(Invoke(funcAddUpdateDataCallback));
@@ -118,8 +156,11 @@ TEST(IMURPCServer, StartServer_RET_OK)
   /* Check Results */
   EXPECT_EQ(ret, IMUServer::eIMUServerError::eRET_OK);
 
+  /* Check Expected Values */
   EXPECT_EQ(ExpectedAccelValue, accelValue);
   EXPECT_EQ(ExpectedGyroValue, gyroValue);
+  EXPECT_EQ(ExpectedEulerAngleValue, eulerAngleValue);
+  EXPECT_EQ(ExpectedComplFilterAngleValue, complFilterAngleValue);
 }
 
 TEST(IMURPCServer, StartServer_RET_ERROR)
