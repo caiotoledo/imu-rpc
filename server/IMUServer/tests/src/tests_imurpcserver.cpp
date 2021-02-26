@@ -11,9 +11,6 @@
 
 using ::testing::_;
 using ::testing::Return;
-using ::testing::Invoke;
-using ::testing::SetArgReferee;
-using ::testing::DoAll;
 using ::testing::AtLeast;
 
 TEST(IMURPCServer, StartServer)
