@@ -11,6 +11,9 @@
 
 using ::testing::_;
 using ::testing::Return;
+using ::testing::Invoke;
+using ::testing::SetArgReferee;
+using ::testing::DoAll;
 using ::testing::AtLeast;
 
 TEST(IMURPCServer, StartServer_RET_OK)
@@ -23,24 +26,48 @@ TEST(IMURPCServer, StartServer_RET_OK)
   std::shared_ptr<IMUServer::IIMUServer> imuServer;
   imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, mathMock);
 
+  /* Prepare local variables */
+  auto funcAddUpdateDataCallback = [](std::function<void()> cb)
+  {
+    cb();
+  };
+
+  auto ExpectedAccelValue = 1;
+  double accelValue = 0;
+  auto funcGetRawAccelCallback = [&accelValue](std::function<double(int)> cb)
+  {
+    accelValue = cb(/* Axis */0);
+    return RPCServer::eRPCError::eRET_OK;
+  };
+
+  auto ExpectedGyroValue = 2;
+  double gyroValue = 0;
+  auto funcGetRawGyroCallback = [&gyroValue](std::function<double(int)> cb)
+  {
+    gyroValue = cb(/* Axis */0);
+    return RPCServer::eRPCError::eRET_OK;
+  };
+
   /* Prepare mock env */
   EXPECT_CALL(*rpcMock, Init())
     .Times(1)
     .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
 
   EXPECT_CALL(*rpcMock, setGetRawAccelCallback_rv(_))
-    .Times(1)
-    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
+    .Times(1);
 
   EXPECT_CALL(*rpcMock, setGetRawGyroCallback_rv(_))
-    .Times(1)
-    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
+    .Times(1);
 
   EXPECT_CALL(*rpcMock, setGetEulerAngleCallback_rv(_))
     .Times(1)
     .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
 
   EXPECT_CALL(*rpcMock, setGetComplFilterAngleCallback_rv(_))
+    .Times(1)
+    .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
+
+  EXPECT_CALL(*rpcMock, NotifyDataUpdate())
     .Times(1)
     .WillRepeatedly(Return(RPCServer::eRPCError::eRET_OK));
 
@@ -54,15 +81,45 @@ TEST(IMURPCServer, StartServer_RET_OK)
   EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
     .Times(1);
 
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(1)
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(ExpectedAccelValue),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
+    .Times(1)
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(ExpectedGyroValue),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
   EXPECT_CALL(*mathMock, Init())
     .Times(1)
     .WillRepeatedly(Return(IMUMath::eIMUMathError::eRET_OK));
+
+  ON_CALL(*rpcMock, setGetRawAccelCallback_rv(_))
+    .WillByDefault(Invoke(funcGetRawAccelCallback));
+
+  ON_CALL(*rpcMock, setGetRawGyroCallback_rv(_))
+    .WillByDefault(Invoke(funcGetRawGyroCallback));
+
+  ON_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .WillByDefault(Invoke(funcAddUpdateDataCallback));
 
   /* Perform test */
   auto ret = imuServer->StartServer();
 
   /* Check Results */
   EXPECT_EQ(ret, IMUServer::eIMUServerError::eRET_OK);
+
+  EXPECT_EQ(ExpectedAccelValue, accelValue);
+  EXPECT_EQ(ExpectedGyroValue, gyroValue);
 }
 
 TEST(IMURPCServer, StartServer_RET_ERROR)
