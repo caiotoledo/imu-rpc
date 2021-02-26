@@ -46,10 +46,10 @@ jobs:
       - name: Generate Coverage Report
         run: |
           mkdir -p .coverage_${{ matrix.buildtype }}/
-          lcov --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
-          lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
-          lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '*tests/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
-          lcov --list .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --remove .coverage_${{ matrix.buildtype }}/coverage.info '*tests/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --list .coverage_${{ matrix.buildtype }}/coverage.info
 
       - uses: codecov/codecov-action@v1
         with:
