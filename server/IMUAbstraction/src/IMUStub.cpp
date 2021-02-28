@@ -164,7 +164,7 @@ eIMUAbstractionError IMUStub::GetRawAccel(DBusTypes::eAxis axis, double &val)
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;
@@ -182,7 +182,7 @@ eIMUAbstractionError IMUStub::GetRawGyro(DBusTypes::eAxis axis, double &val)
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;

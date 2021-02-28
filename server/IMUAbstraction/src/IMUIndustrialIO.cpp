@@ -250,7 +250,7 @@ eIMUAbstractionError IMUIndustrialIO::SetSampleFrequency(eSampleFreq freq)
   }
   else
   {
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;
@@ -280,7 +280,7 @@ eIMUAbstractionError IMUIndustrialIO::SetAccelScale(eAccelScale scale)
   }
   else
   {
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   if (ret == eIMUAbstractionError::eRET_OK)
@@ -318,7 +318,7 @@ eIMUAbstractionError IMUIndustrialIO::SetGyroScale(eGyroScale scale)
   }
   else
   {
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   if (ret == eIMUAbstractionError::eRET_OK)
@@ -344,7 +344,7 @@ eIMUAbstractionError IMUIndustrialIO::GetRawAccel(DBusTypes::eAxis axis, double 
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;
@@ -360,7 +360,7 @@ eIMUAbstractionError IMUIndustrialIO::GetRawGyro(DBusTypes::eAxis axis, double &
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;

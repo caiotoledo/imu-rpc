@@ -11,6 +11,7 @@ namespace IMUAbstraction
   enum class eIMUAbstractionError {
     eRET_OK,
     eRET_ERROR,
+    eRET_INVALID_PARAMETER,
   };
 
   enum class eAccelScale {
