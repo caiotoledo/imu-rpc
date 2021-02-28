@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
+          apt update -qq
           apt install valgrind -y
           apt install gcovr lcov curl -y
 
@@ -35,6 +36,12 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
           make -j$(nproc)
 
+      - name: Initialize Coverage data
+        run: |
+          mkdir -p .coverage_${{ matrix.buildtype }}/
+          lcov -rc lcov_branch_coverage=1 --zerocounters --directory .
+          lcov -rc lcov_branch_coverage=1 --capture --initial --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage_base.info
+
       - name: Run Unit Test
         run: |
           cd .build_${{ matrix.buildtype }}/
@@ -44,10 +51,11 @@ jobs:
 
       - name: Generate Coverage Report
         run: |
-          mkdir -p .coverage_${{ matrix.buildtype }}/
-          lcov --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
-          lcov --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
-          lcov --list .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --capture --directory . --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --add-tracefile .coverage_${{ matrix.buildtype }}/coverage_base.info --add-tracefile .coverage_${{ matrix.buildtype }}/coverage.info --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --remove .coverage_${{ matrix.buildtype }}/coverage.info '/usr/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --remove .coverage_${{ matrix.buildtype }}/coverage.info '*tests/*' --output-file .coverage_${{ matrix.buildtype }}/coverage.info
+          lcov --rc lcov_branch_coverage=1 --list .coverage_${{ matrix.buildtype }}/coverage.info
 
       - uses: codecov/codecov-action@v1
         with:

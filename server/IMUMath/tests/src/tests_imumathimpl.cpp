@@ -13,7 +13,7 @@ using ::testing::Return;
 using ::testing::Invoke;
 using ::testing::SetArgReferee;
 using ::testing::DoAll;
-using ::testing::AnyNumber;
+using ::testing::AtLeast;
 
 constexpr auto SAMPLERATE = 5; /* ms */
 /* Constant used in Complementary Filter */
@@ -25,7 +25,7 @@ inline double round( double val )
   return floor(val + 0.5);
 }
 
-TEST(imumathimpl, imumath_init)
+TEST(IMUMathImpl, imumath_init)
 {
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
 
@@ -37,7 +37,7 @@ TEST(imumathimpl, imumath_init)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber())
+    .Times(AtLeast(1))
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
@@ -59,7 +59,15 @@ TEST(imumathimpl, imumath_init)
 /**
  * TESTING EULER ANGLE
  */
-class GetEulerAngleTestsParameterized : public ::testing::TestWithParam<std::tuple<double,double,double,double,double,double>> {};
+class GetEulerAngleTestsParameterized : public
+  ::testing::TestWithParam<
+    std::tuple<
+      double,double,double, /* Accel */
+      double,double,double, /* Angle */
+      DBusTypes::eAngleUnit
+      >
+    >
+  {};
 
 TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
 {
@@ -70,18 +78,20 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
 
   /* Prepare local variables */
-  double accel[] = {
+  const double accel[] = {
     std::get<0>(GetParam()),
     std::get<1>(GetParam()),
     std::get<2>(GetParam()),
   };
-  double angle[] = {
+  const double angle[] = {
     std::get<3>(GetParam()),
     std::get<4>(GetParam()),
     std::get<5>(GetParam()),
   };
 
-  auto funcGetRawAccel = [accel](DBusTypes::eAxis axis, double &val)
+  auto angleUnit = std::get<6>(GetParam());
+
+  auto funcGetRawAccel = [&accel](DBusTypes::eAxis axis, double &val)
   {
     auto axis_index = static_cast<int>(axis);
     val = accel[axis_index];
@@ -97,15 +107,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AnyNumber());
-
-  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
-
-  EXPECT_CALL(*imuMock, GetSampleFrequency())
-    .Times(AnyNumber())
-    .WillRepeatedly(Return(SAMPLERATE));
+    .Times(AtLeast(1));
 
   EXPECT_CALL(*imuMock, DeInit())
     .Times(1);
@@ -123,7 +125,7 @@ TEST_P(GetEulerAngleTestsParameterized, GetEulerAngle)
   for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
   {
     auto axis = static_cast<DBusTypes::eAxis>(i);
-    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, DBusTypes::eAngleUnit::eDegrees);
+    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, angleUnit);
     EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_OK);
   }
   EXPECT_EQ(round(eulerAngle[0]), angle[0]);
@@ -135,11 +137,330 @@ INSTANTIATE_TEST_CASE_P(
     GetEulerAngleTests,
     GetEulerAngleTestsParameterized,
     ::testing::Values(
-      /* AccelX, AccelY, AccelZ, AngleX, AngleY, AngleZ */
-      std::make_tuple(0,0,0,0,0,0),
-      std::make_tuple(500,500,500,45,45,45),
-      std::make_tuple(0,500,500,45,0,90),
-      std::make_tuple(0,0,-1000,180,180,0),
-      std::make_tuple(-1000,0,0,0,270,180)
+      /* AccelX, AccelY, AccelZ, AngleX, AngleY, AngleZ, eAngleUnit */
+      std::make_tuple(0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(500,500,500,45,45,45, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,500,500,45,0,90, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,-1000,180,180,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(-1000,0,0,0,270,180, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
     )
 );
+
+TEST(IMUMathImpl, GetEulerAngleAbstractionError)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_ERROR));
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  /* Test Euler Angle */
+  auto nan = std::numeric_limits<double>::quiet_NaN();
+  double eulerAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
+  for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
+  {
+    auto axis = static_cast<DBusTypes::eAxis>(i);
+    auto retEuler = imuMath->GetEulerAngle(eulerAngle[i], axis, DBusTypes::eAngleUnit::eDegrees);
+    EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_ERROR);
+  }
+}
+
+TEST(IMUMathImpl, GetEulerAngleInvalidParameters)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  /* Test Euler Angle */
+  double eulerAngle;
+  /* Set invalid Axis */
+  auto axis = static_cast<DBusTypes::eAxis>(100);
+  /* Expected Error for the invalid axis */
+  auto retEuler = imuMath->GetEulerAngle(eulerAngle, axis, DBusTypes::eAngleUnit::eDegrees);
+  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
+
+  /* Use Invalid Angle Unit */
+  auto angleUnit = static_cast<DBusTypes::eAngleUnit>(100);
+  /* Expected Error for the invalid angle unit */
+  retEuler = imuMath->GetEulerAngle(eulerAngle, DBusTypes::eAxis::X, angleUnit);
+  EXPECT_EQ(retEuler, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
+}
+
+/**
+ * TESTING COMPLEMENTARY FILTER
+ */
+class ComplFilterAngleTestsParameterized : public
+  ::testing::TestWithParam<
+    std::tuple<
+      double,double,double, /* Accel */
+      double,double,double, /* Gyro */
+      double,double,double, /* Angle */
+      DBusTypes::eAngleUnit
+      >
+  > {};
+
+TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare local variables */
+  const double accel[] = {
+    std::get<0>(GetParam()),
+    std::get<1>(GetParam()),
+    std::get<2>(GetParam()),
+  };
+  double gyro[] = {
+    std::get<3>(GetParam()),
+    std::get<4>(GetParam()),
+    std::get<5>(GetParam()),
+  };
+  const double angle[] = {
+    std::get<6>(GetParam()),
+    std::get<7>(GetParam()),
+    std::get<8>(GetParam()),
+  };
+
+  auto angleUnit = std::get<9>(GetParam());
+
+  auto funcGetRawAccel = [&accel](DBusTypes::eAxis axis, double &val)
+  {
+    auto axis_index = static_cast<int>(axis);
+    val = accel[axis_index];
+    return IMUAbstraction::eIMUAbstractionError::eRET_OK;
+  };
+  auto funcGetRawGyro = [&gyro](DBusTypes::eAxis axis, double &val)
+  {
+    auto axis_index = static_cast<int>(axis);
+    if (gyro[axis_index] > 0)
+    {
+      gyro[axis_index] -= 10;
+      gyro[axis_index] = (gyro[axis_index] < 0) ? 0 : gyro[axis_index];
+    }
+    val = gyro[axis_index];
+    return IMUAbstraction::eIMUAbstractionError::eRET_OK;
+  };
+
+  std::thread thCallbackManager;
+  auto bCallbackManager = false;
+  auto funcAddUpdateDataCallback = [&thCallbackManager, &bCallbackManager](std::function<void()> cb)
+  {
+    if (!thCallbackManager.joinable())
+    {
+      bCallbackManager = true;
+      thCallbackManager = std::thread(
+        [cb, &bCallbackManager]()
+        {
+          while (bCallbackManager)
+          {
+            cb();
+            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+          }
+        }
+      );
+    }
+  };
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AtLeast(1));
+
+  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
+    .Times(AtLeast(1));
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  ON_CALL(*imuMock, GetRawAccel(_,_))
+    .WillByDefault(Invoke(funcGetRawAccel));
+
+  ON_CALL(*imuMock, GetRawGyro(_,_))
+    .WillByDefault(Invoke(funcGetRawGyro));
+
+  ON_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .WillByDefault(Invoke(funcAddUpdateDataCallback));
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  /* Wait complementary filter initialization and filter stabilization */
+  std::this_thread::sleep_for(std::chrono::milliseconds(10*SAMPLERATE));
+
+  /* Test Complementary Filter Angle */
+  auto nan = std::numeric_limits<double>::quiet_NaN();
+  double complFilterAngle[IMUAbstraction::NUM_AXIS] = {nan, nan, nan};
+  for (size_t i = 0; i < IMUAbstraction::NUM_AXIS; i++)
+  {
+    auto axis = static_cast<DBusTypes::eAxis>(i);
+    auto retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle[i], axis, angleUnit);
+    EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_OK);
+  }
+  EXPECT_EQ(round(complFilterAngle[0]), angle[0]);
+  EXPECT_EQ(round(complFilterAngle[1]), angle[1]);
+  EXPECT_EQ(round(complFilterAngle[2]), angle[2]);
+
+  /* Finish callback manager thread */
+  if (thCallbackManager.joinable())
+  {
+    bCallbackManager = false;
+    thCallbackManager.join();
+  }
+}
+
+INSTANTIATE_TEST_CASE_P(
+    ComplFilterAngleTests,
+    ComplFilterAngleTestsParameterized,
+    ::testing::Values(
+      /* AccelX, AccelY, AccelZ, GyroX, GyroY, GyroZ, AngleX, AngleY, AngleZ, eAngleUnit */
+      std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(500,500,500,45,45,45,45,45,45, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(-1000,0,0,45,45,45,0,270,180, DBusTypes::eAngleUnit::eDegrees),
+      std::make_tuple(0,0,0,0,0,0,0,0,0, DBusTypes::eAngleUnit::eRadians)
+    )
+);
+
+TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
+{
+  /* Construct objects */
+  auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+
+  std::shared_ptr<IMUMath::IIMUMath> imuMath;
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
+
+  /* Prepare local variables */
+  std::thread thCallbackManager;
+  auto bCallbackManager = false;
+  auto funcAddUpdateDataCallback = [&thCallbackManager, &bCallbackManager](std::function<void()> cb)
+  {
+    if (!thCallbackManager.joinable())
+    {
+      bCallbackManager = true;
+      thCallbackManager = std::thread(
+        [cb, &bCallbackManager]()
+        {
+          while (bCallbackManager)
+          {
+            cb();
+            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+          }
+        }
+      );
+    }
+  };
+
+  /* Prepare mock env */
+  EXPECT_CALL(*imuMock, Init())
+    .Times(1)
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .Times(1);
+
+  EXPECT_CALL(*imuMock, GetRawAccel(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, GetRawGyro(_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(
+      DoAll(
+        SetArgReferee<1>(0),
+        Return(IMUAbstraction::eIMUAbstractionError::eRET_OK)
+      )
+    );
+
+  EXPECT_CALL(*imuMock, DeInit())
+    .Times(1);
+
+  ON_CALL(*imuMock, AddUpdateDataCallback_rv(_))
+    .WillByDefault(Invoke(funcAddUpdateDataCallback));
+
+  /* Test Init IMUMath */
+  auto retInit = imuMath->Init();
+  EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+
+  /* Test Complementary Filter Angle */
+  double complFilterAngle;
+  /* Set Invalid Axis */
+  auto invalidAxis = static_cast<DBusTypes::eAxis>(100);
+  /* Set Invalid Angle Unit */
+  auto invalidAngleUnit = static_cast<DBusTypes::eAngleUnit>(100);
+
+  /* Expected Error for the invalid axis */
+  auto retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, invalidAxis, DBusTypes::eAngleUnit::eDegrees);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
+  /* Expected Error for the invalid angle unit */
+  retComplFilter = imuMath->GetComplFilterAngle(complFilterAngle, DBusTypes::eAxis::X, invalidAngleUnit);
+  EXPECT_EQ(retComplFilter, IMUMath::eIMUMathError::eRET_INVALID_PARAMETER);
+
+  /* Finish callback manager thread */
+  if (thCallbackManager.joinable())
+  {
+    bCallbackManager = false;
+    thCallbackManager.join();
+  }
+}

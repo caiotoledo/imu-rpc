@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
+          apt update -qq
           apt install valgrind -y
 
       - uses: actions/checkout@v2
@@ -36,4 +37,4 @@ jobs:
         run: |
           cd .build_${{ matrix.buildtype }}/
           ctest --verbose -T memcheck
-          exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ')
+          exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ' | paste -sd+ | bc)

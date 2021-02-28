@@ -11,6 +11,7 @@ namespace IMUMath
   {
     eRET_OK,
     eRET_ERROR,
+    eRET_INVALID_PARAMETER,
   };
 
   class IIMUMath

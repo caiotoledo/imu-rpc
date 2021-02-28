@@ -48,9 +48,6 @@ eIMUAbstractionError IMUStub::Init(void)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
 
-  /* Random Seed Initialization */
-  srand((unsigned) time(0));
-
   /* IMU Configuration */
   auto retAccel = static_cast<int>(this->SetAccelScale(this->accelScale));
   auto retGyro = static_cast<int>(this->SetGyroScale(this->gyroScale));
@@ -151,7 +148,7 @@ T IMUStub::GetSampleFrequency()
 }
 int IMUStub::GetSampleFrequency(void)
 {
-  return static_cast<int>(mapSampleFreq.at(this->sampleFreq));
+  return this->GetSampleFrequency<int>();
 }
 
 eIMUAbstractionError IMUStub::GetRawAccel(DBusTypes::eAxis axis, double &val)
@@ -167,7 +164,7 @@ eIMUAbstractionError IMUStub::GetRawAccel(DBusTypes::eAxis axis, double &val)
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;
@@ -185,7 +182,7 @@ eIMUAbstractionError IMUStub::GetRawGyro(DBusTypes::eAxis axis, double &val)
   else
   {
     val = 0;
-    ret = eIMUAbstractionError::eRET_ERROR;
+    ret = eIMUAbstractionError::eRET_INVALID_PARAMETER;
   }
 
   return ret;

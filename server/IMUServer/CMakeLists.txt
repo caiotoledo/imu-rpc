@@ -14,3 +14,5 @@ target_link_libraries(${LIBRARY_NAME} PUBLIC imumath)
 
 target_include_directories(${LIBRARY_NAME} PRIVATE ${src_dir})
 target_include_directories(${LIBRARY_NAME} PUBLIC ${inc_dir})
+
+add_subdirectory(tests)
