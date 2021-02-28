@@ -48,9 +48,6 @@ eIMUAbstractionError IMUStub::Init(void)
 {
   auto ret = eIMUAbstractionError::eRET_OK;
 
-  /* Random Seed Initialization */
-  srand((unsigned) time(0));
-
   /* IMU Configuration */
   auto retAccel = static_cast<int>(this->SetAccelScale(this->accelScale));
   auto retGyro = static_cast<int>(this->SetGyroScale(this->gyroScale));
