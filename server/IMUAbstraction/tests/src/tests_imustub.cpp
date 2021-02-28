@@ -92,11 +92,9 @@ TEST(IMUStub, GetRaw_Accel_Gyro_RET_INVALID_PARAMETER)
 
   /* Prepare mock env */
   EXPECT_CALL(*valueGen, GetRawAccel(_,_,_))
-    .Times(AtLeast(1))
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*valueGen, GetRawGyro(_,_,_))
-    .Times(AtLeast(1))
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   /* Perform test */
