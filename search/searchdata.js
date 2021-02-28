@@ -9,7 +9,7 @@ var indexSectionsWithContent =
   6: "aeil",
   7: "el",
   8: "adefgswxyz",
-  9: "_adfgilmrst",
+  9: "_adgilmrst",
   10: "ls"
 };
 

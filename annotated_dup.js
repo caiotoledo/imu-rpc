@@ -14,6 +14,7 @@ var annotated_dup =
       [ "IValueGenerator", "class_i_m_u_abstraction_1_1_i_value_generator.html", "class_i_m_u_abstraction_1_1_i_value_generator" ],
       [ "RandomValueGenerator", "class_i_m_u_abstraction_1_1_random_value_generator.html", "class_i_m_u_abstraction_1_1_random_value_generator" ],
       [ "SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", "class_i_m_u_abstraction_1_1_sin_wave_value_generator" ],
+      [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
       [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ]
     ] ],
     [ "IMUClient", "namespace_i_m_u_client.html", [
@@ -22,7 +23,8 @@ var annotated_dup =
     ] ],
     [ "IMUMath", "namespace_i_m_u_math.html", [
       [ "IIMUMath", "class_i_m_u_math_1_1_i_i_m_u_math.html", "class_i_m_u_math_1_1_i_i_m_u_math" ],
-      [ "IMUMathImpl", "class_i_m_u_math_1_1_i_m_u_math_impl.html", "class_i_m_u_math_1_1_i_m_u_math_impl" ]
+      [ "IMUMathImpl", "class_i_m_u_math_1_1_i_m_u_math_impl.html", "class_i_m_u_math_1_1_i_m_u_math_impl" ],
+      [ "MockIMUAbstraction", "class_i_m_u_math_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_math_1_1_mock_i_m_u_abstraction" ]
     ] ],
     [ "imuplot", "namespaceimuplot.html", [
       [ "Generic3DPoint", "classimuplot_1_1_generic3_d_point.html", "classimuplot_1_1_generic3_d_point" ],
@@ -44,6 +46,7 @@ var annotated_dup =
       [ "SafeQueue", "class_queue_1_1_safe_queue.html", "class_queue_1_1_safe_queue" ]
     ] ],
     [ "RPCServer", "namespace_r_p_c_server.html", [
+      [ "MockRPCServer", "class_r_p_c_server_1_1_mock_r_p_c_server.html", "class_r_p_c_server_1_1_mock_r_p_c_server" ],
       [ "DBusCxxServer", "class_r_p_c_server_1_1_d_bus_cxx_server.html", "class_r_p_c_server_1_1_d_bus_cxx_server" ],
       [ "IRPCServer", "class_r_p_c_server_1_1_i_r_p_c_server.html", "class_r_p_c_server_1_1_i_r_p_c_server" ]
     ] ],
@@ -59,5 +62,6 @@ var annotated_dup =
       [ "SocketServerTCP", "class_socket_server_1_1_socket_server_t_c_p.html", "class_socket_server_1_1_socket_server_t_c_p" ],
       [ "SocketServerUDP", "class_socket_server_1_1_socket_server_u_d_p.html", "class_socket_server_1_1_socket_server_u_d_p" ]
     ] ],
+    [ "ComplFilterAngleTestsParameterized", "class_compl_filter_angle_tests_parameterized.html", null ],
     [ "GetEulerAngleTestsParameterized", "class_get_euler_angle_tests_parameterized.html", null ]
 ];

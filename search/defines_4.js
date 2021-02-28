@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['get_5fcurr_5fmilli_657',['GET_CURR_MILLI',['../_value_gen_impl_8cpp.html#a08733b7b4da16c6f3ae04a40d84f6193',1,'ValueGenImpl.cpp']]]
+  ['imu_5fbuffer_5fiio_676',['IMU_BUFFER_IIO',['../server_8cpp.html#afe84959fc658323d65596634a2d4c8c6',1,'server.cpp']]]
 ];

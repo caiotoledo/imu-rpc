@@ -88,18 +88,10 @@ $(document).ready(function(){initNavTree('server_2_i_m_u_math_2tests_2include_2_
 <div class="contents">
 <a href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;gtest/gtest.h&gt;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;gmock/gmock.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a640e5e2379b081fd79acf3cf7c39e4ac">    6</a></span>&#160;<span class="preprocessor">#define FAIL_GTEST    \</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">do {                  \</span></div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">  EXPECT_FALSE(true); \</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">} while (false)</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a2dc2d04eb65917762fb0ad5ff7dd0910">   11</a></span>&#160;<span class="preprocessor">#define LOGDEBUG(...)</span></div>
-<div class="line"><a name="l00012"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a4ee40d887237a6594d0d643f6c6b9fa3">   12</a></span>&#160;<span class="preprocessor">#define LOGWARN(...)  FAIL_GTEST</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a3efd03edccfaed52b31cc7e880e76091">   13</a></span>&#160;<span class="preprocessor">#define LOGERROR(...) FAIL_GTEST</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a3577749fb48d57a158b8ac1a0b3ab57e">   14</a></span>&#160;<span class="preprocessor">#define LOG(...)</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a2dc2d04eb65917762fb0ad5ff7dd0910">    3</a></span>&#160;<span class="preprocessor">#define LOGDEBUG(...)</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a4ee40d887237a6594d0d643f6c6b9fa3">    4</a></span>&#160;<span class="preprocessor">#define LOGWARN(...)</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a3efd03edccfaed52b31cc7e880e76091">    5</a></span>&#160;<span class="preprocessor">#define LOGERROR(...)</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno"><a class="line" href="server_2_i_m_u_math_2tests_2include_2_log_instance_8h.html#a3577749fb48d57a158b8ac1a0b3ab57e">    6</a></span>&#160;<span class="preprocessor">#define LOG(...)</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

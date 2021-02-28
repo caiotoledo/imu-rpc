@@ -10,6 +10,7 @@ var namespace_i_m_u_abstraction =
     [ "IValueGenerator", "class_i_m_u_abstraction_1_1_i_value_generator.html", "class_i_m_u_abstraction_1_1_i_value_generator" ],
     [ "RandomValueGenerator", "class_i_m_u_abstraction_1_1_random_value_generator.html", "class_i_m_u_abstraction_1_1_random_value_generator" ],
     [ "SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", "class_i_m_u_abstraction_1_1_sin_wave_value_generator" ],
+    [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
     [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ],
     [ "axisdata_t", "namespace_i_m_u_abstraction.html#ab6998b7dc0964984d4336cd9840a792a", null ],
     [ "imudata_t", "namespace_i_m_u_abstraction.html#afdc2889e01718a627d4155c0b259acc4", null ],
@@ -28,7 +29,8 @@ var namespace_i_m_u_abstraction =
     ] ],
     [ "eIMUAbstractionError", "namespace_i_m_u_abstraction.html#ae1bc486fce5d1a615d3f01fb3595fb20", [
       [ "eRET_OK", "namespace_i_m_u_abstraction.html#ae1bc486fce5d1a615d3f01fb3595fb20a75db4f2e777f877c7b80cc83687c187f", null ],
-      [ "eRET_ERROR", "namespace_i_m_u_abstraction.html#ae1bc486fce5d1a615d3f01fb3595fb20a39b182dc50fae315be2aa1816e6fe8d5", null ]
+      [ "eRET_ERROR", "namespace_i_m_u_abstraction.html#ae1bc486fce5d1a615d3f01fb3595fb20a39b182dc50fae315be2aa1816e6fe8d5", null ],
+      [ "eRET_INVALID_PARAMETER", "namespace_i_m_u_abstraction.html#ae1bc486fce5d1a615d3f01fb3595fb20a4f370d0fc12a4e6b971c31f49be582fa", null ]
     ] ],
     [ "eSampleFreq", "namespace_i_m_u_abstraction.html#a93f842e4ec6df6d4a2d2901fa16b4a7f", [
       [ "Freq_10ms", "namespace_i_m_u_abstraction.html#a93f842e4ec6df6d4a2d2901fa16b4a7fa76ad24098d182679517af5cfe040ddc6", null ],

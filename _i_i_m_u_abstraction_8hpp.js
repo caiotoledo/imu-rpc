@@ -15,7 +15,8 @@ var _i_i_m_u_abstraction_8hpp =
     ] ],
     [ "eIMUAbstractionError", "_i_i_m_u_abstraction_8hpp.html#ae1bc486fce5d1a615d3f01fb3595fb20", [
       [ "eRET_OK", "_i_i_m_u_abstraction_8hpp.html#ae1bc486fce5d1a615d3f01fb3595fb20a75db4f2e777f877c7b80cc83687c187f", null ],
-      [ "eRET_ERROR", "_i_i_m_u_abstraction_8hpp.html#ae1bc486fce5d1a615d3f01fb3595fb20a39b182dc50fae315be2aa1816e6fe8d5", null ]
+      [ "eRET_ERROR", "_i_i_m_u_abstraction_8hpp.html#ae1bc486fce5d1a615d3f01fb3595fb20a39b182dc50fae315be2aa1816e6fe8d5", null ],
+      [ "eRET_INVALID_PARAMETER", "_i_i_m_u_abstraction_8hpp.html#ae1bc486fce5d1a615d3f01fb3595fb20a4f370d0fc12a4e6b971c31f49be582fa", null ]
     ] ],
     [ "eSampleFreq", "_i_i_m_u_abstraction_8hpp.html#a93f842e4ec6df6d4a2d2901fa16b4a7f", [
       [ "Freq_10ms", "_i_i_m_u_abstraction_8hpp.html#a93f842e4ec6df6d4a2d2901fa16b4a7fa76ad24098d182679517af5cfe040ddc6", null ],
