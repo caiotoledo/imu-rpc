@@ -76,3 +76,39 @@ TEST(IMUStub, GetRaw_Accel_Gyro_RET_OK)
   EXPECT_EQ(accelValue, expectedAccel);
   EXPECT_EQ(gyroValue, expectedGyro);
 }
+
+TEST(IMUStub, GetRaw_Accel_Gyro_RET_INVALID_PARAMETER)
+{
+  /* Construct objects */
+  auto valueGen = std::make_shared<IMUAbstraction::MockValueGenerator>();
+
+  std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuStub;
+  imuStub = std::make_shared<IMUAbstraction::IMUStub>(
+    valueGen,
+    IMUAbstraction::eAccelScale::Accel_2g,
+    IMUAbstraction::eGyroScale::Gyro_250dps,
+    IMUAbstraction::eSampleFreq::Freq_10ms
+  );
+
+  /* Prepare mock env */
+  EXPECT_CALL(*valueGen, GetRawAccel(_,_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  EXPECT_CALL(*valueGen, GetRawGyro(_,_,_))
+    .Times(AtLeast(1))
+    .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
+
+  /* Perform test */
+  auto retInit = imuStub->Init();
+
+  double value = 0;
+  auto invalidAxis = static_cast<DBusTypes::eAxis>(100);
+  auto retAccel = imuStub->GetRawAccel(invalidAxis, value);
+  auto retGyro = imuStub->GetRawGyro(invalidAxis, value);
+
+  /* Check Results */
+  EXPECT_EQ(retInit, IMUAbstraction::eIMUAbstractionError::eRET_OK);
+  EXPECT_EQ(retAccel, IMUAbstraction::eIMUAbstractionError::eRET_INVALID_PARAMETER);
+  EXPECT_EQ(retGyro, IMUAbstraction::eIMUAbstractionError::eRET_INVALID_PARAMETER);
+}
