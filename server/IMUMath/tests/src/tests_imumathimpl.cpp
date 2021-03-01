@@ -24,7 +24,7 @@ typedef struct cv_s
   std::condition_variable cv;
 } cv_t;
 
-constexpr auto SAMPLERATE = std::chrono::milliseconds(5);
+constexpr auto SAMPLERATE = std::chrono::milliseconds(1);
 /* Constant used in Complementary Filter */
 constexpr double ALPHA = 0.7143;
 
