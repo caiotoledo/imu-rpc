@@ -24,7 +24,7 @@ typedef struct cv_s
   std::condition_variable cv;
 } cv_t;
 
-constexpr auto SAMPLERATE = 5; /* ms */
+constexpr auto SAMPLERATE = std::chrono::milliseconds(5);
 /* Constant used in Complementary Filter */
 constexpr double ALPHA = 0.7143;
 
@@ -328,7 +328,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
               cvCallbackCounter.flag = true;
               cvCallbackCounter.cv.notify_one();
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+            std::this_thread::sleep_for(SAMPLERATE);
           }
         }
       );
@@ -369,7 +369,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     std::unique_lock<std::mutex> lock(cvCallbackCounter.mtx);
     cvCallbackCounter.cv.wait_for(
       lock,
-      std::chrono::milliseconds(2*maxCountCallbackIteration*SAMPLERATE),
+      2*maxCountCallbackIteration*SAMPLERATE,
       [&cvCallbackCounter](){return cvCallbackCounter.flag;}
     );
   }
@@ -429,7 +429,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
           while (bCallbackManager)
           {
             cb();
-            std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+            std::this_thread::sleep_for(SAMPLERATE);
           }
         }
       );
@@ -472,7 +472,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
   auto retInit = imuMath->Init();
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+  std::this_thread::sleep_for(SAMPLERATE);
 
   /* Test Complementary Filter Angle */
   double complFilterAngle;
