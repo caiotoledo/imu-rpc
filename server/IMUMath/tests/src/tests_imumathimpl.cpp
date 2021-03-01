@@ -1,5 +1,7 @@
+#include <condition_variable>
 #include <limits>
 #include <memory>
+#include <mutex>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -14,6 +16,13 @@ using ::testing::Invoke;
 using ::testing::SetArgReferee;
 using ::testing::DoAll;
 using ::testing::AtLeast;
+
+typedef struct cv_s
+{
+  bool flag;
+  std::mutex mtx;
+  std::condition_variable cv;
+} cv_t;
 
 constexpr auto SAMPLERATE = 5; /* ms */
 /* Constant used in Complementary Filter */
@@ -290,19 +299,35 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     return IMUAbstraction::eIMUAbstractionError::eRET_OK;
   };
 
+  /* Wait 10 iterations for Complementary Filter Stabilization */
+  constexpr auto maxCountCallbackIteration = 10;
+  /* Conditional Variable to notify enough callback notifications */
+  cv_t cvCallbackCounter;
+  cvCallbackCounter.flag = false;
+
   std::thread thCallbackManager;
   auto bCallbackManager = false;
-  auto funcAddUpdateDataCallback = [&thCallbackManager, &bCallbackManager](std::function<void()> cb)
+  auto funcAddUpdateDataCallback = [&cvCallbackCounter, &thCallbackManager, &bCallbackManager](std::function<void()> cb)
   {
     if (!thCallbackManager.joinable())
     {
       bCallbackManager = true;
       thCallbackManager = std::thread(
-        [cb, &bCallbackManager]()
+        [cb, &cvCallbackCounter, &bCallbackManager]()
         {
+          auto countCallbackIteration = 0;
           while (bCallbackManager)
           {
             cb();
+            {
+              std::unique_lock<std::mutex> lock(cvCallbackCounter.mtx);
+              countCallbackIteration++;
+            }
+            if (countCallbackIteration >= maxCountCallbackIteration)
+            {
+              cvCallbackCounter.flag = true;
+              cvCallbackCounter.cv.notify_one();
+            }
             std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
           }
         }
@@ -340,8 +365,14 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
   auto retInit = imuMath->Init();
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
-  /* Wait complementary filter initialization and filter stabilization */
-  std::this_thread::sleep_for(std::chrono::milliseconds(10*SAMPLERATE));
+  {
+    std::unique_lock<std::mutex> lock(cvCallbackCounter.mtx);
+    cvCallbackCounter.cv.wait_for(
+      lock,
+      std::chrono::milliseconds(2*maxCountCallbackIteration*SAMPLERATE),
+      [&cvCallbackCounter](){return cvCallbackCounter.flag;}
+    );
+  }
 
   /* Test Complementary Filter Angle */
   auto nan = std::numeric_limits<double>::quiet_NaN();
