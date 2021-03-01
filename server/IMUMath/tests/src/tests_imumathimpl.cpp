@@ -416,19 +416,29 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
   imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuMock, ALPHA);
 
   /* Prepare local variables */
+
+  /* Conditional Variable to notify enough callback notifications */
+  cv_t cvCallback;
+  cvCallback.flag = false;
+
   std::thread thCallbackManager;
   auto bCallbackManager = false;
-  auto funcAddUpdateDataCallback = [&thCallbackManager, &bCallbackManager](std::function<void()> cb)
+  auto funcAddUpdateDataCallback = [&cvCallback, &thCallbackManager, &bCallbackManager](std::function<void()> cb)
   {
     if (!thCallbackManager.joinable())
     {
       bCallbackManager = true;
       thCallbackManager = std::thread(
-        [cb, &bCallbackManager]()
+        [cb, &cvCallback, &bCallbackManager]()
         {
           while (bCallbackManager)
           {
-            cb();
+            {
+              cb();
+              std::unique_lock<std::mutex> lock(cvCallback.mtx);
+            }
+            cvCallback.flag = true;
+            cvCallback.cv.notify_one();
             std::this_thread::sleep_for(SAMPLERATE);
           }
         }
@@ -472,7 +482,14 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
   auto retInit = imuMath->Init();
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
-  std::this_thread::sleep_for(SAMPLERATE);
+  {
+    std::unique_lock<std::mutex> lock(cvCallback.mtx);
+    cvCallback.cv.wait_for(
+      lock,
+      2*SAMPLERATE,
+      [&cvCallback](){return cvCallback.flag;}
+    );
+  }
 
   /* Test Complementary Filter Angle */
   double complFilterAngle;
