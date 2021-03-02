@@ -58,6 +58,47 @@ Default File Location Install:
 - Headers Libraries: `/usr/include/`
 - Shared Libraries: `/usr/lib/`
 
+## Running System
+
+After [Building and Installing binaries](#Build-and-Install-Project) it's possible to start the imu daemon and test with the sample applications:
+
+### **Start Daemon**
+
+Start IMU Daemon running:
+```bash
+imu-daemon -d
+```
+
+Check the default configuration values using
+```bash
+imu-daemon --help
+```
+
+### **Execute Clients**
+
+#### IMU Command Line Interface
+
+Receive IMU data in command line:
+
+```bash
+imu-cli -a -c -g -e -t<TIMEOUT>
+```
+Show *Raw Accelerometer* (-a), *Raw Gyroscope* (-g), *Euler Angle* (-e) and *Complementary Filter Euler Angle* (-g) for `<TIMEOUT>` seconds (-t).
+
+#### IMU Socket Interface
+
+Send IMU Data via TCP/UDP socket:
+```bash
+imu-socket -d -p<PORT> -tu
+```
+Run application as daemon (-d) to provide IMU Data via *TCP* (-t) and *UDP* (-u) socket in port number `<PORT>` (-p).
+
+Receive IMU Data via TCP/UDP socket:
+```bash
+python3 <PROJECT_PATH>/script/imu-dbus.py -a<IP> -p<PORT> -s<SOCKTYPE> -m -d
+```
+Show IMU Data received by `<SOCKTYPE>` socket (-s) from `<IP>` (-a) and `<PORT>` (-p) and display it in a MathPlot (-m) and in console (-d).
+
 ## Build and Execute Unit Test
 
 Same steps as [Build and Install Project](#Build-and-Install-Project) but adding `-DBUILD_UNITTEST=1` in cmake command:
