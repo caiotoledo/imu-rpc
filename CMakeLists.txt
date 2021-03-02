@@ -58,6 +58,10 @@ macro(package_gtest TESTNAME)
     add_test(NAME ${TESTNAME}
       COMMAND ${TEST_PROGRAM}
       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    # Set unit test timeout in seconds
+    if(${TIMEOUT_UNITTEST})
+      set_tests_properties(${TESTNAME} PROPERTIES TIMEOUT ${TIMEOUT_UNITTEST})
+    endif()
   endif()
 endmacro(package_gtest)
 
