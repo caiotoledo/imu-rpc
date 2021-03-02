@@ -11,6 +11,26 @@
 
 Provides a library to interface with IMU using [Industrial IO](https://www.kernel.org/doc/html/v4.14/driver-api/iio/index.html) as a Daemon distributing it via [dbus-cxx](https://dbus-cxx.github.io/) (a [DBus](https://www.freedesktop.org/wiki/Software/dbus/) C++ Wrapper) to its clients.
 
+## System Diagram
+
+```mermaid
+graph TD
+  subgraph Server Daemon
+    IMUDaemon---id2[Server dbus-cxx]
+  end
+  subgraph Application Client
+    LibIMUClient---id3[Client dbus-cxx]
+    LibIMUClient---ClientApplication
+  end
+  subgraph Linux System
+    IMUDaemon-.->|Access via /dev/|id4[[LinuxIIO]]
+  end
+  subgraph DBus
+    id2-.->|IPC|id1[[DBus Env]]
+    id3-.->|IPC|id1[[DBus Env]]
+  end
+```
+
 ## Code Documentation
 https://caiotoledo.github.io/imu-rpc/
 
