@@ -16,6 +16,7 @@ using ::testing::Invoke;
 using ::testing::SetArgReferee;
 using ::testing::DoAll;
 using ::testing::AtLeast;
+using ::testing::AnyNumber;
 
 typedef struct cv_s
 {
@@ -24,7 +25,7 @@ typedef struct cv_s
   std::condition_variable cv;
 } cv_t;
 
-constexpr auto SAMPLERATE = std::chrono::milliseconds(1);
+constexpr auto WAITTIMEOUT = std::chrono::milliseconds(1);
 /* Constant used in Complementary Filter */
 constexpr double ALPHA = 0.7143;
 
@@ -299,8 +300,6 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     return IMUAbstraction::eIMUAbstractionError::eRET_OK;
   };
 
-  /* Wait 10 iterations for Complementary Filter Stabilization */
-  constexpr auto maxCountCallbackIteration = 10;
   /* Conditional Variable to notify enough callback notifications */
   cv_t cvCallbackCounter;
   cvCallbackCounter.flag = false;
@@ -315,6 +314,8 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
       thCallbackManager = std::thread(
         [cb, &cvCallbackCounter, &bCallbackManager]()
         {
+          /* Wait 10 iterations for Complementary Filter Stabilization */
+          constexpr auto maxCountCallbackIteration = 10;
           auto countCallbackIteration = 0;
           while (bCallbackManager)
           {
@@ -328,7 +329,6 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
               cvCallbackCounter.flag = true;
               cvCallbackCounter.cv.notify_one();
             }
-            std::this_thread::sleep_for(SAMPLERATE);
           }
         }
       );
@@ -369,7 +369,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
     std::unique_lock<std::mutex> lock(cvCallbackCounter.mtx);
     cvCallbackCounter.cv.wait_for(
       lock,
-      2*maxCountCallbackIteration*SAMPLERATE,
+      WAITTIMEOUT,
       [&cvCallbackCounter](){return cvCallbackCounter.flag;}
     );
   }
@@ -434,12 +434,11 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
           while (bCallbackManager)
           {
             {
-              cb();
               std::unique_lock<std::mutex> lock(cvCallback.mtx);
+              cb();
+              cvCallback.flag = true;
             }
-            cvCallback.flag = true;
             cvCallback.cv.notify_one();
-            std::this_thread::sleep_for(SAMPLERATE);
           }
         }
       );
@@ -455,7 +454,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
     .Times(1);
 
   EXPECT_CALL(*imuMock, GetRawAccel(_,_))
-    .Times(AtLeast(1))
+    .Times(AnyNumber())
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
@@ -464,7 +463,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
     );
 
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AtLeast(1))
+    .Times(AnyNumber())
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
@@ -486,7 +485,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
     std::unique_lock<std::mutex> lock(cvCallback.mtx);
     cvCallback.cv.wait_for(
       lock,
-      2*SAMPLERATE,
+      WAITTIMEOUT,
       [&cvCallback](){return cvCallback.flag;}
     );
   }
