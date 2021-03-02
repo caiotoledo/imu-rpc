@@ -9,6 +9,8 @@
 
 [![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)](LICENSE.md)
 
+Provides a library to interface with IMU using [Industrial IO](https://www.kernel.org/doc/html/v4.14/driver-api/iio/index.html) as a Daemon distributing it via [dbus-cxx](https://dbus-cxx.github.io/) (a [DBus](https://www.freedesktop.org/wiki/Software/dbus/) C++ Wrapper) to its clients.
+
 ## Code Documentation
 https://caiotoledo.github.io/imu-rpc/
 
