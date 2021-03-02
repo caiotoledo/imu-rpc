@@ -25,7 +25,7 @@ typedef struct cv_s
   std::condition_variable cv;
 } cv_t;
 
-constexpr auto WAITTIMEOUT = std::chrono::milliseconds(1);
+constexpr auto WAITTIMEOUT = std::chrono::milliseconds(500);
 /* Constant used in Complementary Filter */
 constexpr double ALPHA = 0.7143;
 
@@ -320,15 +320,15 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
           while (bCallbackManager)
           {
             cb();
-            {
-              std::unique_lock<std::mutex> lock(cvCallbackCounter.mtx);
-              countCallbackIteration++;
-            }
+            countCallbackIteration++;
             if (countCallbackIteration >= maxCountCallbackIteration)
             {
+              std::lock_guard<std::mutex> lock(cvCallbackCounter.mtx);
               cvCallbackCounter.flag = true;
               cvCallbackCounter.cv.notify_one();
             }
+            /* Allow other threads to run */
+            std::this_thread::yield();
           }
         }
       );
@@ -433,12 +433,14 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
         {
           while (bCallbackManager)
           {
+            cb();
             {
-              std::unique_lock<std::mutex> lock(cvCallback.mtx);
-              cb();
+              std::lock_guard<std::mutex> lock(cvCallback.mtx);
               cvCallback.flag = true;
+              cvCallback.cv.notify_one();
             }
-            cvCallback.cv.notify_one();
+            /* Allow other threads to run */
+            std::this_thread::yield();
           }
         }
       );
