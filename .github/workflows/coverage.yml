@@ -36,7 +36,7 @@ jobs:
       - name: Build Project ${{ matrix.buildtype }} mode
         run: |
           mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 -DTIMEOUT_UNITTEST=$TIMEOUT_UNITTEST ../
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 -DTIMEOUT_UNITTEST=$TIMEOUT_UNITTEST -DENABLE_COVERAGE=1 ../
           make -j$(nproc)
 
       - name: Initialize Coverage data

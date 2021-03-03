@@ -17,7 +17,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -g0 -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0 -s")
 
-set(COVERAGE_FLAGS "-coverage -fprofile-arcs -ftest-coverage")
+if(${ENABLE_COVERAGE})
+  set(COVERAGE_FLAGS "-coverage -fprofile-arcs -ftest-coverage")
+endif()
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 ${COVERAGE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 ${COVERAGE_FLAGS}")
 
