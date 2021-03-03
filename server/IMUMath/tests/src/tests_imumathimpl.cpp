@@ -328,7 +328,7 @@ TEST_P(ComplFilterAngleTestsParameterized, ComplFilterAngle)
               cvCallbackCounter.cv.notify_one();
             }
             /* Allow other threads to run */
-            std::this_thread::yield();
+            std::this_thread::sleep_for(std::chrono::microseconds(50));
           }
         }
       );
@@ -440,7 +440,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
               cvCallback.cv.notify_one();
             }
             /* Allow other threads to run */
-            std::this_thread::yield();
+            std::this_thread::sleep_for(std::chrono::microseconds(50));
           }
         }
       );
