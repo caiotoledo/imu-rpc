@@ -19,6 +19,9 @@ jobs:
     container:
       image: caiotoledo/imu-rpc:latest
 
+    env:
+      TIMEOUT_UNITTEST: 5
+
     steps:
       - name: Install dependencies
         run: |
@@ -33,7 +36,7 @@ jobs:
       - name: Build Project ${{ matrix.buildtype }} mode
         run: |
           mkdir -p .build_${{ matrix.buildtype }}/ && cd .build_${{ matrix.buildtype }}/
-          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 -DTIMEOUT_UNITTEST=$TIMEOUT_UNITTEST ../
           make -j$(nproc)
 
       - name: Initialize Coverage data
