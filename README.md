@@ -20,14 +20,14 @@ graph TD
   end
   subgraph Application Client
     LibIMUClient---id3[Client dbus-cxx]
-    LibIMUClient---ClientApplication
+    ClientApplication---LibIMUClient
   end
   subgraph Linux System
-    IMUDaemon-.->|Access via /dev/|id4[[LinuxIIO]]
-  end
-  subgraph DBus
-    id2-.->|IPC|id1[[DBus Env]]
-    id3-.->|IPC|id1[[DBus Env]]
+    IMUDaemon-.->|Via FileSystem|id4[[Linux IIO Driver]]
+    subgraph DBus
+      id2-.->|IPC|id1[[DBus Daemon]]
+      id3-.->|IPC|id1[[DBus Daemon]]
+    end
   end
 ```
 
