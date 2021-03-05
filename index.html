@@ -89,9 +89,71 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/caiotoledo/imu-rpc/actions"><img src="https://github.com/caiotoledo/imu-rpc/workflows/Runtime%20Tests/badge.svg" alt="Runtime Tests" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/caiotoledo/imu-rpc/actions"><img src="https://github.com/caiotoledo/imu-rpc/workflows/Stability%20Tests/badge.svg" alt="Stability Tests" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/caiotoledo/imu-rpc/actions"><img src="https://github.com/caiotoledo/imu-rpc/workflows/Static%20Analysis/badge.svg" alt="Static Analysis" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/caiotoledo/imu-rpc/actions"><img src="https://github.com/caiotoledo/imu-rpc/workflows/Unittesting/badge.svg" alt="Unit Test" style="pointer-events: none;" class="inline"/></a></p>
 <p><a href="https://codecov.io/github/caiotoledo/imu-rpc?branch=master"><img src="https://codecov.io/github/caiotoledo/imu-rpc/coverage.svg?branch=master" alt="codecov.io" style="pointer-events: none;" class="inline"/></a></p>
 <p><a class="el" href="md__l_i_c_e_n_s_e.html">![License](https://img.shields.io/badge/license-MIT_License-blue.svg?style=flat)</a></p>
-<h1>Documentation:</h1>
-<p><a href="https://caiotoledo.github.io/imu-rpc/">https://caiotoledo.github.io/imu-rpc/</a> </p>
-</div></div><!-- PageDoc -->
+<p>Provides a library to interface with IMU using <a href="https://www.kernel.org/doc/html/v4.14/driver-api/iio/index.html">Industrial IO</a> as a Daemon distributing it via <a href="https://dbus-cxx.github.io/">dbus-cxx</a> (a <a href="https://www.freedesktop.org/wiki/Software/dbus/">DBus</a> C++ Wrapper) to its clients.</p>
+<h1>System Diagram</h1>
+<div class="fragment"><div class="line">graph TD</div>
+<div class="line">  subgraph Server Daemon</div>
+<div class="line">    IMUDaemon---id2[Server dbus-cxx]</div>
+<div class="line">  end</div>
+<div class="line">  subgraph Application Client</div>
+<div class="line">    LibIMUClient---id3[Client dbus-cxx]</div>
+<div class="line">    ClientApplication---LibIMUClient</div>
+<div class="line">  end</div>
+<div class="line">  subgraph Linux System</div>
+<div class="line">    IMUDaemon-.-&gt;|Via FileSystem|id4[[Linux IIO Driver]]</div>
+<div class="line">    subgraph DBus</div>
+<div class="line">      id2-.-&gt;|IPC|id1[[DBus Daemon]]</div>
+<div class="line">      id3-.-&gt;|IPC|id1[[DBus Daemon]]</div>
+<div class="line">    end</div>
+<div class="line">  end</div>
+</div><!-- fragment --><h1>Code Documentation</h1>
+<p><a href="https://caiotoledo.github.io/imu-rpc/">https://caiotoledo.github.io/imu-rpc/</a></p>
+<h1>Dependencies</h1>
+<ul>
+<li><a href="https://dbus-cxx.github.io/">DBus-cxx</a> version 0.12<ul>
+<li><a href="https://github.com/libsigcplusplus/libsigcplusplus">sigc++</a></li>
+<li><a href="https://www.freedesktop.org/wiki/Software/dbus/">dbus</a></li>
+</ul>
+</li>
+<li><a href="https://cmake.org/">CMake</a> 3.8 or greater</li>
+<li><a href="https://github.com/google/googletest">Google Test</a> version 1.8.1 (Only for Unit Test)</li>
+</ul>
+<h1>Build and Install Project</h1>
+<div class="fragment"><div class="line">cd &lt;path_project&gt;</div>
+<div class="line">mkdir .build</div>
+<div class="line">cd .build</div>
+<div class="line">cmake ../</div>
+<div class="line">make</div>
+<div class="line">sudo make install</div>
+</div><!-- fragment --><p>Default File Location Install:</p><ul>
+<li>Binaries: <code>/usr/bin/</code></li>
+<li>Headers Libraries: <code>/usr/include/</code></li>
+<li>Shared Libraries: <code>/usr/lib/</code></li>
+</ul>
+<h1>Running System</h1>
+<p>After <a href="#Build-and-Install-Project">Building and Installing binaries</a> it's possible to start the imu daemon and test with the sample applications:</p>
+<h2><b>Start Daemon</b></h2>
+<p>Start IMU Daemon running: </p><div class="fragment"><div class="line">imu-daemon -d</div>
+</div><!-- fragment --><p>Check the default configuration values using </p><div class="fragment"><div class="line">imu-daemon --help</div>
+</div><!-- fragment --><h2><b>Execute Clients</b></h2>
+<h3>IMU Command Line Interface</h3>
+<p>Receive IMU data in command line:</p>
+<div class="fragment"><div class="line">imu-cli -a -c -g -e -t&lt;TIMEOUT&gt;</div>
+</div><!-- fragment --><p> Show <em>Raw Accelerometer</em> (-a), <em>Raw Gyroscope</em> (-g), <em>Euler Angle</em> (-e) and <em>Complementary Filter Euler Angle</em> (-g) for <code>&lt;TIMEOUT&gt;</code> seconds (-t).</p>
+<h3>IMU Socket Interface</h3>
+<p>Send IMU Data via TCP/UDP socket: </p><div class="fragment"><div class="line">imu-socket -d -p&lt;PORT&gt; -tu</div>
+</div><!-- fragment --><p> Run application as daemon (-d) to provide IMU Data via <em>TCP</em> (-t) and <em>UDP</em> (-u) socket in port number <code>&lt;PORT&gt;</code> (-p).</p>
+<p>Receive IMU Data via TCP/UDP socket: </p><div class="fragment"><div class="line">python3 &lt;PROJECT_PATH&gt;/script/imu-dbus.py -a&lt;IP&gt; -p&lt;PORT&gt; -s&lt;SOCKTYPE&gt; -m -d</div>
+</div><!-- fragment --><p> Show IMU Data received by <code>&lt;SOCKTYPE&gt;</code> socket (-s) from <code>&lt;IP&gt;</code> (-a) and <code>&lt;PORT&gt;</code> (-p) and display it in a MathPlot (-m) and in console (-d).</p>
+<h1>Build and Execute Unit Test</h1>
+<p>Same steps as <a href="#Build-and-Install-Project">Build and Install Project</a> but adding <code>-DBUILD_UNITTEST=1</code> in cmake command:</p>
+<div class="fragment"><div class="line">cd &lt;path_project&gt;</div>
+<div class="line">mkdir .build</div>
+<div class="line">cd .build</div>
+<div class="line">cmake -DBUILD_UNITTEST=1 ../</div>
+<div class="line">make</div>
+<div class="line">make test</div>
+</div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
