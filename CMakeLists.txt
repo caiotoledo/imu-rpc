@@ -17,7 +17,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3 -g0 -s")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -g0 -s")
 
-set(COVERAGE_FLAGS "-coverage -fprofile-arcs -ftest-coverage")
+if(${ENABLE_COVERAGE})
+  set(COVERAGE_FLAGS "-coverage -fprofile-arcs -ftest-coverage")
+endif()
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0 -g3 ${COVERAGE_FLAGS}")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -g3 ${COVERAGE_FLAGS}")
 
@@ -58,6 +60,10 @@ macro(package_gtest TESTNAME)
     add_test(NAME ${TESTNAME}
       COMMAND ${TEST_PROGRAM}
       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    # Set unit test timeout in seconds
+    if(${TIMEOUT_UNITTEST})
+      set_tests_properties(${TESTNAME} PROPERTIES TIMEOUT ${TIMEOUT_UNITTEST})
+    endif()
   endif()
 endmacro(package_gtest)
 
