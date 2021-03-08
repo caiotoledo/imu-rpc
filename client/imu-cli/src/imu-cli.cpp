@@ -5,7 +5,7 @@
 #include <memory>
 #include <chrono>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include <DBusIMUClient.hpp>
 

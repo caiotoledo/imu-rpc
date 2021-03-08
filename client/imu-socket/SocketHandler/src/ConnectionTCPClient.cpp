@@ -3,7 +3,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include "ConnectionTCPClient.hpp"
 

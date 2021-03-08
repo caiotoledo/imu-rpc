@@ -8,7 +8,7 @@
 #include <atomic>
 #include <fstream>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include <DBusCxxServer.hpp>
 

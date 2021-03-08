@@ -6,7 +6,7 @@
 
 #include <IMUBufferIIO.hpp>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #define ST_ENABLE (1U)
 

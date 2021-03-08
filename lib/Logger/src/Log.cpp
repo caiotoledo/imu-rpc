@@ -5,7 +5,7 @@
 #include <iostream>
 #include <map>
 
-#include "Log.h"
+#include "Log.hpp"
 
 #define LOGHEADER(filename, func, line) "[" << filename << ":" << func << "@" << line << "]"
 

@@ -4,7 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include <SocketServerTCP.hpp>
 

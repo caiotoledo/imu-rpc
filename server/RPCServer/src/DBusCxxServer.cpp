@@ -1,7 +1,7 @@
 #include <DBusCxxServer.hpp>
 
 #include <DBusTypes.hpp>
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 using namespace RPCServer;
 
