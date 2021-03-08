@@ -1,7 +1,7 @@
 #include <map>
 #include <cmath>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include <IMUMathImpl.hpp>
 

@@ -10,7 +10,7 @@
 
 #include <IMUIndustrialIO.hpp>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #define _USE_MATH_DEFINES
 

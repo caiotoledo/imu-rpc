@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include <SocketServerUDP.hpp>
 

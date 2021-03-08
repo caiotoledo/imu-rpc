@@ -4,7 +4,7 @@
 
 #include <IMUStub.hpp>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 using namespace IMUAbstraction;
 

@@ -1,6 +1,6 @@
 #include <map>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 
 #include "argvalidator.hpp"
 

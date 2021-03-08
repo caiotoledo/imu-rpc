@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string.h>
 
-#include "SingletonInstancer.h"
-#include "Log.h"
+#include "SingletonInstancer.hpp"
+#include "Log.hpp"
 
 #ifdef LEVEL_DEBUG
   #define LEVEL_WARNING

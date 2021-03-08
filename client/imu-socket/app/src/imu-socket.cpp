@@ -6,7 +6,7 @@
 #include <iomanip>
 #include <memory>
 
-#include <LogInstance.h>
+#include <LogInstance.hpp>
 #include <DBusIMUClient.hpp>
 #include <SocketServerTCP.hpp>
 #include <SocketServerUDP.hpp>
