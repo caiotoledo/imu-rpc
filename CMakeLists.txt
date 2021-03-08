@@ -75,3 +75,6 @@ add_subdirectory(client)
 
 # Libraries Folder
 add_subdirectory(lib)
+
+# Google Tests General Mocks
+add_subdirectory(gtest_mocks)

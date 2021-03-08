@@ -10,4 +10,5 @@ package_gtest(${PROGRAM_NAME}
       ./include/ ./../include/ ./mocks/
     LIB
       imuabstraction
+      gtest_mocks
 )

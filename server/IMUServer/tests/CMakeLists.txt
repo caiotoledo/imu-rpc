@@ -12,4 +12,5 @@ package_gtest(${PROGRAM_NAME}
       imuabstraction
       imumath
       rpcserver
+      gtest_mocks
 )
