@@ -22,7 +22,7 @@ var searchData=
   ['showgraph_272',['showGraph',['../classimuplot_1_1_imu_data_plot.html#abc7d5f299aeed1358ce9028b92cda49c',1,'imuplot::ImuDataPlot']]],
   ['singleton_273',['singleton',['../namespacesingleton.html',1,'']]],
   ['singletoninstancer_274',['SingletonInstancer',['../classsingleton_1_1_singleton_instancer.html',1,'singleton']]],
-  ['singletoninstancer_2eh_275',['SingletonInstancer.h',['../_singleton_instancer_8h.html',1,'']]],
+  ['singletoninstancer_2ehpp_275',['SingletonInstancer.hpp',['../_singleton_instancer_8hpp.html',1,'']]],
   ['sinwave_5fgenerator_276',['SINWAVE_GENERATOR',['../server_8cpp.html#a11ecf1029558a2d187dd37816de2a401',1,'server.cpp']]],
   ['sinwavevaluegenerator_277',['SinWaveValueGenerator',['../class_i_m_u_abstraction_1_1_sin_wave_value_generator.html',1,'IMUAbstraction::SinWaveValueGenerator'],['../class_i_m_u_abstraction_1_1_sin_wave_value_generator.html#aee356c5d1651a8fd422781fb98b5d333',1,'IMUAbstraction::SinWaveValueGenerator::SinWaveValueGenerator()']]],
   ['sockethandler_278',['sockethandler',['../namespacesockethandler.html',1,'']]],
