@@ -14,7 +14,6 @@ var hierarchy =
         [ "IMUAbstraction::IMUBufferIIO", "class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o.html", null ]
       ] ],
       [ "IMUAbstraction::IMUStub", "class_i_m_u_abstraction_1_1_i_m_u_stub.html", null ],
-      [ "IMUAbstraction::MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", null ],
       [ "IMUAbstraction::MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", null ]
     ] ],
     [ "IMUClient::IIMUClient", "class_i_m_u_client_1_1_i_i_m_u_client.html", [

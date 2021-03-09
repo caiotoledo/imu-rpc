@@ -1,11 +1,11 @@
 <map id="server/RPCServer/include/IRPCServer.hpp" name="server/RPCServer/include/IRPCServer.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="277,5,449,47"/>
-<area shape="rect" id="node2" href="$_i_i_m_u_server_8hpp.html" title=" " alt="" coords="72,95,243,136"/>
-<area shape="rect" id="node7" href="$_mock_r_p_c_server_8hpp.html" title=" " alt="" coords="473,184,663,225"/>
-<area shape="rect" id="node8" href="$_d_bus_cxx_server_8hpp.html" title=" " alt="" coords="277,95,449,136"/>
-<area shape="rect" id="node3" href="$_i_m_u_r_p_c_server_8hpp.html" title=" " alt="" coords="53,184,224,225"/>
-<area shape="rect" id="node4" href="$server_8cpp.html" title=" " alt="" coords="177,281,346,307"/>
-<area shape="rect" id="node5" href="$_i_m_u_r_p_c_server_8cpp.html" title=" " alt="" coords="5,273,152,315"/>
-<area shape="rect" id="node6" href="$tests__imurpcserver_8cpp.html" title=" " alt="" coords="423,273,606,315"/>
-<area shape="rect" id="node9" href="$_d_bus_cxx_server_8cpp.html" title=" " alt="" coords="299,184,448,225"/>
+<area shape="rect" id="node1" title=" " alt="" coords="281,5,453,47"/>
+<area shape="rect" id="node2" href="$_mock_r_p_c_server_8hpp.html" title=" " alt="" coords="5,191,271,218"/>
+<area shape="rect" id="node4" href="$_i_i_m_u_server_8hpp.html" title=" " alt="" coords="282,95,453,136"/>
+<area shape="rect" id="node8" href="$_d_bus_cxx_server_8hpp.html" title=" " alt="" coords="477,95,649,136"/>
+<area shape="rect" id="node3" href="$tests__imurpcserver_8cpp.html" title=" " alt="" coords="73,273,256,315"/>
+<area shape="rect" id="node5" href="$_i_m_u_r_p_c_server_8hpp.html" title=" " alt="" coords="295,184,466,225"/>
+<area shape="rect" id="node6" href="$server_8cpp.html" title=" " alt="" coords="465,281,635,307"/>
+<area shape="rect" id="node7" href="$_i_m_u_r_p_c_server_8cpp.html" title=" " alt="" coords="294,273,441,315"/>
+<area shape="rect" id="node9" href="$_d_bus_cxx_server_8cpp.html" title=" " alt="" coords="587,184,737,225"/>
 </map>

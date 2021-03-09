@@ -1,5 +1,7 @@
 var namespace_i_m_u_abstraction =
 [
+    [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ],
+    [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
     [ "IIMUAbstraction", "class_i_m_u_abstraction_1_1_i_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_i_i_m_u_abstraction" ],
     [ "IMUBufferIIO", "class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o.html", "class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o" ],
     [ "imupathdata_s", "struct_i_m_u_abstraction_1_1imupathdata__s.html", "struct_i_m_u_abstraction_1_1imupathdata__s" ],
@@ -10,8 +12,6 @@ var namespace_i_m_u_abstraction =
     [ "IValueGenerator", "class_i_m_u_abstraction_1_1_i_value_generator.html", "class_i_m_u_abstraction_1_1_i_value_generator" ],
     [ "RandomValueGenerator", "class_i_m_u_abstraction_1_1_random_value_generator.html", "class_i_m_u_abstraction_1_1_random_value_generator" ],
     [ "SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", "class_i_m_u_abstraction_1_1_sin_wave_value_generator" ],
-    [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
-    [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ],
     [ "axisdata_t", "namespace_i_m_u_abstraction.html#ab6998b7dc0964984d4336cd9840a792a", null ],
     [ "imudata_t", "namespace_i_m_u_abstraction.html#afdc2889e01718a627d4155c0b259acc4", null ],
     [ "imupathdata_t", "namespace_i_m_u_abstraction.html#a944474abfde30c12a514d329691c0658", null ],

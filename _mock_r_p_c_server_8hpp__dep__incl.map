@@ -1,4 +1,4 @@
-<map id="server/IMUServer/tests/mocks/MockRPCServer.hpp" name="server/IMUServer/tests/mocks/MockRPCServer.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,196,47"/>
-<area shape="rect" id="node2" href="$tests__imurpcserver_8cpp.html" title=" " alt="" coords="9,95,192,136"/>
+<map id="gtest_mocks/mocks/MockRPCServer.hpp" name="gtest_mocks/mocks/MockRPCServer.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,271,32"/>
+<area shape="rect" id="node2" href="$tests__imurpcserver_8cpp.html" title=" " alt="" coords="47,80,229,121"/>
 </map>

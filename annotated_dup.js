@@ -4,6 +4,8 @@ var annotated_dup =
       [ "arguments", "struct_arg_parser_1_1arguments.html", "struct_arg_parser_1_1arguments" ]
     ] ],
     [ "IMUAbstraction", "namespace_i_m_u_abstraction.html", [
+      [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ],
+      [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
       [ "IIMUAbstraction", "class_i_m_u_abstraction_1_1_i_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_i_i_m_u_abstraction" ],
       [ "IMUBufferIIO", "class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o.html", "class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o" ],
       [ "imupathdata_s", "struct_i_m_u_abstraction_1_1imupathdata__s.html", "struct_i_m_u_abstraction_1_1imupathdata__s" ],
@@ -13,18 +15,16 @@ var annotated_dup =
       [ "IMUStub", "class_i_m_u_abstraction_1_1_i_m_u_stub.html", "class_i_m_u_abstraction_1_1_i_m_u_stub" ],
       [ "IValueGenerator", "class_i_m_u_abstraction_1_1_i_value_generator.html", "class_i_m_u_abstraction_1_1_i_value_generator" ],
       [ "RandomValueGenerator", "class_i_m_u_abstraction_1_1_random_value_generator.html", "class_i_m_u_abstraction_1_1_random_value_generator" ],
-      [ "SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", "class_i_m_u_abstraction_1_1_sin_wave_value_generator" ],
-      [ "MockValueGenerator", "class_i_m_u_abstraction_1_1_mock_value_generator.html", "class_i_m_u_abstraction_1_1_mock_value_generator" ],
-      [ "MockIMUAbstraction", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_abstraction_1_1_mock_i_m_u_abstraction" ]
+      [ "SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", "class_i_m_u_abstraction_1_1_sin_wave_value_generator" ]
     ] ],
     [ "IMUClient", "namespace_i_m_u_client.html", [
       [ "DBusIMUClient", "class_i_m_u_client_1_1_d_bus_i_m_u_client.html", "class_i_m_u_client_1_1_d_bus_i_m_u_client" ],
       [ "IIMUClient", "class_i_m_u_client_1_1_i_i_m_u_client.html", "class_i_m_u_client_1_1_i_i_m_u_client" ]
     ] ],
     [ "IMUMath", "namespace_i_m_u_math.html", [
+      [ "MockIMUAbstraction", "class_i_m_u_math_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_math_1_1_mock_i_m_u_abstraction" ],
       [ "IIMUMath", "class_i_m_u_math_1_1_i_i_m_u_math.html", "class_i_m_u_math_1_1_i_i_m_u_math" ],
-      [ "IMUMathImpl", "class_i_m_u_math_1_1_i_m_u_math_impl.html", "class_i_m_u_math_1_1_i_m_u_math_impl" ],
-      [ "MockIMUAbstraction", "class_i_m_u_math_1_1_mock_i_m_u_abstraction.html", "class_i_m_u_math_1_1_mock_i_m_u_abstraction" ]
+      [ "IMUMathImpl", "class_i_m_u_math_1_1_i_m_u_math_impl.html", "class_i_m_u_math_1_1_i_m_u_math_impl" ]
     ] ],
     [ "imuplot", "namespaceimuplot.html", [
       [ "Generic3DPoint", "classimuplot_1_1_generic3_d_point.html", "classimuplot_1_1_generic3_d_point" ],
