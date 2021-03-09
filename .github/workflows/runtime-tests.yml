@@ -20,8 +20,6 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Test Application ${{ matrix.buildtype }} - SampleRate ${{ matrix.samplerate }} ms - AccelScale ${{ matrix.accelscale }} mG - GyroScale ${{ matrix.gyroscale }} °/s
-    container:
-      image: caiotoledo/imu-rpc:latest
 
     env:
       IP: localhost
@@ -29,9 +27,25 @@ jobs:
       TEST_TIME: 1
 
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4 -y
+          sudo apt install dbus-x11 -y
+          sudo apt install psmisc -y
+          sudo apt install python3-pip python3-tk -y
+
+      - name: Install dbus-cxx
+        run: |
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake .
+          make -j$(nproc)
+          sudo make install
+          cd ../
+
       - uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           python3 -m pip install -r script/requirements.txt
 

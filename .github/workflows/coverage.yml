@@ -16,8 +16,6 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Coverage Report ${{ matrix.buildtype }} mode
-    container:
-      image: caiotoledo/imu-rpc:latest
 
     env:
       TIMEOUT_UNITTEST: 5
@@ -25,9 +23,28 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apt update -qq
-          apt install valgrind -y
-          apt install gcovr lcov curl -y
+          sudo apt update -qq
+          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4 -y
+          sudo apt install valgrind -y
+          sudo apt install gcovr lcov curl -y
+
+      - name: Install dbus-cxx
+        run: |
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake .
+          make -j$(nproc)
+          sudo make install
+          cd ../
+
+      - name: Install google tests
+        run: |
+          git clone --branch release-1.8.1 https://github.com/google/googletest.git
+          cd googletest
+          cmake -DBUILD_SHARED_LIBS=ON .
+          make -j$(nproc)
+          sudo make install
+          cd ../
 
       - uses: actions/checkout@v2
         with:

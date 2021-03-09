@@ -16,14 +16,35 @@ jobs:
 
     runs-on: ubuntu-latest
     name: Static Analysis ${{ matrix.buildtype }} mode
-    container:
-      image: caiotoledo/imu-rpc:latest
 
     steps:
+      - name: Install dependencies
+        run: |
+          sudo apt install libdbus-1-dev libsigc++-2.0-dev m4 -y
+          sudo apt install clang-tools-10 -y --no-install-recommends
+
+      - name: Install dbus-cxx
+        run: |
+          git clone -b 0.12.0 https://github.com/dbus-cxx/dbus-cxx.git
+          cd dbus-cxx
+          cmake .
+          make -j$(nproc)
+          sudo make install
+          cd ../
+
+      - name: Install google tests
+        run: |
+          git clone --branch release-1.8.1 https://github.com/google/googletest.git
+          cd googletest
+          cmake -DBUILD_SHARED_LIBS=ON .
+          make -j$(nproc)
+          sudo make install
+          cd ../
+
       - uses: actions/checkout@v2
 
       - name: Run Static Analysis
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
-          scan-build-10 --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
-          scan-build-10 --status-bugs make -j$(nproc)
+          scan-build-10 --exclude /usr/local/ --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
+          scan-build-10 --exclude /usr/local/ --status-bugs make -j$(nproc)
