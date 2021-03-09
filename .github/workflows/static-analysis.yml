@@ -20,6 +20,11 @@ jobs:
       image: caiotoledo/imu-rpc:latest
 
     steps:
+      - name: Install dependencies
+        run: |
+          apt update -qq
+          apt install clang-tools-10 -y
+
       - uses: actions/checkout@v2
 
       - name: Run Static Analysis
