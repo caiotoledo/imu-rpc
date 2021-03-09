@@ -6,3 +6,5 @@ set(inc_dir "./include/")
 add_library(${LIBRARY_NAME} INTERFACE)
 
 target_include_directories(${LIBRARY_NAME} INTERFACE ${inc_dir})
+
+add_subdirectory(tests)
