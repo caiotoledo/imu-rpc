@@ -46,5 +46,5 @@ jobs:
       - name: Run Static Analysis
         run: |
           mkdir -p .build_static_analyzer/ && cd .build_static_analyzer/
-          scan-build-10 --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DBUILD_UNITTEST=1 ../
-          scan-build-10 --status-bugs make -j$(nproc)
+          scan-build-10 --exclude /usr/local/ --status-bugs cmake -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} ../
+          scan-build-10 --exclude /usr/local/ --status-bugs make -j$(nproc)
