@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>IMU RPC Communication: server/IMUServer -&gt; gtest_mocks Relation</title>
+<title>IMU RPC Communication: lib/Timer/include/TimerInstance.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('dir_4ac0440e5894087f0e8241b021accf2a.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('lib_2_timer_2include_2_timer_instance_8hpp_source.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -81,13 +81,30 @@ $(document).ready(function(){initNavTree('dir_4ac0440e5894087f0e8241b021accf2a.h
 </iframe>
 </div>
 
+<div class="header">
+  <div class="headertitle">
+<div class="title">TimerInstance.hpp</div>  </div>
+</div><!--header-->
 <div class="contents">
-<h3>IMUServer &rarr; gtest_mocks Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in server/IMUServer</th><th class="dirtab">Includes file in gtest_mocks</th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="dir_56b9affeca01a8c3baa64180e2256c89.html">tests</a>&#160;/&#160;<a class="el" href="dir_fb209c9c5e89bc6c3344623fae08fe45.html">src</a>&#160;/&#160;<a class="el" href="tests__imurpcserver_8cpp.html">tests_imurpcserver.cpp</a></td><td class="dirtab"><a class="el" href="dir_78b6f37d5cbae94dbd9751cad7e9557f.html">mocks</a>&#160;/&#160;<a class="el" href="_mock_i_m_u_abstraction_8hpp.html">MockIMUAbstraction.hpp</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="dir_56b9affeca01a8c3baa64180e2256c89.html">tests</a>&#160;/&#160;<a class="el" href="dir_fb209c9c5e89bc6c3344623fae08fe45.html">src</a>&#160;/&#160;<a class="el" href="tests__imurpcserver_8cpp.html">tests_imurpcserver.cpp</a></td><td class="dirtab"><a class="el" href="dir_78b6f37d5cbae94dbd9751cad7e9557f.html">mocks</a>&#160;/&#160;<a class="el" href="_mock_i_m_u_math_8hpp.html">MockIMUMath.hpp</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="dir_56b9affeca01a8c3baa64180e2256c89.html">tests</a>&#160;/&#160;<a class="el" href="dir_fb209c9c5e89bc6c3344623fae08fe45.html">src</a>&#160;/&#160;<a class="el" href="tests__imurpcserver_8cpp.html">tests_imurpcserver.cpp</a></td><td class="dirtab"><a class="el" href="dir_78b6f37d5cbae94dbd9751cad7e9557f.html">mocks</a>&#160;/&#160;<a class="el" href="_mock_r_p_c_server_8hpp.html">MockRPCServer.hpp</a></td></tr></table></div><!-- contents -->
+<a href="lib_2_timer_2include_2_timer_instance_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="_singleton_instancer_8hpp.html">SingletonInstancer.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_timer_8hpp.html">Timer.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">/* Singleton class for Timer class */</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="lib_2_timer_2include_2_timer_instance_8hpp.html#a22e74d38c05d37d5812d84295c6bc914">    7</a></span>&#160;<span class="keyword">using</span> <a class="code" href="classsingleton_1_1_singleton_instancer.html">TimerSingleton</a> = <a class="code" href="classsingleton_1_1_singleton_instancer.html">singleton::SingletonInstancer&lt;Timer::Timer&gt;</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">/* Macro for access the timer instance */</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="lib_2_timer_2include_2_timer_instance_8hpp.html#ad086d4e8e5ef192f6684c691680b8195">   10</a></span>&#160;<span class="preprocessor">#define TIMER_INSTANCE    (*TimerSingleton::GetInstance())</span></div>
+<div class="ttc" id="a_singleton_instancer_8hpp_html"><div class="ttname"><a href="_singleton_instancer_8hpp.html">SingletonInstancer.hpp</a></div></div>
+<div class="ttc" id="a_timer_8hpp_html"><div class="ttname"><a href="_timer_8hpp.html">Timer.hpp</a></div></div>
+<div class="ttc" id="aclasssingleton_1_1_singleton_instancer_html"><div class="ttname"><a href="classsingleton_1_1_singleton_instancer.html">singleton::SingletonInstancer</a></div><div class="ttdef"><b>Definition:</b> SingletonInstancer.hpp:10</div></div>
+</div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_41e1742e44e2de38b3bc91f993fed282.html">server</a></li><li class="navelem"><a class="el" href="dir_4ac0440e5894087f0e8241b021accf2a.html">IMUServer</a></li>
+    <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_964222fe38c99f2902c33b27ac1eefb7.html">Timer</a></li><li class="navelem"><a class="el" href="dir_a5b2def740f2f30862689b20e52f63d9.html">include</a></li><li class="navelem"><a class="el" href="lib_2_timer_2include_2_timer_instance_8hpp.html">TimerInstance.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

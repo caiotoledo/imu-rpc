@@ -44,11 +44,16 @@ var hierarchy =
       [ "IMUAbstraction::SinWaveValueGenerator", "class_i_m_u_abstraction_1_1_sin_wave_value_generator.html", null ]
     ] ],
     [ "logger::Log", "classlogger_1_1_log.html", null ],
+    [ "MockRand", "class_mock_rand.html", null ],
+    [ "MockTimer", "class_mock_timer.html", null ],
     [ "Queue::SafeQueue< T >", "class_queue_1_1_safe_queue.html", null ],
     [ "singleton::SingletonInstancer< T >", "classsingleton_1_1_singleton_instancer.html", null ],
     [ "sockethandler.SocketHandlerClient", "classsockethandler_1_1_socket_handler_client.html", null ],
     [ "testing::TestWithParam", null, [
       [ "ComplFilterAngleTestsParameterized", "class_compl_filter_angle_tests_parameterized.html", null ],
-      [ "GetEulerAngleTestsParameterized", "class_get_euler_angle_tests_parameterized.html", null ]
-    ] ]
+      [ "GetEulerAngleTestsParameterized", "class_get_euler_angle_tests_parameterized.html", null ],
+      [ "GetRandomValueTestsParameterized", "class_get_random_value_tests_parameterized.html", null ],
+      [ "GetSinWaveValueTestsParameterized", "class_get_sin_wave_value_tests_parameterized.html", null ]
+    ] ],
+    [ "Timer::Timer", "class_timer_1_1_timer.html", null ]
 ];

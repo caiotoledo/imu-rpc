@@ -62,6 +62,13 @@ var annotated_dup =
       [ "SocketServerTCP", "class_socket_server_1_1_socket_server_t_c_p.html", "class_socket_server_1_1_socket_server_t_c_p" ],
       [ "SocketServerUDP", "class_socket_server_1_1_socket_server_u_d_p.html", "class_socket_server_1_1_socket_server_u_d_p" ]
     ] ],
+    [ "Timer", "namespace_timer.html", [
+      [ "Timer", "class_timer_1_1_timer.html", "class_timer_1_1_timer" ]
+    ] ],
     [ "ComplFilterAngleTestsParameterized", "class_compl_filter_angle_tests_parameterized.html", null ],
-    [ "GetEulerAngleTestsParameterized", "class_get_euler_angle_tests_parameterized.html", null ]
+    [ "GetEulerAngleTestsParameterized", "class_get_euler_angle_tests_parameterized.html", null ],
+    [ "GetRandomValueTestsParameterized", "class_get_random_value_tests_parameterized.html", null ],
+    [ "GetSinWaveValueTestsParameterized", "class_get_sin_wave_value_tests_parameterized.html", null ],
+    [ "MockRand", "class_mock_rand.html", "class_mock_rand" ],
+    [ "MockTimer", "class_mock_timer.html", "class_mock_timer" ]
 ];

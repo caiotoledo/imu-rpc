@@ -49,5 +49,6 @@ var namespaces_dup =
     [ "RPCServer", "namespace_r_p_c_server.html", "namespace_r_p_c_server" ],
     [ "singleton", "namespacesingleton.html", "namespacesingleton" ],
     [ "sockethandler", "namespacesockethandler.html", "namespacesockethandler" ],
-    [ "SocketServer", "namespace_socket_server.html", "namespace_socket_server" ]
+    [ "SocketServer", "namespace_socket_server.html", "namespace_socket_server" ],
+    [ "Timer", "namespace_timer.html", "namespace_timer" ]
 ];

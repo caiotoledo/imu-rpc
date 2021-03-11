@@ -1,5 +1,7 @@
 <map id="server/IMUAbstraction/include/ValueGenImpl.hpp" name="server/IMUAbstraction/include/ValueGenImpl.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="95,5,272,47"/>
-<area shape="rect" id="node2" href="$server_8cpp.html" title=" " alt="" coords="5,102,175,129"/>
-<area shape="rect" id="node3" href="$_value_gen_impl_8cpp.html" title=" " alt="" coords="199,95,354,136"/>
+<area shape="rect" id="node1" title=" " alt="" coords="277,5,455,47"/>
+<area shape="rect" id="node2" href="$server_8cpp.html" title=" " alt="" coords="5,109,175,136"/>
+<area shape="rect" id="node3" href="$_value_gen_impl_8cpp.html" title=" " alt="" coords="199,102,354,143"/>
+<area shape="rect" id="node4" href="$tests__rand__valuegen_8cpp.html" title=" " alt="" coords="379,95,532,151"/>
+<area shape="rect" id="node5" href="$tests__sinwave__valuegen_8cpp.html" title=" " alt="" coords="557,95,722,151"/>
 </map>
