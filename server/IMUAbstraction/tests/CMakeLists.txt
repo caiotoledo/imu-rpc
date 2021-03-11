@@ -10,5 +10,6 @@ package_gtest(${PROGRAM_NAME}
       ./include/ ./../include/ ./mocks/
     LIB
       dbustypes
+      singletoninstancer
       gtest_mocks
 )
