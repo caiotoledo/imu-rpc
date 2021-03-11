@@ -1,13 +1,13 @@
 #include <cmath>
 
-#include <chrono>
+#include <TimerInstance.hpp>
 
 #include <ValueGenImpl.hpp>
 
 using namespace IMUAbstraction;
 
-#define DEG_TO_RAD(x)   (((double)x)*(M_PIl/(double)180.0))
-#define GET_CURR_MILLI  (((double)std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now().time_since_epoch()).count())/1000.0)
+#define DEG_TO_RAD(x)     (((double)x)*(M_PIl/(double)180.0))
+#define GET_CURR_MILLI()  (TIMER_INSTANCE.GetSeconds())
 
 /* RANDOM VALUE GENERATOR CLASS */
 
@@ -59,7 +59,7 @@ eIMUAbstractionError SinWaveValueGenerator::GetRawAccel(DBusTypes::eAxis axis, d
 {
   double amp = scale;
   double freq = freq_sin;
-  double timepoint = GET_CURR_MILLI;
+  double timepoint = GET_CURR_MILLI();
   auto phaseshift = (double)axis * phaseshift_axis;
 
   double ret = this->SinValue(amp, freq, timepoint, phaseshift);
@@ -71,7 +71,7 @@ eIMUAbstractionError SinWaveValueGenerator::GetRawGyro(DBusTypes::eAxis axis, do
 {
   double amp = scale;
   double freq = freq_sin;
-  double timepoint = GET_CURR_MILLI;
+  double timepoint = GET_CURR_MILLI();
   auto phaseshift = ((double)axis + 1) * phaseshift_axis;
 
   double ret = this->SinValue(amp, freq, timepoint, phaseshift);
