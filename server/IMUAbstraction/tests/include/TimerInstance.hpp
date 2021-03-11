@@ -4,10 +4,7 @@
 
 #include <SingletonInstancer.hpp>
 
-class MockTimer {
-public:
-  MOCK_METHOD0(GetSeconds, double(void));
-};
+#include "MockTimer.hpp"
 
 /* Singleton class for Scheduler class */
 using TimerMockSingleton = singleton::SingletonInstancer<MockTimer>;
