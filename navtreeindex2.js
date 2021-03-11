@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"gtest__mocks_2include_2_log_instance_8hpp.html#a3efd03edccfaed52b31cc7e880e76091":[4,0,1,0,0,2],
+"gtest__mocks_2include_2_log_instance_8hpp.html#a4ee40d887237a6594d0d643f6c6b9fa3":[4,0,1,0,0,3],
 "gtest__mocks_2include_2_log_instance_8hpp_source.html":[4,0,1,0,0],
 "hierarchy.html":[3,2],
 "imu-cli_8cpp.html":[4,0,0,0,0,2],
@@ -28,8 +30,8 @@ var NAVTREEINDEX2 =
 "imu-socket_8cpp.html#abf9e6b7e6f15df4b525a2e7705ba3089":[4,0,0,1,0,0,2,0],
 "imu-socket_8cpp.html#ace8af91f9d55161ee01a4cf1aa4bed9b":[4,0,0,1,0,0,2,1],
 "imuplot_8py.html":[4,0,3,1],
-"index.html":[0],
 "index.html":[],
+"index.html":[0],
 "lib_2_logger_2include_2_log_instance_8hpp.html":[4,0,2,2,0,1],
 "lib_2_logger_2include_2_log_instance_8hpp.html#a2dc2d04eb65917762fb0ad5ff7dd0910":[4,0,2,2,0,1,3],
 "lib_2_logger_2include_2_log_instance_8hpp.html#a3577749fb48d57a158b8ac1a0b3ab57e":[4,0,2,2,0,1,1],
@@ -214,5 +216,9 @@ var NAVTREEINDEX2 =
 "tests__imurpcserver_8cpp.html#ad143fb867b5e2fcaad7a81ad5671607c":[4,0,4,3,2,0,0,0],
 "tests__imustub_8cpp.html":[4,0,4,1,2,0,0],
 "tests__imustub_8cpp.html#a4d79bf9bf86bf32dced8808dcf2d8a3d":[4,0,4,1,2,0,0,0],
-"tests__imustub_8cpp.html#a96c81517f3b7063c98aa31587133b5c6":[4,0,4,1,2,0,0,1]
+"tests__imustub_8cpp.html#a96c81517f3b7063c98aa31587133b5c6":[4,0,4,1,2,0,0,1],
+"tests__safequeue_8cpp.html":[4,0,0,1,1,1,0,0],
+"tests__safequeue_8cpp.html#aa4420a64d41d8b77b2d11994f5a70338":[4,0,0,1,1,1,0,0,1],
+"tests__safequeue_8cpp.html#ae5da74a61c07be22572a721d35530ea8":[4,0,0,1,1,1,0,0,2],
+"tests__safequeue_8cpp.html#af431ffa17e061b7d28b24684ffd0a75a":[4,0,0,1,1,1,0,0,0]
 };

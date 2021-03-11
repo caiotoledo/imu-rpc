@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['server_20and_20client_20imu_20based_20on_20rpc_20communication_692',['Server and Client IMU based on RPC Communication',['../index.html',1,'']]]
+  ['server_20and_20client_20imu_20based_20on_20rpc_20communication_694',['Server and Client IMU based on RPC Communication',['../index.html',1,'']]]
 ];
