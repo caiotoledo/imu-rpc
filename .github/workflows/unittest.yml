@@ -39,7 +39,7 @@ jobs:
       - name: Run Unit Test
         run: |
           cd .build_${{ matrix.buildtype }}/
-          ctest --repeat-until-fail 5 --verbose
+          ctest -j$(nproc) --repeat-until-fail 5 --verbose
 
       - name: Run Unit Test Memory Checker
         run: |
