@@ -441,7 +441,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
   auto retInit = imuMath->Init();
   EXPECT_EQ(retInit, IMUMath::eIMUMathError::eRET_OK);
 
-  std::this_thread::sleep_for(std::chrono::milliseconds(SAMPLERATE));
+  std::this_thread::sleep_for(std::chrono::milliseconds(3*SAMPLERATE));
 
   /* Test Complementary Filter Angle */
   double complFilterAngle;
