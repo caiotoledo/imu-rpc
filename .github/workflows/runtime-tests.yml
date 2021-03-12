@@ -42,7 +42,6 @@ jobs:
           make -j$(nproc)
           sudo make install
           sudo ldconfig
-          cd ../
 
       - name: Simple Application Test
         run: |
