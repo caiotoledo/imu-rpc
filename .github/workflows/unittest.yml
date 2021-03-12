@@ -39,5 +39,10 @@ jobs:
       - name: Run Unit Test
         run: |
           cd .build_${{ matrix.buildtype }}/
+          ctest --verbose
+
+      - name: Run Unit Test Memory Checker
+        run: |
+          cd .build_${{ matrix.buildtype }}/
           ctest --verbose -T memcheck
           exit $(find . -iname MemoryChecker.*.log -exec wc -l {} + | cut -f1 -d' ' | paste -sd+ | bc)
