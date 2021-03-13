@@ -73,11 +73,8 @@ void IMUIndustrialIO::InitializePaths(std::string const &sDevicePath)
     {2, "z"},
   };
 
-  for (auto &val : mapAxis)
+  for (auto& [index, sAxis] : mapAxis)
   {
-    auto index = val.first;
-    auto sAxis = val.second;
-
     auto sAccelPath = sDevicePath;
     sAccelPath.append("in_accel_" + sAxis + "_raw");
     imu_data.axisdata[index].DeviceAccelPath = sAccelPath;

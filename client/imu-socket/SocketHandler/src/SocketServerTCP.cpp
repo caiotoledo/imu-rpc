@@ -91,11 +91,8 @@ int SocketServerTCP::SendToClients(const std::vector<uint8_t> &vec)
   int ret = 0;
   std::vector<int> disconnectedClients;
 
-  for (auto &val : mapConnClient)
+  for (auto& [connHandler, client] : mapConnClient)
   {
-    auto connHandler = val.first;
-    auto client = val.second;
-
     ret = client->Send(vec);
     if (ret != 0)
     {
