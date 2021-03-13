@@ -35,6 +35,11 @@ jobs:
         run: |
           python3 -m pip install -r script/requirements.txt
 
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: cpp
+
       - name: Build Project
         run: |
           mkdir -p .build/ && cd .build/
@@ -42,7 +47,9 @@ jobs:
           make -j$(nproc)
           sudo make install
           sudo ldconfig
-          cd ../
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
       - name: Simple Application Test
         run: |
