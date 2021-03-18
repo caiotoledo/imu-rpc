@@ -1,0 +1,6 @@
+<map id="IMUAbstraction::IMUStub::Init" name="IMUAbstraction::IMUStub::Init">
+<area shape="rect" id="node1" title="Initialize IMU Abstraction." alt="" coords="5,71,176,112"/>
+<area shape="rect" id="node2" href="$class_i_m_u_abstraction_1_1_i_m_u_stub.html#adcac32c95d6f20f589af020054107e17" title="Set Accel Scale." alt="" coords="224,5,395,47"/>
+<area shape="rect" id="node3" href="$class_i_m_u_abstraction_1_1_i_m_u_stub.html#ab9008e2a8cf1c121e18c00c463337c53" title="Set Gyro Scale." alt="" coords="224,71,395,112"/>
+<area shape="rect" id="node4" href="$class_i_m_u_abstraction_1_1_i_m_u_stub.html#a35d4f0de6f1c476654ab877d5621518b" title="Set Sample Frequency in ms." alt="" coords="224,136,395,177"/>
+</map>

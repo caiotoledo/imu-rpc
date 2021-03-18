@@ -1,0 +1,7 @@
+<map id="IMUAbstraction::IMUIndustrialIO::SetValueInFile" name="IMUAbstraction::IMUIndustrialIO::SetValueInFile">
+<area shape="rect" id="node1" title="Write a value in a File." alt="" coords="496,39,693,80"/>
+<area shape="rect" id="node2" href="$class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#a86409f425bdf65035b5441bdab1f1033" title="Set Accel Scale." alt="" coords="251,5,448,47"/>
+<area shape="rect" id="node5" href="$class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#a6ccefadaf9b0d682f69f1492a0ec5600" title="Set Gyro Scale." alt="" coords="251,71,448,112"/>
+<area shape="rect" id="node3" href="$class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o.html#a8f800a4ec4031bc5e5751480c3644b2d" title="Initialize IMU Abstraction." alt="" coords="15,5,193,47"/>
+<area shape="rect" id="node4" href="$class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#a0c622e8ea1aacbe1c476bc649434dacf" title="Initialize IMU Abstraction." alt="" coords="5,71,203,112"/>
+</map>

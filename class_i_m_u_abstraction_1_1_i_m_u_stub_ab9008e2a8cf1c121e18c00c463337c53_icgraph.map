@@ -1,0 +1,4 @@
+<map id="IMUAbstraction::IMUStub::SetGyroScale" name="IMUAbstraction::IMUStub::SetGyroScale">
+<area shape="rect" id="node1" title="Set Gyro Scale." alt="" coords="224,5,395,47"/>
+<area shape="rect" id="node2" href="$class_i_m_u_abstraction_1_1_i_m_u_stub.html#a6a47370c1f5c6d83e8d4ef1d2514324b" title="Initialize IMU Abstraction." alt="" coords="5,5,176,47"/>
+</map>
