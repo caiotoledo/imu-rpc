@@ -37,6 +37,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 find_package(PkgConfig REQUIRED)
 # Add DBus CXX Wrapper
 pkg_check_modules(DBUSCXX dbus-cxx-1.0 REQUIRED)
+pkg_check_modules(DBUSCXX_2 dbus-cxx-2.0 REQUIRED)
 
 include (CTest)
 # Macro for Google Test

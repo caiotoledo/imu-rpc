@@ -26,13 +26,11 @@ eRPCError DBusCxxServer::Init(void)
 
   try
   {
-    DBus::init();
+    this->dispatcher = DBus::StandaloneDispatcher::create();
+    this->conn = dispatcher->create_connection(DBus::BusType::SESSION);
 
-    this->dispatcher = DBus::Dispatcher::create();
-    this->conn = dispatcher->create_connection(DBus::BUS_SESSION);
-
-    auto retConn = conn->request_name(DBusTypes::DBUS_NAME, DBUS_NAME_FLAG_REPLACE_EXISTING);
-    if (DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER != retConn)
+    auto retConn = conn->request_name(DBusTypes::DBUS_NAME, DBUSCXX_NAME_FLAG_REPLACE_EXISTING);
+    if (DBus::RequestNameResponse::PrimaryOwner != retConn)
     {
       LOGERROR("Connection Busy!");
       return eRPCError::eRET_ERROR;
@@ -58,7 +56,7 @@ eRPCError DBusCxxServer::NotifyDataUpdate(void)
   if (this->isInitialized())
   {
     auto signal
-      = this->conn->create_signal<void>(DBusTypes::DBUS_PATH, DBusTypes::DBUS_NAME, DBusTypes::DBUS_SIGNAL_DATAUPDATE);
+      = this->conn->create_free_signal<void(void)>(DBusTypes::DBUS_PATH, DBusTypes::DBUS_NAME, DBusTypes::DBUS_SIGNAL_DATAUPDATE);
 
     signal->emit();
     this->conn->flush();
@@ -79,7 +77,7 @@ eRPCError DBusCxxServer::setGetRawAccelCallback(std::function<double(int)> &&cb)
 
   /* Assing the callback to the method */
   try {
-    this->object->create_method<double, int>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETRAWACCEL, cb);
+    this->object->create_method<double(int)>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETRAWACCEL, cb);
   } catch(std::shared_ptr<DBus::Error> e) {
     LOGERROR("%s", e->what());
     ret = eRPCError::eRET_ERROR;
@@ -99,7 +97,7 @@ eRPCError DBusCxxServer::setGetRawGyroCallback(std::function<double(int)> &&cb)
 
   /* Assing the callback to the method */
   try {
-    this->object->create_method<double, int>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETRAWGYRO, cb);
+    this->object->create_method<double(int)>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETRAWGYRO, cb);
   } catch(std::shared_ptr<DBus::Error> e) {
     LOGERROR("%s", e->what());
     ret = eRPCError::eRET_ERROR;
@@ -119,7 +117,7 @@ eRPCError DBusCxxServer::setGetEulerAngleCallback(std::function<double(int, int)
 
   /* Assing the callback to the method */
   try {
-    this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETEULERANGLE, cb);
+    this->object->create_method<double(int, int)>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETEULERANGLE, cb);
   } catch(std::shared_ptr<DBus::Error> e) {
     LOGERROR("%s", e->what());
     ret = eRPCError::eRET_ERROR;
@@ -139,7 +137,7 @@ eRPCError DBusCxxServer::setGetComplFilterAngleCallback(std::function<double(int
 
   /* Assing the callback to the method */
   try {
-    this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETCOMPLFILTERANGLE, cb);
+    this->object->create_method<double(int, int)>(DBusTypes::DBUS_NAME, DBusTypes::DBUS_FUNC_GETCOMPLFILTERANGLE, cb);
   } catch(std::shared_ptr<DBus::Error> e) {
     LOGERROR("%s", e->what());
     ret = eRPCError::eRET_ERROR;
@@ -150,9 +148,6 @@ eRPCError DBusCxxServer::setGetComplFilterAngleCallback(std::function<double(int
 
 void DBusCxxServer::DeInit(void) {
   if (this->isInitialized()) {
-    /* Close Dispatcher connection */
-    this->dispatcher->stop();
-
     /* Reset DBus pointers */
     this->object.reset();
     this->conn.reset();

@@ -1,6 +1,8 @@
 #pragma once
 
-#include <dbus-cxx-0.12/dbus-cxx.h>
+#include <memory>
+
+#include <dbus-cxx-2.0/dbus-cxx.h>
 
 #include "IRPCServer.hpp"
 
@@ -11,9 +13,9 @@ namespace RPCServer
   {
   private:
     bool isConnected = false;
-    DBus::Dispatcher::pointer dispatcher = nullptr;
-    DBus::Connection::pointer conn = nullptr;
-    DBus::Object::pointer object = nullptr;
+    std::shared_ptr<DBus::Dispatcher> dispatcher;
+    std::shared_ptr<DBus::Connection> conn;
+    std::shared_ptr<DBus::Object> object;
 
     bool isInitialized();
 

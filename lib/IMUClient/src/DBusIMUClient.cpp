@@ -29,10 +29,8 @@ eIMUError DBusIMUClient::Init(void)
 
   try
   {
-    DBus::init();
-
-    dispatcher = DBus::Dispatcher::create();
-    connection = dispatcher->create_connection(DBus::BUS_SESSION);
+    dispatcher = DBus::StandaloneDispatcher::create();
+    connection = dispatcher->create_connection(DBus::BusType::SESSION);
     object = connection->create_object_proxy(DBusTypes::DBUS_NAME, DBusTypes::DBUS_PATH);
     isConnected = true;
 
@@ -51,7 +49,7 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
 {
   auto ret = eIMUError::eRET_ERROR;
 
-  auto funcSignalHandler = [this](DBus::SignalMessage::const_pointer msg)
+  auto funcSignalHandler = [this]()
   {
     std::lock_guard<std::mutex> lck(mtxSignalHandler);
 
@@ -73,14 +71,18 @@ eIMUError DBusIMUClient::InitSignalHandler(void)
       /* Store future */
       vecFutCallback.push_back(std::move(fut));
     }
-    return DBus::HANDLED;
   };
 
   if (this->isInitialized())
   {
-    auto signal
-      = connection->create_signal_proxy(DBusTypes::DBUS_PATH, DBusTypes::DBUS_NAME, DBusTypes::DBUS_SIGNAL_DATAUPDATE);
-    signalHandler = signal->signal_dbus_incoming().connect(funcSignalHandler);
+    auto signal = connection->create_free_signal_proxy<void(void)>(
+            DBus::MatchRuleBuilder::create()
+                .set_path(DBusTypes::DBUS_PATH)
+                .set_interface(DBusTypes::DBUS_NAME)
+                .set_member(DBusTypes::DBUS_SIGNAL_DATAUPDATE)
+                .as_signal_match(),
+            DBus::ThreadForCalling::DispatcherThread);
+    signalHandler = signal->connect(funcSignalHandler);
 
     ret = eIMUError::eRET_OK;
   }
@@ -105,7 +107,7 @@ eIMUError DBusIMUClient::GetRawAccel(DBusTypes::eAxis axis, double &val)
 
   /* Initialize Method Proxies */
   auto GetRawAccel_proxy
-    = *(this->object->create_method<double, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETRAWACCEL));
+    = *(this->object->create_method<double(int)>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETRAWACCEL));
 
   /* Execute Method Requests */
   try
@@ -132,7 +134,7 @@ eIMUError DBusIMUClient::GetRawGyro(DBusTypes::eAxis axis, double &val)
 
   /* Initialize Method Proxies */
   auto GetRawGyro_proxy
-    = *(this->object->create_method<double, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETRAWGYRO));
+    = *(this->object->create_method<double(int)>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETRAWGYRO));
 
   /* Execute Method Requests */
   try
@@ -160,7 +162,7 @@ eIMUError DBusIMUClient::GetEulerAngle(DBusTypes::eAxis axis, DBusTypes::eAngleU
 
   /* Initialize Method Proxies */
   auto GetEulerAngle_proxy
-    = *(this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETEULERANGLE));
+    = *(this->object->create_method<double(int, int)>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETEULERANGLE));
 
   /* Execute Method Requests */
   try
@@ -188,7 +190,7 @@ eIMUError DBusIMUClient::GetComplFilterAngle(DBusTypes::eAxis axis, DBusTypes::e
 
   /* Initialize Method Proxies */
   auto GetEulerAngle_proxy
-    = *(this->object->create_method<double, int, int>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETCOMPLFILTERANGLE));
+    = *(this->object->create_method<double(int, int)>(DBusTypes::DBUS_NAME,DBusTypes::DBUS_FUNC_GETCOMPLFILTERANGLE));
 
   /* Execute Method Requests */
   try
@@ -221,9 +223,6 @@ void DBusIMUClient::DeInit(void)
   /* Disconnect DBus */
   if (this->isInitialized())
   {
-    /* Close Dispatcher connection */
-    this->dispatcher->stop();
-
     /* Reset DBus pointers */
     this->object.reset();
     this->connection.reset();

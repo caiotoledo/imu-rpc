@@ -12,8 +12,8 @@ file(GLOB public_hdr_files "${inc_dir}/*.hpp")
 add_library(${LIBRARY_NAME} SHARED ${src_files})
 
 # Link DBus-cxx
-target_link_libraries(${LIBRARY_NAME} PRIVATE ${DBUSCXX_LIBRARIES})
-target_include_directories(${LIBRARY_NAME} PUBLIC ${DBUSCXX_INCLUDE_DIRS})
+target_link_libraries(${LIBRARY_NAME} PRIVATE ${DBUSCXX_2_LIBRARIES})
+target_include_directories(${LIBRARY_NAME} PUBLIC ${DBUSCXX_2_INCLUDE_DIRS})
 
 target_link_libraries(${LIBRARY_NAME} PRIVATE logger)
 target_link_libraries(${LIBRARY_NAME} PRIVATE dbustypes)

@@ -3,8 +3,9 @@
 #include <vector>
 #include <mutex>
 #include <future>
+#include <memory>
 
-#include <dbus-cxx-0.12/dbus-cxx.h>
+#include <dbus-cxx-2.0/dbus-cxx.h>
 
 #include "IIMUClient.hpp"
 
@@ -20,9 +21,9 @@ namespace IMUClient
     std::vector<std::future<void>> vecFutCallback;
 
     bool isConnected = false;
-    DBus::Dispatcher::pointer dispatcher = nullptr;
-    DBus::Connection::pointer connection = nullptr;
-    DBus::ObjectProxy::pointer object = nullptr;
+    std::shared_ptr<DBus::Dispatcher> dispatcher;
+    std::shared_ptr<DBus::Connection> connection;
+    std::shared_ptr<DBus::ObjectProxy> object;
 
     bool isInitialized(void);
     eIMUError InitSignalHandler(void);
