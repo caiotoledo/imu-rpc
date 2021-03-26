@@ -34,7 +34,7 @@ parser.add_argument("--SocketType",
                     help="Define Socket type, valid values: {\"UDP\",\"TCP\"}",
                     metavar="SOCKTYPE",
                     choices=['UDP', 'TCP'],
-                    required=True)
+                    default='TCP')
 parser.add_argument("--SampleTime",
                     "-t",
                     dest="SampleTime",
