@@ -25,16 +25,6 @@ namespace IMUMath
     virtual eIMUMathError Init(void) = 0;
 
     /**
-     * @brief Get Euler Angle of an axis
-     *
-     * @param value Get Angle Value
-     * @param axis Desired axis (X = Roll, Y = Pitch, Z = Yaw)
-     * @param unit Desired angle unit
-     * @return eIMUMathError Returns #eRET_OK when successful, ref #eIMUMathError
-     */
-    virtual eIMUMathError GetEulerAngle(double &value, DBusTypes::eAxis axis, const DBusTypes::eAngleUnit &unit) = 0;
-
-    /**
      * @brief Get Euler Angle with Complementary Filter of an axis
      *
      * @param value Angle Value

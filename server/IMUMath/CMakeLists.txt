@@ -7,6 +7,7 @@ file(GLOB src_files "${src_dir}/*.cpp")
 add_library(${LIBRARY_NAME} STATIC ${src_files})
 
 target_link_libraries(${LIBRARY_NAME} PRIVATE imuabstraction)
+target_link_libraries(${LIBRARY_NAME} PRIVATE imuangle)
 
 target_link_libraries(${LIBRARY_NAME} PRIVATE logger)
 target_link_libraries(${LIBRARY_NAME} PRIVATE pthread)
