@@ -4,6 +4,7 @@
 #include <gmock/gmock.h>
 
 #include <MockIMUAbstraction.hpp>
+#include <MockIMUAngle.hpp>
 #include <MockIMUMath.hpp>
 #include <MockRPCServer.hpp>
 
@@ -21,10 +22,11 @@ TEST(IMURPCServer, StartServer_RET_OK)
   /* Construct objects */
   auto rpcMock = std::make_shared<RPCServer::MockRPCServer>();
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+  auto angleMock = std::make_shared<IMUAngle::MockIMUAngle>();
   auto mathMock = std::make_shared<IMUMath::MockIMUAbstraction>();
 
   std::shared_ptr<IMUServer::IIMUServer> imuServer;
-  imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, mathMock);
+  imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, angleMock, mathMock);
 
   /* Prepare local variables */
   auto funcAddUpdateDataCallback = [](std::function<void()> cb)
@@ -117,12 +119,12 @@ TEST(IMURPCServer, StartServer_RET_OK)
     .Times(1)
     .WillRepeatedly(Return(IMUMath::eIMUMathError::eRET_OK));
 
-  EXPECT_CALL(*mathMock, GetEulerAngle(_,_,_))
+  EXPECT_CALL(*angleMock, GetEulerAngle(_,_,_))
     .Times(1)
     .WillRepeatedly(
       DoAll(
         SetArgReferee<0>(ExpectedEulerAngleValue),
-        Return(IMUMath::eIMUMathError::eRET_OK)
+        Return(IMUAngle::eIMUAngleError::eRET_OK)
       )
     );
 
@@ -168,10 +170,11 @@ TEST(IMURPCServer, StartServer_RET_ERROR)
   /* Construct objects */
   auto rpcMock = std::make_shared<RPCServer::MockRPCServer>();
   auto imuMock = std::make_shared<IMUAbstraction::MockIMUAbstraction>();
+  auto angleMock = std::make_shared<IMUAngle::MockIMUAngle>();
   auto mathMock = std::make_shared<IMUMath::MockIMUAbstraction>();
 
   std::shared_ptr<IMUServer::IIMUServer> imuServer;
-  imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, mathMock);
+  imuServer = std::make_shared<IMUServer::IMURPCServer>(rpcMock, imuMock, angleMock, mathMock);
 
   /* Prepare mock env */
   EXPECT_CALL(*rpcMock, Init())
