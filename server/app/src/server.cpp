@@ -20,6 +20,8 @@
 
 #include <ValueGenImpl.hpp>
 
+#include <IMUEulerAngle.hpp>
+
 #include <IMUMathImpl.hpp>
 
 #include "argvalidator.hpp"
@@ -197,6 +199,7 @@ int main(int argc, char const *argv[])
   std::shared_ptr<RPCServer::IRPCServer> serverRPC;
   std::shared_ptr<IMUServer::IIMUServer> serverIMU;
   std::shared_ptr<IMUAbstraction::IIMUAbstraction> imuAbstraction;
+  std::shared_ptr<IMUAngle::IIMUAngle> imuAngle;
   std::shared_ptr<IMUMath::IIMUMath> imuMath;
   std::shared_ptr<IMUAbstraction::IValueGenerator> valueGen;
 
@@ -241,9 +244,10 @@ int main(int argc, char const *argv[])
     );
     LOGDEBUG("Using IMUStub");
   }
-  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction, args.const_alpha);
+  imuAngle = std::make_shared<IMUAngle::IMUEulerAngle>(imuAbstraction);
+  imuMath = std::make_shared<IMUMath::IMUMathImpl>(imuAbstraction, imuAngle, args.const_alpha);
   serverRPC = std::make_shared<RPCServer::DBusCxxServer>();
-  serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction, imuMath);
+  serverIMU = std::make_shared<IMUServer::IMURPCServer>(serverRPC, imuAbstraction, imuAngle, imuMath);
 
   auto ret = serverIMU->StartServer();
   LOGDEBUG("Server Started [%d]", (int)ret);
