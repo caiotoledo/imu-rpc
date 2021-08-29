@@ -15,6 +15,7 @@ using ::testing::Invoke;
 using ::testing::SetArgReferee;
 using ::testing::DoAll;
 using ::testing::AtLeast;
+using ::testing::AnyNumber;
 
 constexpr auto SAMPLERATE = 5; /* ms */
 /* Constant used in Complementary Filter */
@@ -239,7 +240,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
     .WillRepeatedly(Return(IMUAbstraction::eIMUAbstractionError::eRET_OK));
 
   EXPECT_CALL(*imuMock, AddUpdateDataCallback_rv(_))
-    .Times(1);
+    .Times(AnyNumber());
 
   EXPECT_CALL(*angleMock, GetEulerAngle(_,_,_))
     .Times(AtLeast(1))
@@ -251,7 +252,7 @@ TEST(IMUMathImpl, ComplFilterAngleInvalidParameters)
     );
 
   EXPECT_CALL(*imuMock, GetRawGyro(_,_))
-    .Times(AtLeast(1))
+    .Times(AnyNumber())
     .WillRepeatedly(
       DoAll(
         SetArgReferee<1>(0),
