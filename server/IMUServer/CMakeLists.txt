@@ -10,6 +10,7 @@ target_link_libraries(${LIBRARY_NAME} PRIVATE logger)
 
 target_link_libraries(${LIBRARY_NAME} PUBLIC rpcserver)
 target_link_libraries(${LIBRARY_NAME} PUBLIC imuabstraction)
+target_link_libraries(${LIBRARY_NAME} PUBLIC imuangle)
 target_link_libraries(${LIBRARY_NAME} PUBLIC imumath)
 
 target_include_directories(${LIBRARY_NAME} PRIVATE ${src_dir})

@@ -6,9 +6,11 @@ using namespace IMUServer;
 
 IMURPCServer::IMURPCServer(std::shared_ptr<RPCServer::IRPCServer> server,
                            std::shared_ptr<IMUAbstraction::IIMUAbstraction> imu,
+                           std::shared_ptr<IMUAngle::IIMUAngle> angle,
                            std::shared_ptr<IMUMath::IIMUMath> math) :
 instanceServer(server),
 instanceImu(imu),
+instanceAngle(angle),
 instanceMath(math)
 {
 }
@@ -89,7 +91,7 @@ eIMUServerError IMURPCServer::InitGetEulerAngle(void)
   auto func = [this](int axis, int unit)
   {
     double val = 0;
-    instanceMath->GetEulerAngle(val, (DBusTypes::eAxis)axis, (DBusTypes::eAngleUnit)unit);
+    instanceAngle->GetEulerAngle(val, (DBusTypes::eAxis)axis, (DBusTypes::eAngleUnit)unit);
     return val;
   };
   auto retServer = instanceServer->setGetEulerAngleCallback(func);
