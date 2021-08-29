@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dbustypes_402',['DBusTypes',['../namespace_d_bus_types.html',1,'']]]
+  ['dbustypes_0',['DBusTypes',['../namespace_d_bus_types.html',1,'']]]
 ];

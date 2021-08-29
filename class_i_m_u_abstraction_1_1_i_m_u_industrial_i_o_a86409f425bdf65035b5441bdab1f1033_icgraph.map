@@ -1,5 +1,0 @@
-<map id="IMUAbstraction::IMUIndustrialIO::SetAccelScale" name="IMUAbstraction::IMUIndustrialIO::SetAccelScale">
-<area shape="rect" id="node1" title="Set Accel Scale." alt="" coords="251,39,448,80"/>
-<area shape="rect" id="node2" href="$class_i_m_u_abstraction_1_1_i_m_u_buffer_i_i_o.html#a8f800a4ec4031bc5e5751480c3644b2d" title="Initialize IMU Abstraction." alt="" coords="15,5,193,47"/>
-<area shape="rect" id="node3" href="$class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#a0c622e8ea1aacbe1c476bc649434dacf" title="Initialize IMU Abstraction." alt="" coords="5,71,203,112"/>
-</map>

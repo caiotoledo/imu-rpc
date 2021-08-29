@@ -1,4 +1,0 @@
-<map id="IMUAbstraction::IMUIndustrialIO::SetGyroScale" name="IMUAbstraction::IMUIndustrialIO::SetGyroScale">
-<area shape="rect" id="node1" title="Set Gyro Scale." alt="" coords="5,5,203,47"/>
-<area shape="rect" id="node2" href="$class_i_m_u_abstraction_1_1_i_m_u_industrial_i_o.html#af582f056edbdf4144ce7405d1e269741" title="Write a value in a File." alt="" coords="251,5,448,47"/>
-</map>

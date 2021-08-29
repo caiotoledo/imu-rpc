@@ -1,4 +1,0 @@
-<map id="SocketServer::ConnectionTCPClient::Send" name="SocketServer::ConnectionTCPClient::Send">
-<area shape="rect" id="node1" title="Send data to the client." alt="" coords="5,5,177,47"/>
-<area shape="rect" id="node2" href="$class_socket_server_1_1_connection_t_c_p_client.html#a400606e8dedf44d0086b24fe1691ca12" title="Check if client is connected." alt="" coords="225,5,397,47"/>
-</map>
